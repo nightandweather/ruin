@@ -13,6 +13,7 @@ export default defineConfig({
         agraria: "agraria.html",
         aegis: "aegis.html",
         progenitor: "progenitor.html",
+        gravitas: "gravitas.html",
       },
     },
   },

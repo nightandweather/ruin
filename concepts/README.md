@@ -10,6 +10,7 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | [AG-01 Orbital Agraria](orbital-agraria.md) | Convert power and recycled habitat streams into food and life support | Interactive simulator | Which crop and resource policy maximizes edible output without hiding biological risk? |
 | [AEGIS Spacesuit](aegis-spacesuit.md) | Keep a person mobile and alive outside the habitat | Interactive parametric simulator | Why can't one heavy lunar suit simply become the Mars suit? |
 | [PROGENITOR](progenitor-self-production.md) | Expand robotic industry without hiding precision imports or quality drift | Interactive parametric simulator | How much of the machine that makes machines can really be made locally? |
+| [GRAVITAS](gravitas-artificial-gravity.md) | Create experienced gravity without hiding rotation and human-factors costs | Interactive parametric simulator | How large must a habitat be before artificial gravity becomes tolerable? |
 | [WAYSTATION](waystation-spaceport.md) | Coordinate docking, service, repair, cargo, and departure | Design brief | Which shared port resource makes a ship miss its safe departure window? |
 | FOUNDRY | Mine, refine, machine, and assemble lunar resources autonomously | Interactive simulator | Which local failure becomes a civilization-wide manufacturing bottleneck? |
 | [Stellar survey](stellar-survey.md) | Rank real nearby systems for a swarm bootstrap | Deterministic scoring model | Which target wins when proximity, stability, energy, and materials conflict? |

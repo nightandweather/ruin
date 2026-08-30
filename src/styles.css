@@ -14,7 +14,7 @@ main { height: 100vh; display: grid; grid-template-rows: 74px minmax(0, 1fr) 64p
 .brand strong { font-size: 18px; letter-spacing: .22em; }
 .brand small, .mission-clock span { color: #697781; font: 500 9px DM Mono, monospace; letter-spacing: .16em; }
 .mission-clock { display: grid; text-align: center; gap: 4px; }
-.module-links { display:flex;gap:4px; }.module-link { color:#8e9a9d;border:1px solid #30373e;padding:7px 7px;text-decoration:none;font:500 6px DM Mono,monospace;letter-spacing:.06em; }.module-link:hover { color:#ffb456;border-color:#72502b; }
+.module-links { display:flex;gap:3px; }.module-link { color:#8e9a9d;border:1px solid #30373e;padding:7px 6px;text-decoration:none;font:500 6px DM Mono,monospace;letter-spacing:.04em; }.module-link:hover { color:#ffb456;border-color:#72502b; }
 .mission-clock strong { font: 400 16px DM Mono, monospace; letter-spacing: .12em; color: #b7c5ca; }
 .system-status { min-width: 250px; text-align: right; font: 500 10px DM Mono, monospace; letter-spacing: .14em; }
 .system-status i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 9px; box-shadow: 0 0 10px currentColor; }

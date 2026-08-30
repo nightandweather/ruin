@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, and `/progenitor.html` runs the guided self-production factory. The simulations begin immediately.
+Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, and `/gravitas.html` designs artificial gravity habitats. The simulations begin immediately.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -43,6 +43,7 @@ Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomo
 - **AGRARIA** — tune crop area, light, carbon, water, nutrients, and crop strategy while food, oxygen support, and power demand update together.
 - **AEGIS** — design a mission-specific pressure suit and expose its mass, mobility, life-support, thermal, dust, and emergency-return tradeoffs.
 - **PROGENITOR** — grow a robotic industrial seed while production closure, imported controllers, metrology, lineage drift, and a human-set replication ceiling remain explicit.
+- **GRAVITAS** — trade rotating-habitat radius, RPM, gravity level, Coriolis effects, deck gradient, structure, spin energy, and angular-momentum cancellation.
 
 ```bash
 npm test
@@ -66,6 +67,7 @@ npm run build
 - A bioregenerative crop-deck model linking food, oxygen-equivalent exchange, recovered water, nutrient makeup, quarantine, and collector power.
 - A parametric EVA suit digital twin spanning orbit, lunar industry, Mars field work, and rescue, with coupled PLSS, mobility, mass, dust, and fault-response constraints.
 - A guided robotic self-production model with a physically zoned factory layout, partial production closure, certified lineage, import bottlenecks, and fail-closed offspring quarantine.
+- A physics-grounded artificial-gravity architect for rings, tether pairs, and short-arm centrifuges, with an explicit no-go boundary for unsupported gravity-field generators.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
