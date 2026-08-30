@@ -6,6 +6,8 @@ RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first 
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
+The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [development roadmap](ROADMAP.md) turns the remaining ideas into ordered releases; LUMEN power distribution and a unified campaign state are next.
+
 ## The RUIN laboratory
 
 RUIN is a home for executable science-fiction infrastructure. Each concept begins as a sourced engineering brief, defines what must never happen, and grows into a deterministic simulation that lets an operator experience the tradeoffs.
