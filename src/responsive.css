@@ -1,0 +1,128 @@
+/*
+ * Narrow-viewport layout for every laboratory.
+ *
+ * Each module is built as a viewport-locked console: `body` is pinned to
+ * `min-width: 1100–1240px; height: 100vh; overflow: hidden`, `main` is a
+ * grid of header / layout / footer filling 100vh, and the layout itself is
+ * a fixed three-column arrangement. Below that width nothing reflows — the
+ * page pans, and `overflow: hidden` on `body` hides whatever falls outside,
+ * so the right-hand column is simply unreachable on a phone.
+ *
+ * The nineteen modules share that structure exactly — a `main` whose middle
+ * child is the layout grid — so the reflow is expressed once here rather
+ * than repeated in nineteen stylesheets. Module stylesheets keep every
+ * colour, border and font; only the axis of the layout changes.
+ *
+ * Media queries add no specificity and this file loads before the module
+ * stylesheets, so selectors carry an extra `body` / `main >` / `[class]`
+ * step purely to outrank the rules they need to override.
+ */
+
+@media (max-width: 1180px) {
+  /* The hard floor that forces panning. */
+  html > body {
+    min-width: 0;
+    height: auto;
+    min-height: 100%;
+    overflow: visible;
+  }
+
+  /*
+   * Release the console grid into document flow. The rows must become
+   * content-sized: keeping `minmax(0, 1fr)` on the middle row would squeeze
+   * three stacked panels into one screen, and the panels clip their own
+   * overflow, so content would silently disappear rather than scroll.
+   */
+  body main {
+    height: auto;
+    min-height: 100vh;
+    grid-template-rows: none;
+  }
+
+  /* Headers and control bars were single-line flex rows sized for 1440px. */
+  body main > header,
+  body main > footer {
+    height: auto;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  /*
+   * Grid and flex items default to `min-width: auto`, so a panel or a button
+   * row refuses to shrink below its widest content and pushes the console
+   * past the viewport. Every level has to be allowed to narrow, and the
+   * groups inside the header and footer have to wrap in turn. The module bar
+   * is the exception: it scrolls along its own axis instead of wrapping.
+   */
+  body main > *,
+  body main > [class] {
+    min-width: 0;
+  }
+
+  body main > header > [class]:not(.module-bar),
+  body main > footer > [class]:not(.module-bar) {
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+
+  /* The layout grid: every module's middle child. One column, reading order. */
+  main > .layout,
+  main > [class$="-layout"],
+  main > [class$="-grid"],
+  main > [class$="-main"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    min-height: 0;
+  }
+
+  /*
+   * Panels sized themselves against a fixed row height and hid the rest.
+   * Stacked, they grow with their content; `auto` lets the few genuinely
+   * wide children (dense readout grids) scroll inside their own panel
+   * rather than widening the whole document.
+   */
+  main > .layout > *,
+  main > [class$="-layout"] > *,
+  main > [class$="-grid"] > * {
+    /*
+     * Several modules place panels explicitly (`grid-column: 2/4`,
+     * `grid-row: 1/3`). Against a single-column grid those placements
+     * generate implicit columns and the three-column layout reappears, so
+     * the panels have to fall back to auto placement.
+     */
+    grid-column: auto;
+    grid-row: auto;
+    min-width: 0;
+    min-height: 0;
+    max-height: none;
+    overflow: auto;
+  }
+
+  /* Canvases lose the flex height they inherited from the centre column. */
+  body main canvas[class] {
+    width: 100%;
+    max-width: 100%;
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 720px) {
+  main > .layout,
+  main > [class$="-layout"],
+  main > [class$="-grid"] {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  body main > header,
+  body main > footer {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  body main canvas[class] {
+    min-height: 260px;
+  }
+}

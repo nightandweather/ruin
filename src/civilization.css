@@ -462,3 +462,24 @@ input {
     padding: 20px;
   }
 }
+
+/*
+ * GENESIS lays its boot sequence out as a centred row of fixed-width stages,
+ * each stage labelled by an absolutely positioned caption. Below the
+ * responsive breakpoint the row is wider than the panel: centred overflow
+ * cannot be scrolled to, and the captions resolve against the initial
+ * containing block, so they escape the panel entirely.
+ *
+ * Anchoring the row to the start makes the overflow reachable through the
+ * panel's own scroller, and giving each stage a containing block keeps its
+ * caption with it. The chain itself is unchanged.
+ */
+@media (max-width: 1180px) {
+  .gn-boot {
+    height: auto;
+    justify-content: flex-start;
+  }
+  .gn-boot > div {
+    position: relative;
+  }
+}

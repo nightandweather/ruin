@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { MODULES } from "./modules";
 import "./module-bar.css";
+import "./responsive.css";
 
 /**
  * Navigation across every executable module.
