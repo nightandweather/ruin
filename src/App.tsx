@@ -5,6 +5,8 @@ import { projectCivilization } from "./civilizationProjection";
 import { angularDistance, inspectSatellite } from "./satelliteInspection";
 import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
 import { ModuleBar } from "./ModuleBar";
+import { parseCassette, serializeCassette, type CassetteAction } from "./cassette";
+import { heliosCassette, runHeliosCassette } from "./heliosCassette";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
   "communications-blackout": { code: "COMMS", title: "Relay blackout", detail: "Isolate 30% of nodes" },
@@ -396,6 +398,15 @@ function SatelliteInspector({
   );
 }
 
+function download(filename: string, text: string) {
+  const blob = new Blob([text], { type: "application/json" });
+  const anchor = document.createElement("a");
+  anchor.href = URL.createObjectURL(blob);
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(anchor.href);
+}
+
 export function App() {
   const [simulation, setSimulation] = useState(() => new DysonSwarmSimulation());
   const [snapshot, setSnapshot] = useState(() => simulation.snapshot());
@@ -404,6 +415,11 @@ export function App() {
   const [debrisBearing, setDebrisBearing] = useState(315);
   const [campaign, setCampaign] = useState<FirstLightReport | null>(null);
   const [selectedSatelliteId, setSelectedSatelliteId] = useState<number | null>(null);
+  const [cassetteNotice, setCassetteNotice] = useState<string | null>(null);
+  // Every operator action lands on the tape, so the session can be exported
+  // as a deterministic incident cassette at any point.
+  const tape = useRef<CassetteAction[]>([]);
+  const cassetteFile = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -422,9 +438,19 @@ export function App() {
     [snapshot, selectedSatelliteId],
   );
 
-  const inject = (type: ScenarioType) =>
-    setSnapshot(simulation.inject(type, type === "debris-corridor" ? { bearingDeg: debrisBearing } : {}));
-  const requestReplacements = () => setSnapshot(simulation.requestProduction(50));
+  const inject = (type: ScenarioType) => {
+    const debris = type === "debris-corridor";
+    tape.current.push({
+      atTick: simulation.snapshot().tick,
+      action: "inject",
+      params: debris ? { scenario: type, bearingDeg: debrisBearing } : { scenario: type },
+    });
+    setSnapshot(simulation.inject(type, debris ? { bearingDeg: debrisBearing } : {}));
+  };
+  const requestReplacements = () => {
+    tape.current.push({ atTick: simulation.snapshot().tick, action: "production", params: { units: 50 } });
+    setSnapshot(simulation.requestProduction(50));
+  };
   const reset = () => {
     const next = new DysonSwarmSimulation();
     setSimulation(next);
@@ -432,6 +458,8 @@ export function App() {
     setRunning(true);
     setCampaign(null);
     setSelectedSatelliteId(null);
+    setCassetteNotice(null);
+    tape.current = [];
   };
   const runCampaign = () => {
     const report = runFirstLight();
@@ -451,12 +479,33 @@ export function App() {
         mode,
       })),
     };
-    const blob = new Blob([JSON.stringify(safeSnapshot, null, 2)], { type: "application/json" });
-    const anchor = document.createElement("a");
-    anchor.href = URL.createObjectURL(blob);
-    anchor.download = `helios-snapshot-tick-${snapshot.tick}.json`;
-    anchor.click();
-    URL.revokeObjectURL(anchor.href);
+    download(`helios-snapshot-tick-${snapshot.tick}.json`, JSON.stringify(safeSnapshot, null, 2));
+  };
+  const exportCassette = () => {
+    const cassette = heliosCassette(`Operator session tick ${snapshot.tick}`, [...tape.current], {
+      runToTick: snapshot.tick,
+    });
+    download(`helios-cassette-tick-${snapshot.tick}.json`, serializeCassette(cassette));
+  };
+  const loadCassette = async (file: File | undefined) => {
+    if (!file) return;
+    const parsed = parseCassette(await file.text());
+    if (!parsed.ok) {
+      setCassetteNotice(`CASSETTE REJECTED · ${parsed.errors[0]}`);
+      return;
+    }
+    const result = runHeliosCassette(parsed.cassette);
+    if (!result.ok) {
+      setCassetteNotice(`CASSETTE REJECTED · ${result.errors[0]}`);
+      return;
+    }
+    setRunning(false);
+    setCampaign(null);
+    setSelectedSatelliteId(null);
+    setSnapshot(result.replay.snapshot);
+    setCassetteNotice(
+      `REPLAYED "${parsed.cassette.title}" · ${result.replay.applied.length} ACTIONS · T${result.replay.snapshot.tick}`,
+    );
   };
 
   return (
@@ -751,6 +800,20 @@ export function App() {
         <div className="footer-meta">
           <span>SEED {DEFAULT_CONFIG.seed}</span>
           <span>TICK {snapshot.tick.toLocaleString()}</span>
+          {cassetteNotice && <span className="cassette-notice">{cassetteNotice}</span>}
+          <button onClick={exportCassette}>CASSETTE ↓</button>
+          <button onClick={() => cassetteFile.current?.click()}>CASSETTE ↑</button>
+          <input
+            ref={cassetteFile}
+            type="file"
+            accept="application/json,.json"
+            hidden
+            aria-label="Load incident cassette"
+            onChange={(event) => {
+              void loadCassette(event.target.files?.[0]);
+              event.target.value = "";
+            }}
+          />
           <button onClick={exportSnapshot}>EXPORT SNAPSHOT ↓</button>
         </div>
       </footer>

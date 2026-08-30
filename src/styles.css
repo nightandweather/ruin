@@ -1564,3 +1564,12 @@ footer {
     height: 90px;
   }
 }
+
+.cassette-notice {
+  max-width: 240px;
+  color: #d3a45f;
+  font:
+    400 7px DM Mono,
+    monospace;
+  letter-spacing: 0.08em;
+}

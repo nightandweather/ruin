@@ -1,0 +1,40 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "helios",
+  "title": "1화 — 서하가 검증한 FIRST LIGHT",
+  "notes": "The exact campaign 윤서하 re-reads at 02:11 in episode one: same seed, same commands, same result. Load it from the HELIOS footer (CASSETTE ↑) and watch the five safety invariants she signed off on hold — or try to make them fail.",
+  "seed": 1977,
+  "timeline": [
+    {
+      "atTick": 10,
+      "action": "inject",
+      "params": { "scenario": "communications-blackout" },
+      "label": "Relay blackout splits orbital sectors"
+    },
+    {
+      "atTick": 24,
+      "action": "inject",
+      "params": { "scenario": "demand-spike" },
+      "label": "Critical outer-system load requests power"
+    },
+    {
+      "atTick": 38,
+      "action": "production",
+      "params": { "units": 50 },
+      "label": "FOUNDRY replacement order accepted"
+    },
+    {
+      "atTick": 55,
+      "action": "inject",
+      "params": { "scenario": "thermal-wave" },
+      "label": "Solar thermal wave crosses the swarm"
+    },
+    {
+      "atTick": 82,
+      "action": "inject",
+      "params": { "scenario": "debris-corridor", "bearingDeg": 315 },
+      "label": "Debris corridor triggers bounded avoidance"
+    }
+  ],
+  "runToTick": 140
+}

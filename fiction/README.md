@@ -12,7 +12,14 @@ This directory contains narrative prototypes derived from the executable RUIN la
 
 The first season follows a junior civilization-simulation verifier who discovers that a perfect survival report was produced by changing who counts as a person.
 
-- [Episode 01 — 제외된 사람들](season-01/episode-01.md)
+- [Episode 01 — 제외된 사람들](season-01/episode-01.md) · [incident cassette](season-01/episode-01.cassette.json)
+
+Each episode can carry an **incident cassette** — a deterministic replay file
+(`ruin-cassette/1`) reproducing the operational event the chapter describes.
+Load one from the HELIOS footer (**CASSETTE ↑**) to fly the incident yourself:
+same seed, same commands, same result the characters verify on the page. The
+format lives in `src/cassette.ts` and is validated on load, so cassettes can be
+hand-edited, attached to issues, and exchanged like sheet music.
 
 ### Existing RUIN systems used in Episode 01
 
