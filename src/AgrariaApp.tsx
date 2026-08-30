@@ -6,6 +6,7 @@ import {
   type AgrariaIncident,
   type CropStrategy,
 } from "./agraria";
+import { ModuleBar } from "./ModuleBar";
 const incidents: Record<AgrariaIncident, { code: string; title: string; detail: string }> = {
   "root-dryout": { code: "H₂O", title: "Root dryout", detail: "Isolate racks" },
   "fungal-outbreak": { code: "BIO", title: "Spore outbreak", detail: "Quarantine sector" },
@@ -52,12 +53,7 @@ export function AgrariaApp() {
             <small>ORBITAL BIOREGENERATIVE FARM</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./collector.html">COLLECTOR</a>
-          <a href="./datacore.html">DATACORE</a>
-          <b>AGRARIA</b>
-        </nav>
+        <ModuleBar current="agraria" />
         <div className="agraria-state">
           <span>DECK AG-01 · τ{String(snap.tick).padStart(5, "0")}</span>
           <b className={snap.mode}>{snap.mode.replace("-", " ").toUpperCase()}</b>

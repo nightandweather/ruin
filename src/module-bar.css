@@ -1,0 +1,29 @@
+/*
+ * Shared layout for the module bar.
+ *
+ * Colour, border and typography stay with each laboratory's own stylesheet
+ * (`.xx-top nav a`, which outranks these selectors); this file only makes the
+ * full nineteen-module list survivable inside headers that were originally
+ * sized for three or four links.
+ */
+
+.module-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.module-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.module-bar > a,
+.module-bar > b {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  scroll-margin-inline: 24px;
+}

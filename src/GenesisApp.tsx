@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { genesisConfig, simulateGenesis, type GenesisConfig, type GenesisIncident } from "./genesis";
+import { ModuleBar } from "./ModuleBar";
 const f = (v: number, d = 0) => v.toLocaleString(undefined, { maximumFractionDigits: d });
 export function GenesisApp() {
   const [c, setC] = useState<GenesisConfig>(() => genesisConfig()),
@@ -15,12 +16,7 @@ export function GenesisApp() {
             <small>STELLAR CIVILIZATION BOOTSTRAP CAMPAIGN</small>
           </div>
         </div>
-        <nav>
-          <a href="./atlas.html">ATLAS</a>
-          <a href="./prometheus.html">PROMETHEUS</a>
-          <a href="./progenitor.html">PROGENITOR</a>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="genesis" />
         <div className="cx-state">
           YEAR {c.years} · <b className={r.readiness.toLowerCase()}>{r.readiness}</b>
         </div>

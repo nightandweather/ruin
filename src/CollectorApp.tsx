@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { DEFAULT_COLLECTOR_DESIGN, type CollectorDesign } from "./collectorDesign";
 import { CollectorSimulation, type CollectorIncident } from "./collectorSimulation";
+import { ModuleBar } from "./ModuleBar";
 
 const incidents: Record<CollectorIncident, { code: string; title: string; detail: string }> = {
   "solar-flare": { code: "FLUX", title: "Solar flare", detail: "Articulate arrays" },
@@ -56,12 +57,7 @@ export function CollectorApp() {
             <small>PARAMETRIC STELLAR MACHINE</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./foundry.html">FOUNDRY</a>
-          <b>COLLECTOR</b>
-          <a href="./datacore.html">DATACORE</a>
-        </nav>
+        <ModuleBar current="collector" />
         <div className="collector-clock">
           <span>UNIT C-01 · τ{String(snapshot.tick).padStart(5, "0")}</span>
           <b className={snapshot.mode}>{status}</b>

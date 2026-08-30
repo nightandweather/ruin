@@ -7,6 +7,7 @@ import {
   type PrometheusIncident,
   type ReactorClass,
 } from "./prometheus";
+import { ModuleBar } from "./ModuleBar";
 const f = (v: number, d = 1) =>
   Number.isFinite(v) ? v.toLocaleString(undefined, { maximumFractionDigits: d }) : "∞";
 export function PrometheusApp() {
@@ -260,12 +261,7 @@ function Header({ code, name, sub, state }: { code: string; name: string; sub: s
           <small>{sub}</small>
         </div>
       </div>
-      <nav>
-        <a href="./ignis.html">IGNIS</a>
-        <a href="./corvus.html">CORVUS</a>
-        <a href="./genesis.html">GENESIS</a>
-        <a href="./sentinel.html">SENTINEL</a>
-      </nav>
+      <ModuleBar current="prometheus" />
       <div className="cx-state">
         DESIGN TWIN · <b className={state.toLowerCase()}>{state}</b>
       </div>

@@ -7,6 +7,7 @@ import {
   type ReplicationPolicy,
   type ReplicationSite,
 } from "./progenitor";
+import { ModuleBar } from "./ModuleBar";
 
 const sites: Record<ReplicationSite, [string, string]> = {
   lunar: ["LUNA", "VACUUM · REGOLITH"],
@@ -61,13 +62,7 @@ export function ProgenitorApp() {
             <small>GUIDED SELF-PRODUCTION CONTROL</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./foundry.html">FOUNDRY</a>
-          <a href="./collector.html">COLLECTOR</a>
-          <a href="./aegis.html">AEGIS</a>
-          <b>PROGENITOR</b>
-        </nav>
+        <ModuleBar current="progenitor" />
         <div className="pro-state">
           <span>P-0001 · M{String(snap.month).padStart(4, "0")}</span>
           <b className={snap.mode}>{snap.mode.toUpperCase()}</b>

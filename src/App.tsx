@@ -4,6 +4,7 @@ import { runFirstLight, type FirstLightReport } from "./firstLight";
 import { projectCivilization } from "./civilizationProjection";
 import { angularDistance, inspectSatellite } from "./satelliteInspection";
 import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
+import { ModuleBar } from "./ModuleBar";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
   "communications-blackout": { code: "COMMS", title: "Relay blackout", detail: "Isolate 30% of nodes" },
@@ -471,62 +472,7 @@ export function App() {
           <span>CONSENSUS CONTROL TIME</span>
           <strong>{formatElapsed(snapshot.elapsedSeconds)}</strong>
         </div>
-        <div className="module-links">
-          <a className="module-link" href="./horizons.html">
-            HORIZONS ↗
-          </a>
-          <a className="module-link" href="./foundry.html">
-            FOUNDRY ↗
-          </a>
-          <a className="module-link" href="./collector.html">
-            COLLECTOR ↗
-          </a>
-          <a className="module-link" href="./datacore.html">
-            DATACORE ↗
-          </a>
-          <a className="module-link" href="./agraria.html">
-            AGRARIA ↗
-          </a>
-          <a className="module-link" href="./aegis.html">
-            AEGIS ↗
-          </a>
-          <a className="module-link" href="./progenitor.html">
-            PROGENITOR ↗
-          </a>
-          <a className="module-link" href="./gravitas.html">
-            GRAVITAS ↗
-          </a>
-          <a className="module-link" href="./atlas.html">
-            ATLAS ↗
-          </a>
-          <a className="module-link" href="./navis.html">
-            NAVIS ↗
-          </a>
-          <a className="module-link" href="./ignis.html">
-            IGNIS ↗
-          </a>
-          <a className="module-link" href="./odyssey.html">
-            ODYSSEY ↗
-          </a>
-          <a className="module-link" href="./mender.html">
-            MENDER ↗
-          </a>
-          <a className="module-link" href="./corvus.html">
-            CORVUS ↗
-          </a>
-          <a className="module-link" href="./prometheus.html">
-            PROMETHEUS ↗
-          </a>
-          <a className="module-link" href="./genesis.html">
-            GENESIS ↗
-          </a>
-          <a className="module-link" href="./mnemosyne.html">
-            MNEMOSYNE ↗
-          </a>
-          <a className="module-link" href="./sentinel.html">
-            SENTINEL ↗
-          </a>
-        </div>
+        <ModuleBar current="helios" />
         <div className={`system-status ${status.tone}`}>
           <i />
           SYSTEM {status.label}

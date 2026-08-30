@@ -9,6 +9,7 @@ import {
   type CorvusIncident,
   type CorvusMission,
 } from "./corvus";
+import { ModuleBar } from "./ModuleBar";
 const fmt = (v: number, d = 1) =>
   Number.isFinite(v) ? v.toLocaleString(undefined, { maximumFractionDigits: d }) : "∞";
 export function CorvusApp() {
@@ -27,12 +28,7 @@ export function CorvusApp() {
             <small>AUTONOMOUS CIVILIAN SPACE-DRONE SWARM</small>
           </div>
         </div>
-        <nav>
-          <a href="./odyssey.html">ODYSSEY</a>
-          <a href="./mender.html">MENDER</a>
-          <b>CORVUS</b>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="corvus" />
         <div className="cv-state">
           <span>DESIGN TWIN · NON-FLIGHT SOFTWARE</span>
           <b className={result.readiness.toLowerCase()}>{result.readiness}</b>

@@ -6,6 +6,7 @@ import {
   type DatacoreIncident,
   type JobKind,
 } from "./datacore";
+import { ModuleBar } from "./ModuleBar";
 
 const incidentLabels: Record<DatacoreIncident, { code: string; title: string; detail: string }> = {
   "radiation-storm": { code: "RAD", title: "Particle storm", detail: "Scrub + quorum" },
@@ -55,13 +56,7 @@ export function DatacoreApp() {
             <small>ORBITAL VERIFIED COMPUTE</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./foundry.html">FOUNDRY</a>
-          <a href="./collector.html">COLLECTOR</a>
-          <b>DATACORE</b>
-          <a href="./agraria.html">AGRARIA</a>
-        </nav>
+        <ModuleBar current="datacore" />
         <div className="datacore-status">
           <span>NODE DC-01 · τ{String(snapshot.tick).padStart(5, "0")}</span>
           <b className={snapshot.mode}>{snapshot.mode.replace("-", " ").toUpperCase()}</b>

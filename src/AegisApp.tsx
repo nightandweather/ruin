@@ -6,6 +6,7 @@ import {
   type SuitIncident,
   type SuitMission,
 } from "./aegis";
+import { ModuleBar } from "./ModuleBar";
 
 const missionNames: Record<SuitMission, string> = {
   "orbital-service": "ORBITAL",
@@ -61,13 +62,7 @@ export function AegisApp() {
             <small>EXTRAVEHICULAR SYSTEM ARCHITECT</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./foundry.html">FOUNDRY</a>
-          <a href="./datacore.html">DATACORE</a>
-          <a href="./agraria.html">AGRARIA</a>
-          <b>AEGIS</b>
-        </nav>
+        <ModuleBar current="aegis" />
         <div className="ae-status">
           <span>SUIT AX-07 · τ{String(snap.tick).padStart(5, "0")}</span>
           <b className={snap.mode}>{snap.mode.toUpperCase()}</b>

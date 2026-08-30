@@ -9,6 +9,7 @@ import {
   type HorizonPolicy,
   type HorizonSystemId,
 } from "./horizons";
+import { ModuleBar } from "./ModuleBar";
 
 const fmt = (value: number, digits = 0) => value.toLocaleString(undefined, { maximumFractionDigits: digits });
 
@@ -34,12 +35,7 @@ export function HorizonsApp() {
             <small>POST-STELLAR CIVILIZATION OPERATING FIELD</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./genesis.html">GENESIS</a>
-          <a href="./mnemosyne.html">MNEMOSYNE</a>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="horizons" />
         <div className={`hz-state ${critical ? "critical" : ""}`}>
           C.E. {2321 + state.year} · <b>{status}</b>
         </div>

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AutonomousFoundrySimulation, type FoundryScenario } from "./foundry";
+import { ModuleBar } from "./ModuleBar";
 
 const scenarios: Record<FoundryScenario, { code: string; title: string; detail: string }> = {
   "dust-front": { code: "DUST", title: "Electrostatic dust", detail: "Derate excavation" },
@@ -48,12 +49,7 @@ export function FoundryApp() {
             <small>AUTONOMOUS LUNAR MANUFACTURING</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <b>FOUNDRY</b>
-          <a href="./collector.html">COLLECTOR</a>
-          <a href="./datacore.html">DATACORE</a>
-        </nav>
+        <ModuleBar current="foundry" />
         <div className="foundry-clock">
           <span>{formatTime(snapshot.elapsedMinutes)}</span>
           <b className={status.toLowerCase()}>{status}</b>

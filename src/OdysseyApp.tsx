@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { CARTESIAN_STARS } from "./stellarAtlas";
 import { evaluateVoyage, odysseyConfig, type OdysseyConfig, type RelayTopology } from "./odyssey";
+import { ModuleBar } from "./ModuleBar";
 const fmt = (v: number, d = 2) =>
   Number.isFinite(v) ? v.toLocaleString(undefined, { maximumFractionDigits: d }) : "∞";
 const targets = CARTESIAN_STARS.filter((s) => s.id !== "sol" && s.distanceLy < 20).sort(
@@ -29,13 +30,7 @@ export function OdysseyApp() {
             <small>INTERSTELLAR NAVIGATION + ENERGY RELAY</small>
           </div>
         </div>
-        <nav>
-          <a href="./atlas.html">ATLAS</a>
-          <a href="./navis.html">NAVIS</a>
-          <a href="./ignis.html">IGNIS</a>
-          <b>ODYSSEY</b>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="odyssey" />
         <div className="od-state">
           <span>DESIGN TWIN · NON-FLIGHT SOFTWARE</span>
           <b className={result.status.toLowerCase()}>{result.status}</b>

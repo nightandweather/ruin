@@ -40,9 +40,13 @@ npm run dev
 Before opening a pull request:
 
 ```bash
+npm run format:check
 npm test
 npm run build
 ```
+
+`npm run format` rewrites the tree with Prettier. CI rejects unformatted code, so
+that every diff stays readable.
 
 ## Project shape
 
@@ -64,7 +68,10 @@ concepts/example.md
 example.html
 ```
 
-Add the HTML entry point to `vite.config.ts`. Prefer a small engine with explicit state over a large UI component containing hidden simulation logic.
+Register the module in `src/modules.ts`. That one entry drives both the Vite build
+inputs and the module bar on every page, so navigation and the bundler stay in sync
+without further edits. Prefer a small engine with explicit state over a large UI
+component containing hidden simulation logic.
 
 ## Modeling rules
 

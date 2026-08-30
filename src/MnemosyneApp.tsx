@@ -6,6 +6,7 @@ import {
   type MnemosyneConfig,
   type MnemosyneIncident,
 } from "./mnemosyne";
+import { ModuleBar } from "./ModuleBar";
 const f = (v: number, d = 1) => v.toLocaleString(undefined, { maximumFractionDigits: d });
 export function MnemosyneApp() {
   const [c, setC] = useState<MnemosyneConfig>(() => mnemosyneConfig()),
@@ -21,12 +22,7 @@ export function MnemosyneApp() {
             <small>NEURAL IDENTITY EVIDENCE LABORATORY</small>
           </div>
         </div>
-        <nav>
-          <a href="./datacore.html">DATACORE</a>
-          <a href="./genesis.html">GENESIS</a>
-          <b>MNEMOSYNE</b>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="mnemosyne" />
         <div className="mn-state">
           NO CLAIM OF CONSCIOUSNESS TRANSFER · <b className={r.readiness.toLowerCase()}>{r.readiness}</b>
         </div>

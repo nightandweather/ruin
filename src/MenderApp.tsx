@@ -8,6 +8,7 @@ import {
   type MenderFrame,
   type RepairTask,
 } from "./mender";
+import { ModuleBar } from "./ModuleBar";
 const frames: Record<MenderFrame, [string, string]> = {
   "free-flyer": ["FREE-FLYER", "ORBITAL APPROACH"],
   "rail-walker": ["RAIL WALKER", "HULL-ANCHORED"],
@@ -32,13 +33,7 @@ export function MenderApp() {
             <small>ROBOTIC REPAIR ARCHITECT</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./progenitor.html">PROGENITOR</a>
-          <a href="./navis.html">NAVIS</a>
-          <b>MENDER</b>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="mender" />
         <div className="md-state">
           <span>ISAM MAINTENANCE TWIN</span>
           <b className={result.readiness.toLowerCase()}>{result.readiness}</b>

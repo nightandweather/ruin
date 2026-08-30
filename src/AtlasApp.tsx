@@ -7,6 +7,7 @@ import {
   type StarKind,
 } from "./stellarAtlas";
 import { rankStarSystems } from "./starSurvey";
+import { ModuleBar } from "./ModuleBar";
 
 type AtlasFilter = StarKind | "all";
 const radii = [10, 20, 50] as const;
@@ -80,12 +81,7 @@ export function AtlasApp() {
             <small>LOCAL STELLAR OPERATIONS MAP</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./gravitas.html">GRAVITAS</a>
-          <b>ATLAS</b>
-          <a href="./navis.html">NAVIS</a>
-        </nav>
+        <ModuleBar current="atlas" />
         <div className="at-status">
           <span>ICRS · EPOCH CATALOG SNAPSHOT</span>
           <b>30 VERIFIED OBJECTS</b>

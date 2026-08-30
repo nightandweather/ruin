@@ -7,6 +7,7 @@ import {
   type GravitasIncident,
   type GravityArchitecture,
 } from "./gravitas";
+import { ModuleBar } from "./ModuleBar";
 
 const architectures: Record<GravityArchitecture, [string, string]> = {
   ring: ["RING", "CONTINUOUS HABITAT"],
@@ -62,12 +63,7 @@ export function GravitasApp() {
             <small>ARTIFICIAL GRAVITY ARCHITECT</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./aegis.html">AEGIS</a>
-          <a href="./progenitor.html">PROGENITOR</a>
-          <b>GRAVITAS</b>
-        </nav>
+        <ModuleBar current="gravitas" />
         <div className="gr-state">
           <span>AG-01 · τ{String(snap.tick).padStart(5, "0")}</span>
           <b className={snap.mode}>{snap.mode.toUpperCase()}</b>

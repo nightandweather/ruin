@@ -8,6 +8,7 @@ import {
   type NavisConfig,
   type PropulsionId,
 } from "./navis";
+import { ModuleBar } from "./ModuleBar";
 
 const missionLabels: Record<MissionId, [string, string]> = {
   "orbital-tug": ["TUG", "CISLUNAR SERVICE"],
@@ -51,14 +52,7 @@ export function NavisApp() {
             <small>SPACECRAFT SYSTEM ARCHITECT</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./atlas.html">ATLAS</a>
-          <b>NAVIS</b>
-          <a href="./ignis.html">IGNIS</a>
-          <a href="./odyssey.html">ODYSSEY</a>
-          <a href="./mender.html">MENDER</a>
-        </nav>
+        <ModuleBar current="navis" />
         <div className="nv-state">
           <span>DESIGN TWIN · NON-FLIGHT SOFTWARE</span>
           <b className={result.readiness.toLowerCase()}>{result.readiness}</b>

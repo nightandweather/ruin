@@ -7,6 +7,7 @@ import {
   type FailureSeverity,
   type RuinSystem,
 } from "./sentinel";
+import { ModuleBar } from "./ModuleBar";
 const systems = Object.keys(SYSTEM_META) as RuinSystem[];
 const severities: FailureSeverity[] = ["minor", "major", "critical"];
 export function SentinelApp() {
@@ -30,14 +31,7 @@ export function SentinelApp() {
             <small>SYSTEM-WIDE FAULT RESPONSE</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./navis.html">NAVIS</a>
-          <a href="./ignis.html">IGNIS</a>
-          <a href="./odyssey.html">ODYSSEY</a>
-          <a href="./mender.html">MENDER</a>
-          <b>SENTINEL</b>
-        </nav>
+        <ModuleBar current="sentinel" />
         <div className="sn-state">
           <span>
             {FAILURE_PLANS.length} PLANS · {systems.length} SYSTEMS

@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ENGINES, engineConfig, evaluateEngine, type EngineId, type IgnisConfig } from "./ignis";
+import { ModuleBar } from "./ModuleBar";
 
 const engineIds = Object.keys(ENGINES) as EngineId[];
 const format = (value: number, digits = 2) =>
@@ -31,13 +32,7 @@ export function IgnisApp() {
             <small>PROPULSION ENGINE LABORATORY</small>
           </div>
         </div>
-        <nav>
-          <a href="./">HELIOS</a>
-          <a href="./navis.html">NAVIS</a>
-          <b>IGNIS</b>
-          <a href="./odyssey.html">ODYSSEY</a>
-          <a href="./sentinel.html">SENTINEL</a>
-        </nav>
+        <ModuleBar current="ignis" />
         <div className="ig-state">
           <span>DESIGN MODEL · NON-FLIGHT SOFTWARE</span>
           <b className={result.readiness.toLowerCase()}>{result.readiness}</b>

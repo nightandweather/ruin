@@ -76,21 +76,28 @@ footer {
   text-align: center;
   gap: 4px;
 }
-.module-links {
-  display: flex;
+.module-bar {
   gap: 2px;
+  flex: 1 1 auto;
 }
-.module-link {
+.module-bar > a,
+.module-bar > b {
   color: #8e9a9d;
   border: 1px solid #30373e;
-  padding: 7px 3px;
+  padding: 7px 6px;
   text-decoration: none;
   font:
-    500 5px DM Mono,
+    500 8px DM Mono,
     monospace;
-  letter-spacing: 0;
+  letter-spacing: 0.04em;
 }
-.module-link:hover {
+.module-bar > b {
+  color: #ffb456;
+  border-color: #72502b;
+  background: #1a140b;
+}
+.module-bar > a:hover,
+.module-bar > a:focus-visible {
   color: #ffb456;
   border-color: #72502b;
 }
@@ -848,16 +855,18 @@ footer {
 .mission-clock strong {
   color: #d0cec4;
 }
-.module-links {
+.module-bar {
   max-width: 610px;
-  overflow: hidden;
   border: solid #262b27;
   border-width: 0 1px;
 }
-.module-link {
+.module-bar > a,
+.module-bar > b {
   border: 0;
   border-right: 1px solid #252a26;
   padding: 6px 5px;
+}
+.module-bar > a {
   color: #6e746e;
 }
 .system-status {
