@@ -12,6 +12,12 @@ export interface DatacoreConfig {
   sourceCollectors: number;
   verificationReplicas: 1 | 2 | 3;
   opticalLinkMbps: number;
+  /**
+   * Power granted by the civilization state bus, MW. When present it
+   * replaces the standalone C-01 contract, so a grid settlement — not a
+   * local constant — decides how many tiles may light.
+   */
+  allocatedPowerMW?: number;
 }
 
 export interface ComputeJob {
@@ -200,8 +206,8 @@ export class OrbitalDatacoreSimulation {
   }
 
   private computeState() {
-    const availablePowerMW =
-      this.config.sourceCollectors * C01_DELIVERY_MW * (this.has("collector-curtailment") ? 0.32 : 1);
+    const contractedMW = this.config.allocatedPowerMW ?? this.config.sourceCollectors * C01_DELIVERY_MW;
+    const availablePowerMW = contractedMW * (this.has("collector-curtailment") ? 0.32 : 1);
     const radiatorArea = this.config.radiatorAreaM2 * (this.has("coolant-loop-loss") ? 0.5 : 1);
     const maxThermalPowerMW = (EMISSIVITY * SIGMA * radiatorArea * MAX_COOLANT_K ** 4) / 1e6;
     const facilityPowerPerTileMW = (this.config.tilePowerKw * 1.24) / 1000;

@@ -22,7 +22,7 @@ Definition of done:
 
 Create a versioned scenario file and shared tick contract. Existing engines remain independently testable, but a campaign runner can exchange power, material, food, compute, crew exposure, and repair orders.
 
-Foundation delivered: the FIRST LIGHT commissioned HELIOS scenario now provides a fixed action ledger, control-tick checkpoints, executable invariants, and replay-hash verification — and the incident-cassette format (`ruin-cassette/1`, `src/cassette.ts`) now makes any HELIOS session an exportable, hand-editable, deterministic replay. The [civilization state bus concept](concepts/civilization-state-bus.md) specifies the versioned `ruin-state/1` document, ledger adapters, and conservation invariants; the first slice is HELIOS ↔ DATACORE over the power ledger alone. Cross-module adapters remain open.
+Foundation delivered: the FIRST LIGHT commissioned HELIOS scenario now provides a fixed action ledger, control-tick checkpoints, executable invariants, and replay-hash verification — and the incident-cassette format (`ruin-cassette/1`, `src/cassette.ts`) now makes any HELIOS session an exportable, hand-editable, deterministic replay. The [civilization state bus](concepts/civilization-state-bus.md) now has its first executable slice: the `ruin-state/1` document with a settling, conservation-checked power ledger (`src/civilizationState.ts`), HELIOS and DATACORE adapters, and a cassette-driven campaign runner (`src/powerCampaign.ts`) under which a relay blackout demonstrably load-sheds compute. Further ledgers (material, crew dose, debris, authority, archive) and adapters remain open.
 
 First executable question: **can one local failure become a legible cross-system shortage without creating an untestable monolith?**
 

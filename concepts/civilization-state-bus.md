@@ -37,6 +37,8 @@ Modules never call each other. Each exposes `importLedgers(state)` / `exportLedg
 3. **Bounded queues.** Order and event ledgers carry explicit caps; overflow is a visible failure, not silent truncation.
 4. **Schema versioning.** `ruin-state/1` documents remain replayable forever; migrations are explicit and tested.
 
-## First slice
+## First slice — implemented
 
-HELIOS ↔ DATACORE over the power ledger only: HELIOS exports delivered GW, DATACORE imports it as its admission budget, and one cassette demonstrates a blackout propagating into rejected compute workloads. Two adapters, one runner, one test.
+HELIOS ↔ DATACORE over the power ledger only, in `src/civilizationState.ts` (document, validation, conservation, settlement) and `src/powerCampaign.ts` (both adapters plus the campaign runner). HELIOS posts its safe generating capability — `potentialGW`, not the demand-tracking `deliveredGW`, which would hide every surplus — and the civilization's survival demand; DATACORE posts its facility draw; settlement serves survival load first and hands DATACORE the residual, which reaches the engine as `allocatedPowerMW`.
+
+`tests/civilizationState.test.ts` proves the slice: settlement conserves power and rejects forged documents, the pipeline is deterministic end to end, a quiet grid grants DATACORE its full draw, and a relay-blackout-plus-demand-spike cassette arrives at DATACORE as `power-cap` mode with fewer lit tiles and less verified compute — a computed consequence, not a narrated one.
