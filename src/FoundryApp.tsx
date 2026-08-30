@@ -40,7 +40,7 @@ export function FoundryApp() {
     <main className="foundry-shell">
       <header className="foundry-topbar">
         <div className="foundry-brand"><span>R//F</span><div><strong>RUIN // FOUNDRY</strong><small>AUTONOMOUS LUNAR MANUFACTURING</small></div></div>
-        <nav><a href="/">HELIOS</a><b>FOUNDRY</b></nav>
+        <nav><a href="/">HELIOS</a><b>FOUNDRY</b><a href="/collector.html">COLLECTOR</a></nav>
         <div className="foundry-clock"><span>{formatTime(snapshot.elapsedMinutes)}</span><b className={status.toLowerCase()}>{status}</b></div>
       </header>
 

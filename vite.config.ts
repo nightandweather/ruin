@@ -8,6 +8,7 @@ export default defineConfig({
       input: {
         helios: "index.html",
         foundry: "foundry.html",
+        collector: "collector.html",
       },
     },
   },
