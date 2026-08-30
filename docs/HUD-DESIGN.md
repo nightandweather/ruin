@@ -40,6 +40,13 @@ These figures are scenario outputs, not demographic forecasts. Their purpose is 
 - Red is never used for branding or decoration.
 - FIRST LIGHT remains the primary commissioned scenario and evidence surface.
 - Every projected consequence must trace back to visible current state rather than an arbitrary score.
+- The orbital map supports direct collector selection, while the three named civilization sites provide keyboard-accessible inspection entry points.
+- A selected collector remains bound to live control ticks. Its local record exposes health, link and thermal margins, power, nearby mode composition, active hazards, and the controller's recommended action.
+- Selecting an authenticated neighbor moves the inspection context through the mesh; closing the record returns to the unchanged civilization-scale view.
+
+### Local-system inspection
+
+![Collector and authenticated-neighbor inspection](assets/ruin-satellite-inspection.png)
 
 ## Reference states
 

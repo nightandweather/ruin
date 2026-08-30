@@ -23,6 +23,10 @@ RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first 
 
 The main situation room follows a deliberately restrained visual language: **NASA mission control × nuclear-submarine CIC × a forgotten civilization's oracle machine**. The star system dominates the screen; civilization vitals and event provenance sit at its edges; and a causal horizon shows how present power and communication failures can change population and institutional trust over 1, 10, and 50 years. Teal is reserved for verified state, amber for uncertainty, and red for irreversible outcomes. See the [HUD art direction and signal semantics](docs/HUD-DESIGN.md).
 
+The orbital map is inspectable rather than decorative. Click a sampled collector or one of the labeled civilization sites to open its live local-system record: control mode, health, link and thermal margins, delivered power, nearby operating-state composition, six authenticated neighbors, active system hazards, and the current autonomy recommendation. Neighbor controls move through the mesh without leaving the situation room.
+
+[![Live collector and neighborhood inspection](docs/assets/ruin-satellite-inspection.png)](https://nightandweather.github.io/ruin/)
+
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
 The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [engineering notes](docs/ENGINEERING-NOTES.md) separate grounded kernels, scenario assumptions, and next validation work for every executable module.

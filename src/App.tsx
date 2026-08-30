@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_CONFIG, DysonSwarmSimulation } from "./simulation";
 import { runFirstLight, type FirstLightReport } from "./firstLight";
 import { projectCivilization } from "./civilizationProjection";
+import { angularDistance, inspectSatellite } from "./satelliteInspection";
 import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
@@ -18,7 +19,14 @@ const formatElapsed = (seconds: number) => {
   return `T+${String(hours).padStart(3, "0")}:${String(minutes).padStart(2, "0")}`;
 };
 
-function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Satellite[]; tick: number; debrisBearing?: number }) {
+function screenPosition(satellite: Satellite, tick: number, width: number, height: number) {
+  const maxRadius = Math.min(width, height) * 0.45;
+  const radius = maxRadius * (0.42 + satellite.band * 0.075);
+  const angle = satellite.phase + tick * (0.0005 + satellite.band * 0.00003);
+  return { x: width / 2 + Math.cos(angle) * radius, y: height / 2 + Math.sin(angle) * radius * 0.58 };
+}
+
+function SwarmMap({ satellites, tick, debrisBearing, selectedId, onSelect, onClear }: { satellites: readonly Satellite[]; tick: number; debrisBearing?: number; selectedId: number | null; onSelect:(id:number)=>void; onClear:()=>void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -113,10 +121,7 @@ function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Sa
     const sampleStep = Math.max(1, Math.floor(satellites.length / 1600));
     for (let index = 0; index < satellites.length; index += sampleStep) {
       const satellite = satellites[index];
-      const radius = maxRadius * (0.42 + satellite.band * 0.075);
-      const angle = satellite.phase + tick * (0.0005 + satellite.band * 0.00003);
-      const x = cx + Math.cos(angle) * radius;
-      const y = cy + Math.sin(angle) * radius * 0.58;
+      const { x, y } = screenPosition(satellite, tick, width, height);
       const color =
         satellite.mode === "offline"
           ? "#ff4f68"
@@ -132,9 +137,58 @@ function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Sa
       context.fillRect(x, y, 1.4, 1.4);
     }
     context.globalAlpha = 1;
-  }, [satellites, tick, debrisBearing]);
 
-  return <canvas ref={canvasRef} className="swarm-canvas" aria-label="Orbital map of sampled swarm collectors" />;
+    const selected = selectedId === null ? undefined : satellites[selectedId];
+    if (selected) {
+      const selectedPosition = screenPosition(selected, tick, width, height);
+      const neighbors = satellites
+        .filter((candidate) => candidate.id !== selected.id && candidate.band === selected.band)
+        .sort((left, right) => angularDistance(left.phase, selected.phase) - angularDistance(right.phase, selected.phase))
+        .slice(0, 6);
+      context.save();
+      context.strokeStyle = "rgba(216, 164, 94, .38)";
+      context.lineWidth = 0.8;
+      for (const neighbor of neighbors) {
+        const neighborPosition = screenPosition(neighbor, tick, width, height);
+        context.beginPath();
+        context.moveTo(selectedPosition.x, selectedPosition.y);
+        context.lineTo(neighborPosition.x, neighborPosition.y);
+        context.stroke();
+      }
+      context.strokeStyle = "#d8a45e";
+      context.lineWidth = 1;
+      context.beginPath();
+      context.arc(selectedPosition.x, selectedPosition.y, 9, 0, Math.PI * 2);
+      context.stroke();
+      context.beginPath();
+      context.arc(selectedPosition.x, selectedPosition.y, 14, 0, Math.PI * 2);
+      context.setLineDash([2, 4]);
+      context.stroke();
+      context.restore();
+    }
+  }, [satellites, tick, debrisBearing, selectedId]);
+
+  const selectAt = (clientX: number, clientY: number) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const bounds = canvas.getBoundingClientRect();
+    const x = clientX - bounds.left;
+    const y = clientY - bounds.top;
+    const sampleStep = Math.max(1, Math.floor(satellites.length / 1600));
+    let nearestId: number | null = null;
+    let nearestDistance = 15 ** 2;
+    for (let index = 0; index < satellites.length; index += sampleStep) {
+      const position = screenPosition(satellites[index], tick, bounds.width, bounds.height);
+      const distance = (position.x - x) ** 2 + (position.y - y) ** 2;
+      if (distance < nearestDistance) {
+        nearestId = satellites[index].id;
+        nearestDistance = distance;
+      }
+    }
+    if (nearestId === null) onClear(); else onSelect(nearestId);
+  };
+
+  return <canvas ref={canvasRef} className="swarm-canvas" aria-label="Interactive orbital map of sampled swarm collectors" onClick={(event)=>selectAt(event.clientX,event.clientY)} />;
 }
 
 function Metric({ label, value, unit, tone = "plain" }: { label: string; value: string | number; unit?: string; tone?: string }) {
@@ -161,6 +215,35 @@ function CausalHorizon({ snapshot }: { snapshot: SimulationSnapshot }) {
   </section>;
 }
 
+type SatelliteInspection = NonNullable<ReturnType<typeof inspectSatellite>>;
+
+function SatelliteInspector({ inspection, onClose, onSelect }: { inspection: SatelliteInspection; onClose:()=>void; onSelect:(id:number)=>void }) {
+  const { satellite } = inspection;
+  const panelRef = useRef<HTMLElement>(null);
+  useEffect(() => { if (panelRef.current) panelRef.current.scrollTop = 0; }, [satellite.id]);
+  const localTotal = Math.max(1, inspection.localNodes.length);
+  const localModes = (["nominal", "curtailed", "isolated", "thermal", "offline"] as const)
+    .filter((mode) => inspection.localCounts[mode] > 0);
+  return <aside ref={panelRef} className={`satellite-inspector ${satellite.mode}`} aria-label={`Collector ${satellite.id} local inspection`}>
+    <header><div><span>LOCAL SYSTEM INSPECTION</span><b>COLLECTOR {String(satellite.id).padStart(5,"0")}</b></div><button aria-label="Close collector inspection" onClick={onClose}>×</button></header>
+    <div className="inspection-status"><i /><span>CONTROL MODE</span><b>{satellite.mode.toUpperCase()}</b><small>BAND {String(satellite.band + 1).padStart(2,"0")} · BEARING {inspection.bearingDegrees.toFixed(1)}°</small></div>
+    <div className="inspection-metrics">
+      <span>HEALTH MARGIN</span><b>{inspection.healthMarginPercent.toFixed(1)}%</b>
+      <span>LINK QUALITY</span><b>{(satellite.linkQuality * 100).toFixed(1)}%</b>
+      <span>NEIGHBOR MESH</span><b>{(inspection.meanNeighborLink * 100).toFixed(1)}%</b>
+      <span>THERMAL MARGIN</span><b className={inspection.thermalMarginK < 12 ? "warning" : ""}>{inspection.thermalMarginK.toFixed(1)} K</b>
+      <span>DELIVERED POWER</span><b>{satellite.deliveredMW.toFixed(3)} MW</b>
+      <span>POWER RESERVE</span><b>{inspection.powerMarginMW.toFixed(3)} MW</b>
+      <span>ONE-WAY DELAY</span><b>{inspection.oneWayDelaySeconds.toFixed(1)} s</b>
+      <span>LOCAL POPULATION</span><b>{inspection.localNodes.length} NODES</b>
+    </div>
+    <section className="local-composition"><span>LOCAL OPERATING FIELD</span>{localModes.map((mode)=><div key={mode}><label>{mode.toUpperCase()} <b>{inspection.localCounts[mode]}</b></label><i><em className={mode} style={{width:`${inspection.localCounts[mode] / localTotal * 100}%`}} /></i></div>)}</section>
+    <section className="neighbor-list"><span>AUTHENTICATED NEIGHBORS</span><div>{inspection.neighbors.map((neighbor)=><button key={neighbor.id} onClick={()=>onSelect(neighbor.id)}><i className={neighbor.mode}/><b>{String(neighbor.id).padStart(5,"0")}</b><small>{(neighbor.linkQuality*100).toFixed(0)}% LINK</small></button>)}</div></section>
+    <section className="hazard-list"><span>ACTIVE SYSTEM HAZARDS</span><div>{inspection.activeHazards.length===0?<b>NOMINAL ENVELOPE</b>:inspection.activeHazards.map((hazard)=><b key={hazard}>{hazard.replaceAll("-"," ").toUpperCase()}</b>)}</div></section>
+    <footer><span>AUTONOMY RECOMMENDATION</span><p>{inspection.recommendation}</p><small>SELECTION REMAINS LIVE · TELEMETRY FOLLOWS CONTROL TICKS</small></footer>
+  </aside>;
+}
+
 export function App() {
   const [simulation, setSimulation] = useState(() => new DysonSwarmSimulation());
   const [snapshot, setSnapshot] = useState(() => simulation.snapshot());
@@ -168,6 +251,7 @@ export function App() {
   const [speed, setSpeed] = useState(5);
   const [debrisBearing, setDebrisBearing] = useState(315);
   const [campaign, setCampaign] = useState<FirstLightReport | null>(null);
+  const [selectedSatelliteId, setSelectedSatelliteId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -181,6 +265,7 @@ export function App() {
     return { label: "NOMINAL", tone: "nominal" };
   }, [snapshot]);
   const civilization = useMemo(() => projectCivilization(snapshot), [snapshot]);
+  const inspection = useMemo(() => selectedSatelliteId === null ? null : inspectSatellite(snapshot, selectedSatelliteId), [snapshot, selectedSatelliteId]);
 
   const inject = (type: ScenarioType) =>
     setSnapshot(simulation.inject(type, type === "debris-corridor" ? { bearingDeg: debrisBearing } : {}));
@@ -191,8 +276,9 @@ export function App() {
     setSnapshot(next.snapshot());
     setRunning(true);
     setCampaign(null);
+    setSelectedSatelliteId(null);
   };
-  const runCampaign = () => { const report=runFirstLight(); setRunning(false); setSnapshot(report.finalSnapshot); setCampaign(report); };
+  const runCampaign = () => { const report=runFirstLight(); setRunning(false); setSnapshot(report.finalSnapshot); setSelectedSatelliteId(null); setCampaign(report); };
   const exportSnapshot = () => {
     const safeSnapshot = { ...snapshot, satellites: snapshot.satellites.map(({ id, band, health, temperatureK, mode }) => ({ id, band, health, temperatureK, mode })) };
     const blob = new Blob([JSON.stringify(safeSnapshot, null, 2)], { type: "application/json" });
@@ -244,17 +330,21 @@ export function App() {
         </aside>
 
         <section className="center-stack">
-          <div className="map-panel panel">
+          <div className={`map-panel panel ${inspection ? "inspecting" : ""}`}>
             <div className="panel-label">CIVILIZATION NETWORK // INNER SYSTEM // 0.40 AU</div>
             <SwarmMap
               satellites={snapshot.satellites}
               tick={snapshot.tick}
               debrisBearing={snapshot.activeScenarios.find((scenario) => scenario.type === "debris-corridor")?.bearingDeg}
+              selectedId={selectedSatelliteId}
+              onSelect={setSelectedSatelliteId}
+              onClear={()=>setSelectedSatelliteId(null)}
             />
             {campaign && <FirstLightEvidence report={campaign} close={()=>setCampaign(null)} />}
-            <div className="map-node node-a"><i />L5 RELAY NEXUS<small>Δ 2.1 s</small></div>
-            <div className="map-node node-b"><i />INNER COLONIES<small>61 HABITATS</small></div>
-            <div className="map-node node-c"><i />OUTER SETTLEMENTS<small>Δ 199.6 s</small></div>
+            {inspection && <SatelliteInspector inspection={inspection} onClose={()=>setSelectedSatelliteId(null)} onSelect={setSelectedSatelliteId} />}
+            <button className="map-node node-a" onClick={()=>setSelectedSatelliteId(410)}><i />L5 RELAY NEXUS<small>Δ 2.1 s · INSPECT</small></button>
+            <button className="map-node node-b" onClick={()=>setSelectedSatelliteId(2681)}><i />INNER COLONIES<small>61 HABITATS · INSPECT</small></button>
+            <button className="map-node node-c" onClick={()=>setSelectedSatelliteId(7940)}><i />OUTER SETTLEMENTS<small>Δ 199.6 s · INSPECT</small></button>
             <div className="signal-key"><span>SIGNAL DELAY</span><i className="instant" />0–5 s<i className="delayed" />30–200 s<i className="lost" />PARTITION</div>
             <div className="map-readout left">CIVILIZATION NODES<br /><strong>18,732</strong></div>
             <div className="map-readout right">ORBITAL ASSETS<br /><strong>14,398</strong></div>
