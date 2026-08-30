@@ -52,7 +52,9 @@ that every diff stays readable.
 
 - `src/*.ts` contains deterministic simulation engines with no browser dependency.
 - `src/*App.tsx` and `src/*.css` contain the operator interfaces.
-- `tests/` asserts system behavior and safety invariants.
+- `tests/*.test.ts` asserts engine behavior and safety invariants in node;
+  `tests/*.test.tsx` renders the operator interfaces in jsdom (start the file
+  with a `// @vitest-environment jsdom` comment).
 - `concepts/` separates sourced assumptions from proposed software behavior.
 - `ROADMAP.md` explains current priorities and dependency order.
 
