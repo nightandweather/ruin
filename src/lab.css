@@ -1,0 +1,329 @@
+/*
+ * Shared chassis for the operations laboratories (HYGEIA, KESSLER, THEMIS,
+ * RELIQUARY), following the precedent of civilization.css, which GENESIS and
+ * PROMETHEUS already share. Each module keeps its identity by setting the
+ * --lb-* palette on its own <main> class; everything structural lives here.
+ */
+
+:root {
+  color: #dfe4e2;
+  background: #070909;
+  font-family: Manrope, sans-serif;
+}
+body {
+  margin: 0;
+  min-width: 1180px;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--lb-ground, #070909);
+}
+button,
+input {
+  font: inherit;
+}
+
+.lb-shell {
+  --lb-accent: #9fd8c8;
+  --lb-accent-strong: #c6f3e4;
+  --lb-danger: #ff6b7c;
+  --lb-border: #37413e;
+  --lb-panel: #0d100fee;
+  --lb-ink: #93a19b;
+  --lb-ink-dim: #6c7a74;
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 66px minmax(0, 1fr);
+}
+.lb-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--lb-border);
+  background: #08090988;
+}
+.lb-brand {
+  min-width: 340px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.lb-brand > span {
+  width: 44px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--lb-accent);
+  color: var(--lb-accent-strong);
+  font: 500 8px DM Mono;
+}
+.lb-brand div {
+  display: grid;
+}
+.lb-brand strong {
+  font-size: 15px;
+  letter-spacing: 0.17em;
+}
+.lb-brand small,
+.lb-state {
+  color: var(--lb-ink-dim);
+  font: 400 7px DM Mono;
+}
+.lb-state {
+  min-width: 300px;
+  text-align: right;
+}
+.lb-state b {
+  display: block;
+  font: 500 12px DM Mono;
+  color: var(--lb-accent);
+}
+.lb-state b.conditional {
+  color: #edb45f;
+}
+.lb-state b.no-go {
+  color: var(--lb-danger);
+}
+.lb-layout {
+  min-height: 0;
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: 275px minmax(0, 1fr) 315px;
+  grid-template-rows: minmax(0, 1fr) 190px;
+  gap: 10px;
+}
+.lb-panel {
+  border: 1px solid var(--lb-border);
+  background: var(--lb-panel);
+  min-height: 0;
+}
+.lb-config {
+  grid-row: 1 / 3;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+}
+.lb-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lb-ink);
+  font: 500 7px DM Mono;
+  letter-spacing: 0.12em;
+}
+.lb-title span {
+  color: var(--lb-accent);
+}
+.lb-title:after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: var(--lb-border);
+}
+.lb-options {
+  display: grid;
+  gap: 4px;
+}
+.lb-options button {
+  padding: 8px 10px;
+  text-align: left;
+  border: 1px solid var(--lb-border);
+  background: #14171644;
+  color: var(--lb-ink);
+}
+.lb-options button b {
+  display: block;
+  font: 500 7px DM Mono;
+}
+.lb-options button small {
+  color: var(--lb-ink-dim);
+  font: 400 5.5px DM Mono;
+}
+.lb-options button.active {
+  border-color: var(--lb-accent);
+  background: #1a221f88;
+  color: var(--lb-accent-strong);
+}
+.lb-range {
+  display: grid;
+  gap: 5px;
+}
+.lb-range > span {
+  display: flex;
+  justify-content: space-between;
+  color: var(--lb-ink-dim);
+  font: 400 6px DM Mono;
+}
+.lb-range b {
+  color: var(--lb-accent);
+  font-weight: 400;
+}
+.lb-range input {
+  width: 100%;
+  accent-color: var(--lb-accent);
+}
+.lb-stage {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+.lb-stage svg {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+}
+.lb-stagefoot {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  border: 1px solid var(--lb-border);
+}
+.lb-output {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  overflow: auto;
+}
+.lb-verdict {
+  padding: 10px;
+  border: 1px solid var(--lb-accent);
+  background: #0f1a1688;
+  display: grid;
+  gap: 2px;
+}
+.lb-verdict span,
+.lb-verdict small {
+  color: var(--lb-ink-dim);
+  font: 400 5.5px DM Mono;
+}
+.lb-verdict b {
+  color: var(--lb-accent-strong);
+  font: 500 17px DM Mono;
+}
+.lb-verdict.conditional {
+  border-color: #7e633b;
+  background: #241b1088;
+}
+.lb-verdict.conditional b {
+  color: #efb35c;
+}
+.lb-verdict.no-go {
+  border-color: #803d49;
+  background: #26121788;
+}
+.lb-verdict.no-go b {
+  color: var(--lb-danger);
+}
+.lb-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--lb-border);
+}
+.lb-metric {
+  padding: 8px;
+  display: grid;
+  gap: 3px;
+  border-right: 1px solid var(--lb-border);
+  border-bottom: 1px solid var(--lb-border);
+}
+.lb-metric:nth-child(even) {
+  border-right: 0;
+}
+.lb-metric span {
+  color: var(--lb-ink-dim);
+  font: 400 5px DM Mono;
+}
+.lb-metric b {
+  font: 400 10.5px DM Mono;
+  color: #dfe4e2;
+}
+.lb-metric b small {
+  margin-left: 3px;
+  color: var(--lb-ink-dim);
+  font-size: 5.5px;
+}
+.lb-metric.accent b {
+  color: var(--lb-accent);
+}
+.lb-metric.warning b {
+  color: var(--lb-danger);
+}
+.lb-bottom {
+  grid-column: 2 / 4;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 15px;
+  overflow: hidden;
+}
+.lb-bottom > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+  overflow: auto;
+}
+.lb-register p {
+  margin: 0;
+  padding: 5px 7px;
+  border-left: 2px solid var(--lb-danger);
+  background: #1c121466;
+  color: #b39a9e;
+  font: 400 6px DM Mono;
+}
+.lb-register p.clear {
+  border-color: var(--lb-accent);
+  background: #10201b66;
+  color: var(--lb-ink);
+}
+.lb-invariant {
+  margin: 0;
+  padding: 6px 8px;
+  border: 1px dashed var(--lb-border);
+  color: var(--lb-ink-dim);
+  font: 400 5.5px/1.7 DM Mono;
+}
+.lb-invariant b {
+  color: var(--lb-accent);
+}
+.lb-basis {
+  margin-top: auto;
+  color: var(--lb-ink-dim);
+  font: 500 5px DM Mono;
+  letter-spacing: 0.08em;
+}
+
+/* — module palettes — */
+.hygeia {
+  --lb-accent: #7fd8e8;
+  --lb-accent-strong: #c2eff7;
+  --lb-border: #2c4a52;
+  --lb-panel: #0a1214ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #10262c, #081114 55%, #050a0c);
+}
+.kessler {
+  --lb-accent: #ff9a6b;
+  --lb-accent-strong: #ffc9ae;
+  --lb-border: #55352b;
+  --lb-panel: #140d0aee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #2c1810, #140b08 55%, #0a0605);
+}
+.themis {
+  --lb-accent: #b79cff;
+  --lb-accent-strong: #ddd0ff;
+  --lb-border: #3d3455;
+  --lb-panel: #0f0c16ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #1c142e, #0e0a16 55%, #07050c);
+}
+.reliquary {
+  --lb-accent: #e0c37a;
+  --lb-accent-strong: #f4e2b3;
+  --lb-border: #4e422b;
+  --lb-panel: #12100aee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #291f0f, #120e08 55%, #0a0805);
+}

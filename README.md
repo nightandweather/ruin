@@ -67,6 +67,7 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **DATACORE** — schedule verified GPU workloads against collector power, radiator capacity, radiation scrubbing, and optical-link availability.
 - **AGRARIA** — tune crop area, light, carbon, water, nutrients, and crop strategy while food, oxygen support, and power demand update together.
 - **AEGIS** — design a mission-specific pressure suit and expose its mass, mobility, life-support, thermal, dust, and emergency-return tradeoffs.
+- **HYGEIA** — manage crew radiation exposure across storm shelters, hull shielding, EVA recall timing, and a fail-closed career-dose allowance that refuses over-limit assignments outright.
 - **PROGENITOR** — grow a robotic industrial seed while production closure, imported controllers, metrology, lineage drift, and a human-set replication ceiling remain explicit.
 - **GRAVITAS** — trade rotating-habitat radius, RPM, gravity level, Coriolis effects, deck gradient, structure, spin energy, and angular-momentum cancellation.
 - **ATLAS** — rotate and filter a heliocentric 3D map of 30 curated real stars, inspect catalog coordinates and planet counts, and expose interstellar communication and hypothetical cruise latency.
@@ -75,6 +76,7 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **ODYSSEY** — fly between curated ATLAS stars while HELIOS and deep relays beam power and navigation references through diffraction, pointing error, receiver capture, light-time, thermal, autonomy, and relay-outage constraints.
 - **MENDER** — configure orbital and surface repair robots while reaction torque, anchoring, reach, payload, tools, energy, heat rejection, and delayed-command autonomy remain coupled.
 - **CORVUS** — design autonomous civilian space-drone swarms whose propulsion, solar power, battery survival, heat rejection, crosslinks, relative separation, quorum, and delayed-command autonomy remain coupled.
+- **KESSLER** — run fifty years of debris population dynamics in a dragless band where the cascade feeds on itself, removal is the only sink, and a fail-closed moratorium halts installation past the density cap.
 - **PROMETHEUS** — connect fission heat, power conversion, survival and factory loads, radiation separation, radiators, and low-thrust nuclear-electric propulsion without reactor-construction or weapon detail.
 - **GENESIS** — run a century-scale seed campaign from first resource survey through certified factory replication, stellar-power independence, habitation, and local self-sufficiency.
 - **MNEMOSYNE** — test structural, synaptic, dynamic, glial, molecular, memory, behavioral, embodiment, consent, and fork evidence without claiming that a mind or consciousness has been transferred.

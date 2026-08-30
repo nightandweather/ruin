@@ -25,7 +25,9 @@ import { FoundryApp } from "../src/FoundryApp";
 import { GenesisApp } from "../src/GenesisApp";
 import { GravitasApp } from "../src/GravitasApp";
 import { HorizonsApp } from "../src/HorizonsApp";
+import { HygeiaApp } from "../src/HygeiaApp";
 import { IgnisApp } from "../src/IgnisApp";
+import { KesslerApp } from "../src/KesslerApp";
 import { MenderApp } from "../src/MenderApp";
 import { MnemosyneApp } from "../src/MnemosyneApp";
 import { NavisApp } from "../src/NavisApp";
@@ -46,7 +48,9 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "genesis", Component: GenesisApp },
   { id: "gravitas", Component: GravitasApp },
   { id: "horizons", Component: HorizonsApp },
+  { id: "hygeia", Component: HygeiaApp },
   { id: "ignis", Component: IgnisApp },
+  { id: "kessler", Component: KesslerApp },
   { id: "mender", Component: MenderApp },
   { id: "mnemosyne", Component: MnemosyneApp },
   { id: "navis", Component: NavisApp },
