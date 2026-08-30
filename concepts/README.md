@@ -7,6 +7,7 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | [HELIOS](../README.md) | Operate and repair a 10,000-node Dyson swarm | Interactive simulator | Can safe power delivery survive partitions, heat, and debris? |
 | [C-01 Seed Collector](seed-collector.md) | Design the machine represented by one HELIOS node | Interactive parametric simulator | Which geometry maximizes safe power without making replication impossible? |
 | [DC-01 Orbital Datacore](orbital-datacore.md) | Turn collector power and space-native data into verified computation | Interactive simulator | Can useful compute survive heat, radiation errors, power caps, and link loss? |
+| [AG-01 Orbital Agraria](orbital-agraria.md) | Convert power and recycled habitat streams into food and life support | Interactive simulator | Which crop and resource policy maximizes edible output without hiding biological risk? |
 | FOUNDRY | Mine, refine, machine, and assemble lunar resources autonomously | Interactive simulator | Which local failure becomes a civilization-wide manufacturing bottleneck? |
 | [Stellar survey](stellar-survey.md) | Rank real nearby systems for a swarm bootstrap | Deterministic scoring model | Which target wins when proximity, stability, energy, and materials conflict? |
 | [Fleet operations](fleet-operations.md) | Protect civilian and industrial convoys under delayed command | Tested simulation core | Can escorts fail closed and prioritize rescue without real-time orders? |

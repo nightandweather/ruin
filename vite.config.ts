@@ -10,6 +10,7 @@ export default defineConfig({
         foundry: "foundry.html",
         collector: "collector.html",
         datacore: "datacore.html",
+        agraria: "agraria.html",
       },
     },
   },
