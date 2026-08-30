@@ -29,7 +29,6 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      - run: cp docs/assets/ruin-first-light-72s.mp4 dist/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
