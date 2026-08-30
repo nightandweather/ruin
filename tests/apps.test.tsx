@@ -19,6 +19,7 @@ import { AegisApp } from "../src/AegisApp";
 import { AgrariaApp } from "../src/AgrariaApp";
 import { AtlasApp } from "../src/AtlasApp";
 import { CollectorApp } from "../src/CollectorApp";
+import { ConcordApp } from "../src/ConcordApp";
 import { CorvusApp } from "../src/CorvusApp";
 import { DatacoreApp } from "../src/DatacoreApp";
 import { FoundryApp } from "../src/FoundryApp";
@@ -44,6 +45,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "agraria", Component: AgrariaApp },
   { id: "atlas", Component: AtlasApp },
   { id: "collector", Component: CollectorApp },
+  { id: "concord", Component: ConcordApp },
   { id: "corvus", Component: CorvusApp },
   { id: "datacore", Component: DatacoreApp },
   { id: "foundry", Component: FoundryApp },

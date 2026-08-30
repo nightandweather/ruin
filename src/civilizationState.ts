@@ -121,8 +121,11 @@ export function settlePowerLedger(state: CivilizationState): CivilizationState {
   let remaining = Object.values(ledger.supply).reduce((sum, v) => sum + v, 0);
   const allocations: Record<string, number> = {};
   for (const consumer of order) {
+    // Full precision, no rounding: fc-driven fuzzing caught toFixed(6)
+    // rounding a 5e-7 MW grant UP past a 5e-7 MW supply — a settlement
+    // that invents half a microwatt would eventually invent a reactor.
     const granted = Math.min(ledger.demand[consumer], remaining);
-    allocations[consumer] = Number(granted.toFixed(6));
+    allocations[consumer] = granted;
     remaining -= granted;
   }
 

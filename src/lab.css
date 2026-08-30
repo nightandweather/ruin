@@ -323,6 +323,47 @@ input {
   letter-spacing: 0.08em;
 }
 
+.cc-tiles {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+.cc-tiles i {
+  aspect-ratio: 1;
+  border: 1px solid var(--lb-border);
+}
+.cc-tiles i.active {
+  background: var(--lb-accent);
+  border-color: var(--lb-accent);
+}
+.cc-tiles i.standby {
+  background: #1c222144;
+}
+.cc-tiles i.scrub {
+  background: #edb45f66;
+  border-color: #edb45f;
+}
+.cc-tiles i.offline {
+  background: #ff6b7c66;
+  border-color: #ff6b7c;
+}
+.cc-timeline p {
+  margin: 0;
+  padding: 5px 7px;
+  border-left: 2px solid var(--lb-accent);
+  background: #12181766;
+  color: var(--lb-ink);
+  font: 400 6px DM Mono;
+}
+.cc-timeline p b {
+  margin-right: 6px;
+  color: var(--lb-accent);
+}
+.cc-timeline {
+  display: grid;
+  gap: 4px;
+}
+
 /* — module palettes — */
 .hygeia {
   --lb-accent: #7fd8e8;
@@ -344,6 +385,13 @@ input {
   --lb-border: #3d3455;
   --lb-panel: #0f0c16ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #1c142e, #0e0a16 55%, #07050c);
+}
+.concord {
+  --lb-accent: #8fd0ff;
+  --lb-accent-strong: #cfeaff;
+  --lb-border: #2c4152;
+  --lb-panel: #0a1014ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #102230, #081016 55%, #05090c);
 }
 .reliquary {
   --lb-accent: #e0c37a;

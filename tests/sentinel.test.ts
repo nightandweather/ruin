@@ -3,7 +3,7 @@ import { assessFailure, FAILURE_PLANS, plansFor, SYSTEM_META, type RuinSystem } 
 describe("SENTINEL failure registry", () => {
   const systems = Object.keys(SYSTEM_META) as RuinSystem[];
   it("covers every executable module with at least three failures", () => {
-    expect(systems).toHaveLength(17);
+    expect(systems).toHaveLength(21);
     for (const s of systems) expect(plansFor(s).length).toBeGreaterThanOrEqual(3);
   });
   it("uses unique plan identifiers", () => {

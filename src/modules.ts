@@ -18,6 +18,7 @@ export interface ModuleDefinition {
  */
 export const MODULES: readonly ModuleDefinition[] = [
   { id: "helios", page: "index.html", href: "./", label: "HELIOS" },
+  { id: "concord", page: "concord.html", href: "./concord.html", label: "CONCORD" },
   { id: "foundry", page: "foundry.html", href: "./foundry.html", label: "FOUNDRY" },
   { id: "collector", page: "collector.html", href: "./collector.html", label: "COLLECTOR" },
   { id: "datacore", page: "datacore.html", href: "./datacore.html", label: "DATACORE" },

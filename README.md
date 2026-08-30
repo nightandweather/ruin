@@ -62,6 +62,7 @@ npm run dev
 Open the displayed local URL. `/` runs HELIOS; the module bar links every laboratory, including `/horizons.html` for the connected post-stellar civilization network, `/prometheus.html` for civilian fission power and NEP, `/genesis.html` for the stellar bootstrap campaign, `/mnemosyne.html` for neural identity evidence, and `/sentinel.html` for system-wide fault response.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
+- **CONCORD** — replay any incident cassette through the civilization state bus and watch the power ledger settle survival-first, down to the compute tiles that go dark to pay for the shortfall.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
 - **COLLECTOR** — resize a seed collector's wings, radiators, shielding, propellant, and orbit while power, heat, mass, geometry, and factory burden update together.
 - **DATACORE** — schedule verified GPU workloads against collector power, radiator capacity, radiation scrubbing, and optical-link availability.
@@ -81,7 +82,7 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **GENESIS** — run a century-scale seed campaign from first resource survey through certified factory replication, stellar-power independence, habitation, and local self-sufficiency.
 - **MNEMOSYNE** — test structural, synaptic, dynamic, glial, molecular, memory, behavioral, embodiment, consent, and fork evidence without claiming that a mind or consciousness has been transferred.
 - **THEMIS** — operate the autonomous civilization executive: light-lag against decision windows, evidence floors by action class, physically receivable veto pauses, and irreversible actions that never execute unproven.
-- **SENTINEL** — inspect 51 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **SENTINEL** — inspect 63 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
 - **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
 
@@ -118,7 +119,7 @@ npm run build
 - A civilian fission and NEP architect coupling thermal power, conversion, electrical loads, radiators, radiation separation, propellant, thrust, and degraded safe states.
 - A cross-module stellar bootstrap campaign linking PROMETHEUS, CORVUS, FOUNDRY, PROGENITOR, HELIOS, AGRARIA, and GRAVITAS into evidence-gated milestones.
 - A neural identity-evidence laboratory that refuses to equate a connectome, behavioral imitation, or copied memory with demonstrated continuity and treats every fork as independent personhood.
-- A cross-system FDIR registry covering 17 executable modules with 51 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
+- A cross-system FDIR registry covering 21 executable modules with 63 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - A deterministic post-stellar causal network linking fourteen speculative systems through explicit resources, dependencies, catastrophic failures, safety invariants, recovery policies, and century-scale civilization projections.
 - Downloadable JSON snapshots for later replay or analysis.
 
