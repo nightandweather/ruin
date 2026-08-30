@@ -19,6 +19,7 @@ export default defineConfig({
         mender: "mender.html",
         sentinel: "sentinel.html",
         ignis: "ignis.html",
+        odyssey: "odyssey.html",
       },
     },
   },
