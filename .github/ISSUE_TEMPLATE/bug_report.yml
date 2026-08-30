@@ -1,0 +1,40 @@
+name: Simulation or interface bug
+description: Report behavior that is incorrect, inconsistent, or difficult to use
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior and why it appears wrong.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: Include the module, configuration, incident sequence, and seed if relevant.
+      placeholder: |
+        1. Open...
+        2. Set...
+        3. Inject...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: Commit or version
+      description: Paste the commit hash or say main.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, browser details, logs, or possible causes.

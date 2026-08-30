@@ -2,6 +2,10 @@
 
 > Mission control for a star-sized distributed system.
 
+[![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
+
 RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first module, is a deterministic browser simulation of an autonomous Dyson swarm: 10,000 independent solar collectors operating at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures.
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
@@ -144,6 +148,12 @@ A strong proposal does not need to know how to build the technology. It only nee
 - What would an operator be able to change and observe in a simulation?
 
 [Open an idea proposal](https://github.com/nightandweather/ruin/issues/new) or use the [concept template](concepts/template.md). Wild ideas are welcome; falsifiable assumptions, safety invariants, and interesting failure modes make them buildable.
+
+## Contributing
+
+RUIN is public, MIT-licensed open source. Code, research, interface, accessibility, documentation, and strange-but-operational concept contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, modeling rules, module structure, and safety boundaries; use [GitHub Discussions](https://github.com/nightandweather/ruin/discussions) for early ideas and the [issue forms](https://github.com/nightandweather/ruin/issues/new/choose) for scoped work.
+
+Community participation follows the [code of conduct](CODE_OF_CONDUCT.md). Potential vulnerabilities should be reported privately according to [SECURITY.md](SECURITY.md).
 
 ## License
 
