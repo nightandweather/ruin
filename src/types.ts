@@ -1,6 +1,11 @@
 export type SatelliteMode = "nominal" | "curtailed" | "isolated" | "thermal" | "offline";
 
-export type ScenarioType = "communications-blackout" | "thermal-wave" | "cascade-failure" | "demand-spike";
+export type ScenarioType =
+  | "communications-blackout"
+  | "thermal-wave"
+  | "cascade-failure"
+  | "demand-spike"
+  | "debris-corridor";
 
 export interface SimulationConfig {
   satelliteCount: number;
@@ -41,6 +46,8 @@ export interface SwarmMetrics {
   isolatedCount: number;
   thermalCount: number;
   safetyTrips: number;
+  avoidanceManeuvers: number;
+  confirmedImpacts: number;
 }
 
 export interface SimulationEvent {
@@ -65,5 +72,10 @@ export interface SimulationSnapshot {
   satellites: readonly Satellite[];
   events: readonly SimulationEvent[];
   history: readonly ChartPoint[];
-  activeScenarios: readonly { type: ScenarioType; endsAtTick: number }[];
+  activeScenarios: readonly {
+    type: ScenarioType;
+    endsAtTick: number;
+    bearingDeg?: number;
+    affectedCount: number;
+  }[];
 }

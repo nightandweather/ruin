@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. The simulation begins immediately. Inject a relay blackout, thermal wave, manufacturing cascade, or demand spike and watch the controller redistribute safe capacity.
+Open the displayed local URL. The simulation begins immediately. Inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 
 ```bash
 npm test
@@ -27,6 +27,7 @@ npm run build
 - Per-node health, link quality, thermal state, capacity, delivery, and operating mode.
 - Safe dispatch under demand changes, thermal derating, offline nodes, and network partitions.
 - Recovery windows and a bounded event stream.
+- Directional debris conjunctions, pre-impact power derating, avoidance burns, and residual impacts.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
@@ -39,11 +40,13 @@ HELIOS separates sourced physical constants from invented system parameters:
 - Waste heat uses a simplified radiative-equilibrium calculation based on the Stefan–Boltzmann law.
 - Collector area, 42% conversion efficiency, radiator area, temperature limits, fault rates, repair times, beam delivery, and control policy are speculative scenario parameters.
 - Orbital positions are visualized, not propagated with an N-body integrator. Collisions, station keeping, diffraction, transmission losses, material degradation, and signal travel time are future model layers.
+- Debris corridors use angular proximity in the visualization plane rather than a high-fidelity ephemeris and covariance model. The detect–assess–mitigate workflow is inspired by real conjunction assessment, while its outcomes are speculative.
 
 Sources:
 
 - [NASA GSFC: Radiative Transfer](https://science.gsfc.nasa.gov/earth/climate/researchareas/159/)
 - [NASA Passive Thermal Control Engineering Guidebook](https://ntrs.nasa.gov/citations/20230013900)
+- [NASA: Conjunction Assessment and Collision Avoidance](https://www.nasa.gov/cara/)
 - [Freeman Dyson, “Search for Artificial Stellar Sources of Infrared Radiation” (1960)](https://doi.org/10.1126/science.131.3414.1667)
 
 ## Architecture
@@ -66,10 +69,24 @@ The simulation engine in `src/simulation.ts` has no browser dependency. That kee
 
 - Event replay and scenario files.
 - Signal propagation delay and local consensus between orbital sectors.
-- Orbital conjunction prediction and collision avoidance.
+- Ephemeris and covariance-based conjunction probability instead of the current angular corridor model.
 - Power-beam destinations, exclusion corridors, and transmission loss.
 - Infrared waste-heat signature and observability from distant systems.
 - A campaign mode in which the swarm grows from hundreds to billions of collectors.
+
+## Beyond Kardashev II
+
+HELIOS begins with the operating problems of a civilization using a meaningful fraction of one star. The next scales are less about finding more energy and more about governing systems that can no longer share a present moment.
+
+| Scale | Operational problem | Candidate simulation |
+| --- | --- | --- |
+| Planetary | Climate, orbital debris, and globally coupled infrastructure | Multi-objective planetary control with hard safety limits |
+| Stellar | Heat rejection, beam safety, solar weather, and swarm autonomy | The current HELIOS mission |
+| Interstellar | Years of communication delay and colonies with diverging goals | Policy replication without a global leader |
+| Galactic | Stellar lifecycles, relativistic travel, and million-year plans | Eventually consistent governance across causal horizons |
+| Post-galactic | Entropy budgets, black-hole energy, and survival across cosmological change | Deep-time resource allocation with irreversible decisions |
+
+These are storytelling frames, not settled extensions to the Kardashev scale. Each future module should turn one frame into explicit state, constraints, failure modes, and testable policies.
 
 ## License
 

@@ -7,6 +7,7 @@ const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail
   "thermal-wave": { code: "FLARE", title: "Thermal wave", detail: "Heat two orbital bands" },
   "cascade-failure": { code: "FAULT", title: "Cascade failure", detail: "Drop 5% of collectors" },
   "demand-spike": { code: "LOAD", title: "Demand spike", detail: "Raise target by 35%" },
+  "debris-corridor": { code: "ROCK", title: "Debris corridor", detail: "Predict and evade impacts" },
 };
 
 const formatElapsed = (seconds: number) => {
@@ -15,7 +16,7 @@ const formatElapsed = (seconds: number) => {
   return `T+${String(hours).padStart(3, "0")}:${String(minutes).padStart(2, "0")}`;
 };
 
-function SwarmMap({ satellites, tick }: { satellites: readonly Satellite[]; tick: number }) {
+function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Satellite[]; tick: number; debrisBearing?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -47,6 +48,30 @@ function SwarmMap({ satellites, tick }: { satellites: readonly Satellite[]; tick
     context.arc(cx, cy, 7, 0, Math.PI * 2);
     context.fill();
 
+    if (debrisBearing !== undefined) {
+      const bearing = (debrisBearing * Math.PI) / 180;
+      const startX = cx + Math.cos(bearing) * maxRadius * 1.42;
+      const startY = cy + Math.sin(bearing) * maxRadius * 0.88;
+      const endX = cx + Math.cos(bearing + Math.PI) * maxRadius * 0.86;
+      const endY = cy + Math.sin(bearing + Math.PI) * maxRadius * 0.5;
+      context.save();
+      context.strokeStyle = "rgba(255, 79, 104, .9)";
+      context.fillStyle = "#ff4f68";
+      context.lineWidth = 1.2;
+      context.setLineDash([7, 6]);
+      context.beginPath();
+      context.moveTo(startX, startY);
+      context.lineTo(endX, endY);
+      context.stroke();
+      context.setLineDash([]);
+      context.beginPath();
+      context.arc(startX, startY, 3.5, 0, Math.PI * 2);
+      context.fill();
+      context.font = "9px DM Mono";
+      context.fillText(`INBOUND ${Math.round(debrisBearing)}°`, startX - 34, startY - 10);
+      context.restore();
+    }
+
     context.lineWidth = 0.5;
     for (let band = 0; band < DEFAULT_CONFIG.orbitBands; band += 1) {
       context.strokeStyle = band % 2 === 0 ? "rgba(160, 179, 192, .12)" : "rgba(160, 179, 192, .06)";
@@ -77,7 +102,7 @@ function SwarmMap({ satellites, tick }: { satellites: readonly Satellite[]; tick
       context.fillRect(x, y, 1.4, 1.4);
     }
     context.globalAlpha = 1;
-  }, [satellites, tick]);
+  }, [satellites, tick, debrisBearing]);
 
   return <canvas ref={canvasRef} className="swarm-canvas" aria-label="Orbital map of sampled swarm collectors" />;
 }
@@ -131,6 +156,7 @@ export function App() {
   const [snapshot, setSnapshot] = useState(() => simulation.snapshot());
   const [running, setRunning] = useState(true);
   const [speed, setSpeed] = useState(5);
+  const [debrisBearing, setDebrisBearing] = useState(315);
 
   useEffect(() => {
     if (!running) return;
@@ -144,7 +170,8 @@ export function App() {
     return { label: "NOMINAL", tone: "nominal" };
   }, [snapshot]);
 
-  const inject = (type: ScenarioType) => setSnapshot(simulation.inject(type));
+  const inject = (type: ScenarioType) =>
+    setSnapshot(simulation.inject(type, type === "debris-corridor" ? { bearingDeg: debrisBearing } : {}));
   const reset = () => {
     const next = new DysonSwarmSimulation();
     setSimulation(next);
@@ -190,12 +217,20 @@ export function App() {
               return <button key={type} className={active ? "active" : ""} onClick={() => inject(type)} disabled={active}><b>{item.code}</b><span>{item.title}<small>{item.detail}</small></span></button>;
             })}
           </div>
+          <label className="bearing-control">
+            <span>DEBRIS BEARING <b>{String(debrisBearing).padStart(3, "0")}°</b></span>
+            <input type="range" min="0" max="359" value={debrisBearing} onChange={(event) => setDebrisBearing(Number(event.target.value))} />
+          </label>
         </aside>
 
         <section className="center-stack">
           <div className="map-panel panel">
             <div className="panel-label">ORBITAL DISTRIBUTION // 0.40 AU</div>
-            <SwarmMap satellites={snapshot.satellites} tick={snapshot.tick} />
+            <SwarmMap
+              satellites={snapshot.satellites}
+              tick={snapshot.tick}
+              debrisBearing={snapshot.activeScenarios.find((scenario) => scenario.type === "debris-corridor")?.bearingDeg}
+            />
             <div className="map-readout left">BANDS<br /><strong>08</strong></div>
             <div className="map-readout right">SAMPLE<br /><strong>1:6</strong></div>
           </div>
@@ -222,6 +257,7 @@ export function App() {
             <span>BEAM SAFETY INTERLOCKS</span>
             <strong>{snapshot.metrics.safetyTrips === 0 ? "ARMED" : `${snapshot.metrics.safetyTrips} TRIPS`}</strong>
             <div className="safety-line"><i style={{ width: `${Math.max(2, 100 - snapshot.metrics.safetyTrips)}%` }} /></div>
+            <div className="avoidance-readout"><span>EVASIVE BURNS</span><b>{snapshot.metrics.avoidanceManeuvers}</b><span>IMPACTS</span><b>{snapshot.metrics.confirmedImpacts}</b></div>
           </div>
         </aside>
       </section>

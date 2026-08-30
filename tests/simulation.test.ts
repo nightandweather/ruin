@@ -32,4 +32,16 @@ describe("DysonSwarmSimulation", () => {
     expect(metrics.deliveredGW).toBeLessThanOrEqual(metrics.potentialGW);
     expect(metrics.deliveredGW).toBeGreaterThanOrEqual(0);
   });
+
+  it("predicts a directional debris corridor and resolves avoidance maneuvers", () => {
+    const simulation = new DysonSwarmSimulation({ satelliteCount: 1_000, seed: 7 });
+    const detected = simulation.inject("debris-corridor", { bearingDeg: 90 });
+    const threat = detected.activeScenarios.find((scenario) => scenario.type === "debris-corridor");
+    expect(threat?.bearingDeg).toBe(90);
+    expect(threat?.affectedCount).toBe(15);
+
+    const resolved = simulation.step(45);
+    expect(resolved.activeScenarios).toHaveLength(0);
+    expect(resolved.metrics.avoidanceManeuvers + resolved.metrics.confirmedImpacts).toBe(15);
+  });
 });

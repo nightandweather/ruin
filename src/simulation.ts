@@ -32,6 +32,7 @@ interface ActiveScenario {
   type: ScenarioType;
   endsAtTick: number;
   affectedIds: Set<number>;
+  bearingDeg?: number;
 }
 
 const round = (value: number, digits = 2) => Number(value.toFixed(digits));
@@ -46,6 +47,8 @@ export class DysonSwarmSimulation {
   private currentTick = 0;
   private eventSequence = 0;
   private safetyTrips = 0;
+  private avoidanceManeuvers = 0;
+  private confirmedImpacts = 0;
   private latestMetrics: SwarmMetrics;
 
   constructor(config: Partial<SimulationConfig> = {}) {
@@ -111,7 +114,7 @@ export class DysonSwarmSimulation {
     return this.snapshot();
   }
 
-  inject(type: ScenarioType): SimulationSnapshot {
+  inject(type: ScenarioType, options: { bearingDeg?: number } = {}): SimulationSnapshot {
     const definitions: Record<ScenarioType, { fraction: number; duration: number; message: string }> = {
       "communications-blackout": {
         fraction: 0.3,
@@ -133,12 +136,26 @@ export class DysonSwarmSimulation {
         duration: 60,
         message: "Outer-system beam demand rose 35% above baseline",
       },
+      "debris-corridor": {
+        fraction: 0.015,
+        duration: 45,
+        message: "",
+      },
     };
     const definition = definitions[type];
     const affectedIds = new Set<number>();
     const targetCount = Math.floor(this.config.satelliteCount * definition.fraction);
-    while (affectedIds.size < targetCount) {
-      affectedIds.add(Math.floor(this.random.next() * this.config.satelliteCount));
+    const bearingDeg = type === "debris-corridor" ? ((options.bearingDeg ?? 315) % 360 + 360) % 360 : undefined;
+    if (type === "debris-corridor") {
+      const bearingRad = (bearingDeg! * Math.PI) / 180;
+      const byCorridorDistance = [...this.fleet].sort(
+        (left, right) => this.angularDistance(left.phase, bearingRad) - this.angularDistance(right.phase, bearingRad),
+      );
+      for (let index = 0; index < targetCount; index += 1) affectedIds.add(byCorridorDistance[index].id);
+    } else {
+      while (affectedIds.size < targetCount) {
+        affectedIds.add(Math.floor(this.random.next() * this.config.satelliteCount));
+      }
     }
 
     const endsAtTick = this.currentTick + definition.duration;
@@ -150,8 +167,12 @@ export class DysonSwarmSimulation {
         satellite.mode = "offline";
       }
     }
-    this.scenarios.push({ type, endsAtTick, affectedIds });
-    this.recordEvent(type === "demand-spike" ? "warning" : "critical", "SCENARIO", definition.message);
+    this.scenarios.push({ type, endsAtTick, affectedIds, bearingDeg });
+    const message =
+      type === "debris-corridor"
+        ? `Inbound debris detected on bearing ${bearingDeg!.toFixed(0)}°; ${targetCount} conjunctions predicted`
+        : definition.message;
+    this.recordEvent(type === "demand-spike" ? "warning" : "critical", "SCENARIO", message);
     return this.snapshot();
   }
 
@@ -163,7 +184,12 @@ export class DysonSwarmSimulation {
       satellites: this.fleet,
       events: this.eventLog,
       history: this.chartHistory,
-      activeScenarios: this.scenarios.map(({ type, endsAtTick }) => ({ type, endsAtTick })),
+      activeScenarios: this.scenarios.map(({ type, endsAtTick, bearingDeg, affectedIds }) => ({
+        type,
+        endsAtTick,
+        bearingDeg,
+        affectedCount: affectedIds.size,
+      })),
     };
   }
 
@@ -171,10 +197,12 @@ export class DysonSwarmSimulation {
     const nominalCapacity = this.nominalCapacityMW();
     const thermalScenario = this.scenarios.find((scenario) => scenario.type === "thermal-wave");
     const blackoutScenario = this.scenarios.find((scenario) => scenario.type === "communications-blackout");
+    const debrisScenario = this.scenarios.find((scenario) => scenario.type === "debris-corridor");
 
     for (const satellite of this.fleet) {
       const thermallyAffected = thermalScenario?.affectedIds.has(satellite.id) ?? false;
       const isolated = blackoutScenario?.affectedIds.has(satellite.id) ?? false;
+      const avoidingDebris = debrisScenario?.affectedIds.has(satellite.id) ?? false;
       const targetTemperature = this.equilibriumTemperatureK(thermallyAffected ? 1.18 : 1);
       satellite.temperatureK += (targetTemperature - satellite.temperatureK) * 0.08;
       satellite.temperatureK += this.random.range(-0.45, 0.45);
@@ -191,10 +219,13 @@ export class DysonSwarmSimulation {
         satellite.deliveredMW = 0;
       } else if (satellite.temperatureK >= this.config.thermalLimitK) {
         satellite.mode = "thermal";
+      } else if (avoidingDebris) {
+        satellite.mode = "curtailed";
       } else {
         satellite.mode = "nominal";
       }
-      satellite.capacityMW = nominalCapacity * satellite.health * (thermallyAffected ? 1.18 : 1);
+      satellite.capacityMW =
+        nominalCapacity * satellite.health * (thermallyAffected ? 1.18 : 1) * (avoidingDebris ? 0.62 : 1);
     }
   }
 
@@ -239,6 +270,8 @@ export class DysonSwarmSimulation {
       isolatedCount: this.fleet.filter((satellite) => satellite.mode === "isolated").length,
       thermalCount: this.fleet.filter((satellite) => satellite.mode === "thermal").length,
       safetyTrips: this.safetyTrips,
+      avoidanceManeuvers: this.avoidanceManeuvers,
+      confirmedImpacts: this.confirmedImpacts,
     };
   }
 
@@ -253,10 +286,41 @@ export class DysonSwarmSimulation {
             satellite.mode = "nominal";
           }
         }
+        if (scenario.type === "debris-corridor") {
+          let avoided = 0;
+          let impacts = 0;
+          for (const id of scenario.affectedIds) {
+            const satellite = this.fleet[id];
+            if (this.random.chance(0.985)) {
+              satellite.phase = (satellite.phase + this.random.range(0.008, 0.018)) % (Math.PI * 2);
+              satellite.health = Math.max(0, satellite.health - 0.001);
+              avoided += 1;
+            } else {
+              satellite.health = 0;
+              satellite.mode = "offline";
+              satellite.deliveredMW = 0;
+              impacts += 1;
+            }
+          }
+          this.avoidanceManeuvers += avoided;
+          this.confirmedImpacts += impacts;
+          this.recordEvent(
+            impacts === 0 ? "recovery" : "warning",
+            "COLLISION",
+            `${avoided} avoidance burns completed; ${impacts} collector impacts confirmed`,
+          );
+        }
         this.scenarios.splice(index, 1);
-        this.recordEvent("recovery", "AUTONOMY", `${scenario.type} recovery protocol completed`);
+        if (scenario.type !== "debris-corridor") {
+          this.recordEvent("recovery", "AUTONOMY", `${scenario.type} recovery protocol completed`);
+        }
       }
     }
+  }
+
+  private angularDistance(left: number, right: number): number {
+    const difference = Math.abs(left - right) % (Math.PI * 2);
+    return Math.min(difference, Math.PI * 2 - difference);
   }
 
   private recordEvent(level: SimulationEvent["level"], source: string, message: string): void {
