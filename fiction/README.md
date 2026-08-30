@@ -12,6 +12,8 @@ This directory contains narrative prototypes derived from the executable RUIN la
 
 The first season follows a junior civilization-simulation verifier who discovers that a perfect survival report was produced by changing who counts as a person.
 
+Political conflict follows the same rule as infrastructure failure: every major position must protect something real. Outer-system autonomy, fail-closed beam safety, memory-personhood, food continuity, and care for the person immediately in front of you can all be morally defensible while demanding mutually exclusive actions. No faction exists only to be proven evil; policy becomes tragic when several individual forms of justice compete for the same finite resource.
+
 - [Episode 01 — 제외된 사람들](season-01/episode-01.md)
 
 ### Existing RUIN systems used in Episode 01
