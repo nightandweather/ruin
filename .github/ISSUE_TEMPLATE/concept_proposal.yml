@@ -1,0 +1,46 @@
+name: Speculative infrastructure concept
+description: Propose a future infrastructure problem for RUIN to model
+title: "[Concept]: "
+labels:
+  - concept
+body:
+  - type: input
+    id: premise
+    attributes:
+      label: Premise
+      description: Name the infrastructure and the civilization-scale need it serves.
+    validations:
+      required: true
+  - type: textarea
+    id: operational-question
+    attributes:
+      label: First operational question
+      description: What decision or failure should a small simulation make visible?
+    validations:
+      required: true
+  - type: textarea
+    id: state
+    attributes:
+      label: State and actors
+      description: What assets, resources, operators, or autonomous agents must be modeled?
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety invariants
+      description: What must the system never do, even under pressure or incomplete information?
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Primary sources
+      description: Link scientific papers, agency reports, or standards and distinguish them from fictional assumptions.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope confirmation
+      options:
+        - label: This proposal is for a safe software simulation, not instructions for constructing a weapon or hazardous device.
+          required: true

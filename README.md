@@ -6,6 +6,17 @@ RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first 
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
+## The RUIN laboratory
+
+RUIN is a home for executable science-fiction infrastructure. Each concept begins as a sourced engineering brief, defines what must never happen, and grows into a deterministic simulation that lets an operator experience the tradeoffs.
+
+- [Concept registry](concepts/README.md) — current and proposed infrastructure modules.
+- [Orbital elevator](concepts/orbital-elevator.md) — factory queues, climbers, tether safety, and orbital depots.
+- [Lunar mass driver](concepts/mass-driver.md) — electromagnetic cargo launch with fail-closed corridor authorization.
+- [Concept template](concepts/template.md) — a repeatable path from a wild idea to testable software.
+
+HELIOS is the first executable module rather than the limit of the repository.
+
 ## Run it
 
 ```bash
