@@ -345,6 +345,17 @@ footer {
   letter-spacing: 0.12em;
 }
 .swarm-canvas {
+  /*
+   * Absolutely positioned so the canvas can never size its own ancestors.
+   * The resize effect sets the drawing buffer to clientSize x
+   * devicePixelRatio, and a canvas's buffer is also its intrinsic size — in
+   * normal flow that intrinsic size feeds the panel's min-content, which
+   * feeds the next clientSize measurement, doubling the canvas every tick
+   * on any display with devicePixelRatio > 1. Out of flow, layout flows
+   * strictly from panel to canvas.
+   */
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;

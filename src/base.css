@@ -1,0 +1,15 @@
+/*
+ * The reset every laboratory shares.
+ *
+ * Palettes stay in each module's own stylesheet — the `:root` colour and
+ * background are that module's identity, not duplication — but the border-box
+ * reset was copied into all eighteen of them and belongs in one place.
+ *
+ * Web fonts are loaded from each HTML entry point with a `<link>` rather than
+ * a CSS `@import`, so the browser can request them while it is still parsing
+ * the document instead of after the module stylesheet has downloaded.
+ */
+
+* {
+  box-sizing: border-box;
+}

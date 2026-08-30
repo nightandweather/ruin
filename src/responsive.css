@@ -100,11 +100,14 @@
     overflow: auto;
   }
 
-  /* Canvases lose the flex height they inherited from the centre column. */
-  body main canvas[class] {
-    width: 100%;
-    max-width: 100%;
-    min-height: 320px;
+  /*
+   * The orbital map's canvas is absolutely positioned (see .swarm-canvas in
+   * styles.css) so it cannot size its panel; stacked in one column the panel
+   * needs an explicit height of its own.
+   */
+  body main .map-panel[class] {
+    height: 56vh;
+    min-height: 300px;
   }
 }
 
@@ -122,7 +125,8 @@
     padding-right: 10px;
   }
 
-  body main canvas[class] {
-    min-height: 260px;
+  body main .map-panel[class] {
+    height: 46vh;
+    min-height: 240px;
   }
 }
