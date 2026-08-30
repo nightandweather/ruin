@@ -32,6 +32,9 @@ input {
   --lb-ink-dim: #6c7a74;
   height: 100vh;
   display: grid;
+  /* The explicit minmax(0, 1fr) column keeps the shell at viewport width;
+     an implicit auto column would grow to the module bar's max-content. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 66px minmax(0, 1fr);
 }
 .lb-top {
@@ -72,6 +75,28 @@ input {
 .lb-state {
   min-width: 300px;
   text-align: right;
+}
+.lb-top .module-bar {
+  border: 1px solid var(--lb-border);
+  padding: 3px;
+  gap: 3px;
+  max-width: 640px;
+}
+.lb-top .module-bar > a,
+.lb-top .module-bar > b {
+  padding: 7px 8px;
+  text-decoration: none;
+  color: var(--lb-ink-dim);
+  font: 500 7px DM Mono;
+}
+.lb-top .module-bar > b {
+  color: var(--lb-accent-strong);
+  border: 1px solid var(--lb-accent);
+  background: #1a1f2244;
+}
+.lb-top .module-bar > a:hover,
+.lb-top .module-bar > a:focus-visible {
+  color: var(--lb-accent);
 }
 .lb-state b {
   display: block;
