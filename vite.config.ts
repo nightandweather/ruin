@@ -3,6 +3,14 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    rollupOptions: {
+      input: {
+        helios: "index.html",
+        foundry: "foundry.html",
+      },
+    },
+  },
   test: {
     environment: "node",
     include: ["tests/**/*.test.ts"],

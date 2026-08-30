@@ -25,7 +25,10 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. The simulation begins immediately. Inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
+Open the displayed local URL. `/` runs HELIOS and `/foundry.html` runs the autonomous lunar factory. The simulations begin immediately.
+
+- **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
+- **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
 
 ```bash
 npm test
@@ -41,6 +44,7 @@ npm run build
 - Recovery windows and a bounded event stream.
 - Directional debris conjunctions, pre-impact power derating, avoidance burns, and residual impacts.
 - Surface factory orders, replacement production, orbital-elevator cargo cycles, orbital inventory, and automatic installation.
+- A second executable FOUNDRY module with autonomous excavation, beneficiation, refining, trace-metal inventory, machine tooling, assembly, wear, and cascading production faults.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
@@ -62,6 +66,9 @@ Sources:
 - [NASA Passive Thermal Control Engineering Guidebook](https://ntrs.nasa.gov/citations/20230013900)
 - [NASA: Conjunction Assessment and Collision Avoidance](https://www.nasa.gov/cara/)
 - [NASA NTRS: Technology Development and Demonstration Concepts for the Space Elevator](https://ntrs.nasa.gov/citations/20040161582)
+- [NASA: Lunar Surface Technology and ISRU](https://www.nasa.gov/lunar-surface-technology/)
+- [NASA NTRS: System Modeling of a Lunar Molten Regolith Electrolysis Plant](https://ntrs.nasa.gov/citations/20240012420)
+- [NASA NTRS: Manufacturing and Metal Extraction Lunar Technology](https://ntrs.nasa.gov/citations/20230009049)
 - [Freeman Dyson, “Search for Artificial Stellar Sources of Infrared Radiation” (1960)](https://doi.org/10.1126/science.131.3414.1667)
 
 ## Architecture

@@ -194,6 +194,7 @@ export function App() {
       <header className="topbar">
         <div className="brand"><span className="sun-mark">✦</span><div><strong>HELIOS</strong><small>DYSON SWARM AUTONOMY</small></div></div>
         <div className="mission-clock"><span>SOL CONTROL TIME</span><strong>{formatElapsed(snapshot.elapsedSeconds)}</strong></div>
+        <a className="module-link" href="/foundry.html">FOUNDRY ↗</a>
         <div className={`system-status ${status.tone}`}><i />SYSTEM {status.label}</div>
       </header>
 
