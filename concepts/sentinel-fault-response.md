@@ -4,7 +4,7 @@ SENTINEL is RUIN's common Fault Detection, Isolation, and Recovery registry. It 
 
 ## Coverage
 
-The executable registry contains three primary plans for each of 13 systems:
+The executable registry contains three primary plans for each of 14 systems:
 
 | System | Predicted fault families |
 | --- | --- |
@@ -21,6 +21,7 @@ The executable registry contains three primary plans for each of 13 systems:
 | IGNIS | propellant-feed imbalance, thermal overrun, propulsion power/control loss |
 | ODYSSEY | Dyson beam-lock loss, interstellar relay partition, receiver overheat |
 | MENDER | anchor slip, joint jam, relative-perception loss |
+| CORVUS | swarm consensus partition, relative-navigation divergence, power or thermal exhaustion |
 
 ## Registry contract
 

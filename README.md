@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, `/atlas.html` maps the real nearby stellar neighborhood, `/navis.html` architects spacecraft against those routes, `/ignis.html` operates the propulsion engine laboratory, `/odyssey.html` navigates a Dyson-powered interstellar relay corridor, `/mender.html` designs robotic repair systems, and `/sentinel.html` coordinates system-wide fault response. The simulations begin immediately.
+Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, `/atlas.html` maps the real nearby stellar neighborhood, `/navis.html` architects spacecraft against those routes, `/ignis.html` operates the propulsion engine laboratory, `/odyssey.html` navigates a Dyson-powered interstellar relay corridor, `/mender.html` designs robotic repair systems, `/corvus.html` architects autonomous civilian drone swarms, and `/sentinel.html` coordinates system-wide fault response. The simulations begin immediately.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -49,7 +49,8 @@ Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomo
 - **IGNIS** — design chemical, Hall-electric, nuclear-thermal, and explicitly unsupported fusion engines while thrust, specific impulse, power, mass flow, propellant, heat rejection, transient heat storage, cluster failures, and burn authorization remain coupled.
 - **ODYSSEY** — fly between curated ATLAS stars while HELIOS and deep relays beam power and navigation references through diffraction, pointing error, receiver capture, light-time, thermal, autonomy, and relay-outage constraints.
 - **MENDER** — configure orbital and surface repair robots while reaction torque, anchoring, reach, payload, tools, energy, heat rejection, and delayed-command autonomy remain coupled.
-- **SENTINEL** — inspect 39 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **CORVUS** — design autonomous civilian space-drone swarms whose propulsion, solar power, battery survival, heat rejection, crosslinks, relative separation, quorum, and delayed-command autonomy remain coupled.
+- **SENTINEL** — inspect 42 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
 
 ```bash
 npm test
@@ -79,7 +80,8 @@ npm run build
 - A propulsion engine laboratory coupling equivalent exhaust velocity, mass flow, power-limited electric thrust, cluster engine-out behavior, transient heat storage, radiator capacity, propellant endurance, and evidence-based ignition authority.
 - A Dyson-powered interstellar corridor linking real nearby-star distances to optical diffraction, pointing jitter, relay light-time, receiver capture, electric thrust, heat rejection, navigation uncertainty, and stored-energy survival.
 - A task-grounded robotic repair architect with two-point contact, reaction-moment stability, seven-DOF servicing arms, tool and payload contracts, battery endurance, recharge, heat rejection, and signal-delay autonomy.
-- A cross-system FDIR registry covering 13 executable modules with 39 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
+- An autonomous civilian drone-swarm architect coupling per-node mass, delta-v, solar power, battery hold, and heat rejection to formation spacing, crosslink range, distributed quorum, collision reserve, and light-time autonomy.
+- A cross-system FDIR registry covering 14 executable modules with 42 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.

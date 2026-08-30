@@ -20,6 +20,7 @@ export default defineConfig({
         sentinel: "sentinel.html",
         ignis: "ignis.html",
         odyssey: "odyssey.html",
+        corvus: "corvus.html",
       },
     },
   },

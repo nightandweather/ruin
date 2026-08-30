@@ -1,0 +1,1 @@
+import{StrictMode}from"react";import{createRoot}from"react-dom/client";import{CorvusApp}from"./CorvusApp";import"./corvus.css";createRoot(document.getElementById("root")!).render(<StrictMode><CorvusApp/></StrictMode>);
