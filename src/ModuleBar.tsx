@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { MODULES } from "./modules";
+import "./base.css";
 import "./module-bar.css";
 import "./responsive.css";
 
