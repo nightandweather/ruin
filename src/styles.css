@@ -6,17 +6,17 @@ body { margin: 0; min-width: 1120px; height: 100vh; overflow: hidden; background
 button { font: inherit; }
 main { height: 100vh; display: grid; grid-template-rows: 74px minmax(0, 1fr) 64px; }
 .topbar, footer { display: flex; align-items: center; justify-content: space-between; border-color: #232931; border-style: solid; background: rgba(7,9,13,.86); backdrop-filter: blur(16px); }
-.topbar { padding: 0 28px; border-width: 0 0 1px; }
-.brand { display: flex; align-items: center; gap: 13px; min-width: 250px; }
+.topbar { padding: 0 18px; border-width: 0 0 1px; }
+.brand { display: flex; align-items: center; gap: 13px; min-width: 220px; }
 .sun-mark { width: 34px; height: 34px; display: grid; place-items: center; color: #ffb456; border: 1px solid #684620; transform: rotate(45deg); }
 .sun-mark::first-letter { transform: rotate(-45deg); }
 .brand div { display: grid; }
 .brand strong { font-size: 18px; letter-spacing: .22em; }
 .brand small, .mission-clock span { color: #697781; font: 500 9px DM Mono, monospace; letter-spacing: .16em; }
 .mission-clock { display: grid; text-align: center; gap: 4px; }
-.module-links { display:flex;gap:3px; }.module-link { color:#8e9a9d;border:1px solid #30373e;padding:7px 6px;text-decoration:none;font:500 6px DM Mono,monospace;letter-spacing:.04em; }.module-link:hover { color:#ffb456;border-color:#72502b; }
+.module-links { display:flex;gap:2px; }.module-link { color:#8e9a9d;border:1px solid #30373e;padding:7px 4px;text-decoration:none;font:500 5px DM Mono,monospace;letter-spacing:.02em; }.module-link:hover { color:#ffb456;border-color:#72502b; }
 .mission-clock strong { font: 400 16px DM Mono, monospace; letter-spacing: .12em; color: #b7c5ca; }
-.system-status { min-width: 250px; text-align: right; font: 500 10px DM Mono, monospace; letter-spacing: .14em; }
+.system-status { min-width: 210px; text-align: right; font: 500 10px DM Mono, monospace; letter-spacing: .14em; }
 .system-status i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 9px; box-shadow: 0 0 10px currentColor; }
 .system-status.nominal { color: #64f3c2; } .system-status.warning { color: #ffb456; } .system-status.critical { color: #ff4f68; }
 .layout { padding: 16px; display: grid; grid-template-columns: 260px minmax(580px, 1fr) 300px; gap: 12px; min-height: 0; }

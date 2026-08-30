@@ -16,6 +16,7 @@ export default defineConfig({
         gravitas: "gravitas.html",
         atlas: "atlas.html",
         navis: "navis.html",
+        mender: "mender.html",
       },
     },
   },
