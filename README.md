@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, and `/gravitas.html` designs artificial gravity habitats. The simulations begin immediately.
+Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, and `/atlas.html` maps the real nearby stellar neighborhood. The simulations begin immediately.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -44,6 +44,7 @@ Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomo
 - **AEGIS** — design a mission-specific pressure suit and expose its mass, mobility, life-support, thermal, dust, and emergency-return tradeoffs.
 - **PROGENITOR** — grow a robotic industrial seed while production closure, imported controllers, metrology, lineage drift, and a human-set replication ceiling remain explicit.
 - **GRAVITAS** — trade rotating-habitat radius, RPM, gravity level, Coriolis effects, deck gradient, structure, spin energy, and angular-momentum cancellation.
+- **ATLAS** — rotate and filter a heliocentric 3D map of 30 curated real stars, inspect catalog coordinates and planet counts, and expose interstellar communication and hypothetical cruise latency.
 
 ```bash
 npm test
@@ -68,6 +69,7 @@ npm run build
 - A parametric EVA suit digital twin spanning orbit, lunar industry, Mars field work, and rescue, with coupled PLSS, mobility, mass, dust, and fault-response constraints.
 - A guided robotic self-production model with a physically zoned factory layout, partial production closure, certified lineage, import bottlenecks, and fail-closed offspring quarantine.
 - A physics-grounded artificial-gravity architect for rings, tether pairs, and short-arm centrifuges, with an explicit no-go boundary for unsupported gravity-field generators.
+- A real-coordinate nearby-star atlas that converts ICRS right ascension, declination, and distance into heliocentric XYZ positions while keeping curated coverage distinct from the full Gaia catalog.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.

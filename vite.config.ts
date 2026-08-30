@@ -14,6 +14,7 @@ export default defineConfig({
         aegis: "aegis.html",
         progenitor: "progenitor.html",
         gravitas: "gravitas.html",
+        atlas: "atlas.html",
       },
     },
   },
