@@ -80,7 +80,9 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **PROMETHEUS** — connect fission heat, power conversion, survival and factory loads, radiation separation, radiators, and low-thrust nuclear-electric propulsion without reactor-construction or weapon detail.
 - **GENESIS** — run a century-scale seed campaign from first resource survey through certified factory replication, stellar-power independence, habitation, and local self-sufficiency.
 - **MNEMOSYNE** — test structural, synaptic, dynamic, glial, molecular, memory, behavioral, embodiment, consent, and fork evidence without claiming that a mind or consciousness has been transferred.
+- **THEMIS** — operate the autonomous civilization executive: light-lag against decision windows, evidence floors by action class, physically receivable veto pauses, and irreversible actions that never execute unproven.
 - **SENTINEL** — inspect 51 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
 
 ```bash

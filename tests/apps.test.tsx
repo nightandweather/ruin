@@ -34,7 +34,9 @@ import { NavisApp } from "../src/NavisApp";
 import { OdysseyApp } from "../src/OdysseyApp";
 import { ProgenitorApp } from "../src/ProgenitorApp";
 import { PrometheusApp } from "../src/PrometheusApp";
+import { ReliquaryApp } from "../src/ReliquaryApp";
 import { SentinelApp } from "../src/SentinelApp";
+import { ThemisApp } from "../src/ThemisApp";
 
 const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "helios", Component: App },
@@ -57,7 +59,9 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "odyssey", Component: OdysseyApp },
   { id: "progenitor", Component: ProgenitorApp },
   { id: "prometheus", Component: PrometheusApp },
+  { id: "reliquary", Component: ReliquaryApp },
   { id: "sentinel", Component: SentinelApp },
+  { id: "themis", Component: ThemisApp },
 ];
 
 let root: Root | null = null;

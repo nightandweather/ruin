@@ -36,7 +36,9 @@ export const MODULES: readonly ModuleDefinition[] = [
   { id: "prometheus", page: "prometheus.html", href: "./prometheus.html", label: "PROMETHEUS" },
   { id: "genesis", page: "genesis.html", href: "./genesis.html", label: "GENESIS" },
   { id: "mnemosyne", page: "mnemosyne.html", href: "./mnemosyne.html", label: "MNEMOSYNE" },
+  { id: "themis", page: "themis.html", href: "./themis.html", label: "THEMIS" },
   { id: "sentinel", page: "sentinel.html", href: "./sentinel.html", label: "SENTINEL" },
+  { id: "reliquary", page: "reliquary.html", href: "./reliquary.html", label: "RELIQUARY" },
   { id: "horizons", page: "horizons.html", href: "./horizons.html", label: "HORIZONS" },
 ];
 
