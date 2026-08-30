@@ -6,25 +6,25 @@ SENTINEL is RUIN's common Fault Detection, Isolation, and Recovery registry. It 
 
 The executable registry contains three primary plans for each of 17 systems:
 
-| System | Predicted fault families |
-| --- | --- |
-| HELIOS | relay partition, thermal cascade, debris collision chain |
-| FOUNDRY | contaminated feedstock, hidden tool wear, process power interruption |
-| COLLECTOR | beam pointing drift, radiator loss, structural breach |
-| DATACORE | silent radiation corruption, coolant loss, optical partition |
-| AGRARIA | pathogen outbreak, root dryout, lighting-bus loss |
-| AEGIS | pressure loss, cooling loss, EVA communications loss |
-| PROGENITOR | metrology drift, controller shortage, software-lineage contamination |
-| GRAVITAS | rotating mass imbalance, bearing degradation, pressure-sector breach |
-| ATLAS | catalog epoch drift, identity crossmatch error, distance bias |
-| NAVIS | thermal deficit, propulsion underperformance, high-gain communications loss |
-| IGNIS | propellant-feed imbalance, thermal overrun, propulsion power/control loss |
-| ODYSSEY | Dyson beam-lock loss, interstellar relay partition, receiver overheat |
-| MENDER | anchor slip, joint jam, relative-perception loss |
-| CORVUS | swarm consensus partition, relative-navigation divergence, power or thermal exhaustion |
-| PROMETHEUS | heat-transport loss, conversion-train loss, electric-thruster loss |
-| GENESIS | resource collapse, manufacturing-lineage collapse, settlement life-support collapse |
-| MNEMOSYNE | state-ledger corruption, embodiment loss, forked-authority conflict |
+| System     | Predicted fault families                                                               |
+| ---------- | -------------------------------------------------------------------------------------- |
+| HELIOS     | relay partition, thermal cascade, debris collision chain                               |
+| FOUNDRY    | contaminated feedstock, hidden tool wear, process power interruption                   |
+| COLLECTOR  | beam pointing drift, radiator loss, structural breach                                  |
+| DATACORE   | silent radiation corruption, coolant loss, optical partition                           |
+| AGRARIA    | pathogen outbreak, root dryout, lighting-bus loss                                      |
+| AEGIS      | pressure loss, cooling loss, EVA communications loss                                   |
+| PROGENITOR | metrology drift, controller shortage, software-lineage contamination                   |
+| GRAVITAS   | rotating mass imbalance, bearing degradation, pressure-sector breach                   |
+| ATLAS      | catalog epoch drift, identity crossmatch error, distance bias                          |
+| NAVIS      | thermal deficit, propulsion underperformance, high-gain communications loss            |
+| IGNIS      | propellant-feed imbalance, thermal overrun, propulsion power/control loss              |
+| ODYSSEY    | Dyson beam-lock loss, interstellar relay partition, receiver overheat                  |
+| MENDER     | anchor slip, joint jam, relative-perception loss                                       |
+| CORVUS     | swarm consensus partition, relative-navigation divergence, power or thermal exhaustion |
+| PROMETHEUS | heat-transport loss, conversion-train loss, electric-thruster loss                     |
+| GENESIS    | resource collapse, manufacturing-lineage collapse, settlement life-support collapse    |
+| MNEMOSYNE  | state-ledger corruption, embodiment loss, forked-authority conflict                    |
 
 ## Registry contract
 

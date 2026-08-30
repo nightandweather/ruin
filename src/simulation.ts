@@ -73,7 +73,11 @@ export class DysonSwarmSimulation {
     this.random = new DeterministicRandom(this.config.seed);
     this.fleet = this.createFleet();
     this.latestMetrics = this.calculateAndDispatch();
-    this.recordEvent("info", "CONTROL", `${this.config.satelliteCount.toLocaleString()} collectors synchronized`);
+    this.recordEvent(
+      "info",
+      "CONTROL",
+      `${this.config.satelliteCount.toLocaleString()} collectors synchronized`,
+    );
     this.recordHistory();
   }
 
@@ -92,8 +96,7 @@ export class DysonSwarmSimulation {
       this.config.collectorAreaM2 *
       (1 - this.config.conversionEfficiency);
     const radiativeTerm =
-      absorbedWasteW /
-      (this.config.radiatorEmissivity * STEFAN_BOLTZMANN * this.config.radiatorAreaM2);
+      absorbedWasteW / (this.config.radiatorEmissivity * STEFAN_BOLTZMANN * this.config.radiatorAreaM2);
     return (radiativeTerm + BACKGROUND_TEMPERATURE_K ** 4) ** 0.25;
   }
 
@@ -126,7 +129,11 @@ export class DysonSwarmSimulation {
       this.latestMetrics = this.calculateAndDispatch();
       if (this.currentTick % 5 === 0) this.recordHistory();
       if (this.currentTick % 120 === 0) {
-        this.recordEvent("info", "CONTROL", `Routine consensus checkpoint ${this.currentTick / 120} committed`);
+        this.recordEvent(
+          "info",
+          "CONTROL",
+          `Routine consensus checkpoint ${this.currentTick / 120} committed`,
+        );
       }
     }
     return this.snapshot();
@@ -163,11 +170,13 @@ export class DysonSwarmSimulation {
     const definition = definitions[type];
     const affectedIds = new Set<number>();
     const targetCount = Math.floor(this.config.satelliteCount * definition.fraction);
-    const bearingDeg = type === "debris-corridor" ? ((options.bearingDeg ?? 315) % 360 + 360) % 360 : undefined;
+    const bearingDeg =
+      type === "debris-corridor" ? (((options.bearingDeg ?? 315) % 360) + 360) % 360 : undefined;
     if (type === "debris-corridor") {
       const bearingRad = (bearingDeg! * Math.PI) / 180;
       const byCorridorDistance = [...this.fleet].sort(
-        (left, right) => this.angularDistance(left.phase, bearingRad) - this.angularDistance(right.phase, bearingRad),
+        (left, right) =>
+          this.angularDistance(left.phase, bearingRad) - this.angularDistance(right.phase, bearingRad),
       );
       for (let index = 0; index < targetCount; index += 1) affectedIds.add(byCorridorDistance[index].id);
     } else {
@@ -240,7 +249,9 @@ export class DysonSwarmSimulation {
       const targetTemperature = this.equilibriumTemperatureK(thermallyAffected ? 1.18 : 1);
       satellite.temperatureK += (targetTemperature - satellite.temperatureK) * 0.08;
       satellite.temperatureK += this.random.range(-0.45, 0.45);
-      satellite.linkQuality = isolated ? 0 : Math.min(1, Math.max(0, satellite.linkQuality + this.random.range(-0.004, 0.004)));
+      satellite.linkQuality = isolated
+        ? 0
+        : Math.min(1, Math.max(0, satellite.linkQuality + this.random.range(-0.004, 0.004)));
 
       if (satellite.health <= 0.1 || satellite.temperatureK >= this.config.shutdownTemperatureK) {
         if (satellite.mode !== "offline" && satellite.temperatureK >= this.config.shutdownTemperatureK) {
@@ -267,7 +278,9 @@ export class DysonSwarmSimulation {
     const demandMultiplier = this.scenarios.some((scenario) => scenario.type === "demand-spike") ? 1.35 : 1;
     const nominalFleetPotential = this.nominalCapacityMW() * this.config.satelliteCount;
     const demandMW = nominalFleetPotential * this.config.baselineDemandFraction * demandMultiplier;
-    const eligible = this.fleet.filter((satellite) => satellite.mode !== "offline" && satellite.mode !== "isolated");
+    const eligible = this.fleet.filter(
+      (satellite) => satellite.mode !== "offline" && satellite.mode !== "isolated",
+    );
     const safeCapacityMW = eligible.reduce((sum, satellite) => {
       const thermalDerating = satellite.mode === "thermal" ? 0.3 : 1;
       return sum + satellite.capacityMW * thermalDerating;
@@ -366,7 +379,11 @@ export class DysonSwarmSimulation {
 
   private enqueueProduction(units: number, source: string): void {
     this.logistics.factoryBacklog += units;
-    this.recordEvent("info", "FACTORY", `${source} requested ${units} replacement collector${units === 1 ? "" : "s"}`);
+    this.recordEvent(
+      "info",
+      "FACTORY",
+      `${source} requested ${units} replacement collector${units === 1 ? "" : "s"}`,
+    );
   }
 
   private advanceLogistics(): void {
@@ -387,7 +404,11 @@ export class DysonSwarmSimulation {
         this.logistics.elevatorCargo = 0;
         this.logistics.elevatorStatus = "standby";
         this.logistics.elevatorProgressPercent = 0;
-        this.recordEvent("recovery", "ELEVATOR", `${delivered} replacement collectors delivered to orbital depot`);
+        this.recordEvent(
+          "recovery",
+          "ELEVATOR",
+          `${delivered} replacement collectors delivered to orbital depot`,
+        );
       }
     } else if (
       this.logistics.groundInventory >= ELEVATOR_MINIMUM_BATCH ||
@@ -417,7 +438,11 @@ export class DysonSwarmSimulation {
       this.logistics.replacementsInstalled += 1;
     }
     if (installCount > 0 && (installCount === damaged.length || this.logistics.orbitalInventory === 0)) {
-      this.recordEvent("recovery", "DEPOT", `${installCount} damaged collector${installCount === 1 ? "" : "s"} replaced on orbit`);
+      this.recordEvent(
+        "recovery",
+        "DEPOT",
+        `${installCount} damaged collector${installCount === 1 ? "" : "s"} replaced on orbit`,
+      );
     }
   }
 

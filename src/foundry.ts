@@ -68,7 +68,11 @@ export class AutonomousFoundrySimulation {
     replacementKits: 0,
   };
   private readonly stageHealth = new Map<FoundryStage["id"], number>([
-    ["excavation", 0.99], ["crushing", 0.98], ["refining", 0.97], ["machining", 0.99], ["assembly", 0.99],
+    ["excavation", 0.99],
+    ["crushing", 0.98],
+    ["refining", 0.97],
+    ["machining", 0.99],
+    ["assembly", 0.99],
   ]);
   private stages: FoundryStage[] = [];
   private readonly scenarios: ActiveScenario[] = [];
@@ -116,7 +120,8 @@ export class AutonomousFoundrySimulation {
       this.expireScenarios();
       this.runProductionTick();
       if (this.currentTick % 3 === 0) this.recordHistory();
-      if (this.currentTick % 72 === 0) this.recordEvent("info", "QUALITY", "Shift mass balance and tool calibration committed");
+      if (this.currentTick % 72 === 0)
+        this.recordEvent("info", "QUALITY", "Shift mass balance and tool calibration committed");
     }
     return this.snapshot();
   }
@@ -166,12 +171,19 @@ export class AutonomousFoundrySimulation {
     const machineFactor = has("cutter-wear") ? 0.15 : 1;
     const possibleByStructural = Math.floor(this.inventory.structuralMetalKg / 40);
     const possibleByRare = Math.floor(this.inventory.rareMetalKg / 0.5);
-    const machined = Math.min(3 * machineFactor * powerFactor * this.health("machining"), possibleByStructural, possibleByRare);
+    const machined = Math.min(
+      3 * machineFactor * powerFactor * this.health("machining"),
+      possibleByStructural,
+      possibleByRare,
+    );
     this.inventory.structuralMetalKg -= machined * 40;
     this.inventory.rareMetalKg -= machined * 0.5;
     this.inventory.machinedSets += machined;
 
-    const assembled = Math.min(1 * powerFactor * this.health("assembly"), Math.floor(this.inventory.machinedSets / 4));
+    const assembled = Math.min(
+      1 * powerFactor * this.health("assembly"),
+      Math.floor(this.inventory.machinedSets / 4),
+    );
     this.inventory.machinedSets -= assembled * 4;
     this.inventory.replacementKits += assembled;
 
@@ -180,17 +192,48 @@ export class AutonomousFoundrySimulation {
     this.orderBacklog -= shipped;
     this.totalKitsShipped += shipped;
     if (shipped > 0 && this.orderBacklog === 0) {
-      this.recordEvent("recovery", "DISPATCH", `Production order completed; ${this.totalKitsShipped} kits shipped in total`);
+      this.recordEvent(
+        "recovery",
+        "DISPATCH",
+        `Production order completed; ${this.totalKitsShipped} kits shipped in total`,
+      );
     }
 
     this.powerMW = round(
-      (4.8 * dustFactor + (crushedInput > 0 ? 1.8 : 0) + (refineryInput > 0 ? 8 : 0) + (machined > 0 ? 2.4 : 0) + (assembled > 0 ? 0.8 : 0)) * powerFactor,
+      (4.8 * dustFactor +
+        (crushedInput > 0 ? 1.8 : 0) +
+        (refineryInput > 0 ? 8 : 0) +
+        (machined > 0 ? 2.4 : 0) +
+        (assembled > 0 ? 0.8 : 0)) *
+        powerFactor,
     );
     this.stages = [
       this.makeStage("excavation", "ROBOT MINE", mined, 432, `${round(mined, 0)} kg/tick`, has("dust-front")),
-      this.makeStage("crushing", "CRUSH + GRADE", crushedInput, 360, `${round(crushedInput, 0)} kg/tick`, has("crusher-jam"), has("crusher-jam")),
-      this.makeStage("refining", "MRE REFINERY", refineryInput, 250, `${round(structuralOutput, 1)} kg metal`, false),
-      this.makeStage("machining", "MACHINE SHOP", machined, 3, `${round(machined, 1)} sets/tick`, has("cutter-wear")),
+      this.makeStage(
+        "crushing",
+        "CRUSH + GRADE",
+        crushedInput,
+        360,
+        `${round(crushedInput, 0)} kg/tick`,
+        has("crusher-jam"),
+        has("crusher-jam"),
+      ),
+      this.makeStage(
+        "refining",
+        "MRE REFINERY",
+        refineryInput,
+        250,
+        `${round(structuralOutput, 1)} kg metal`,
+        false,
+      ),
+      this.makeStage(
+        "machining",
+        "MACHINE SHOP",
+        machined,
+        3,
+        `${round(machined, 1)} sets/tick`,
+        has("cutter-wear"),
+      ),
       this.makeStage("assembly", "ROBOT ASSEMBLY", assembled, 1, `${round(assembled, 1)} kits/tick`, false),
     ];
     for (const stage of this.stages) {
@@ -244,9 +287,19 @@ export class AutonomousFoundrySimulation {
 
   private emptyStages(): FoundryStage[] {
     return [
-      ["excavation", "ROBOT MINE"], ["crushing", "CRUSH + GRADE"], ["refining", "MRE REFINERY"],
-      ["machining", "MACHINE SHOP"], ["assembly", "ROBOT ASSEMBLY"],
-    ].map(([id, label]) => ({ id: id as FoundryStage["id"], label, utilizationPercent: 0, healthPercent: 100, status: "starved", rateLabel: "standby" }));
+      ["excavation", "ROBOT MINE"],
+      ["crushing", "CRUSH + GRADE"],
+      ["refining", "MRE REFINERY"],
+      ["machining", "MACHINE SHOP"],
+      ["assembly", "ROBOT ASSEMBLY"],
+    ].map(([id, label]) => ({
+      id: id as FoundryStage["id"],
+      label,
+      utilizationPercent: 0,
+      healthPercent: 100,
+      status: "starved",
+      rateLabel: "standby",
+    }));
   }
 
   private recordEvent(level: FoundryEvent["level"], source: string, message: string): void {

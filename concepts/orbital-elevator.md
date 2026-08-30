@@ -20,12 +20,12 @@ Primary references:
 
 ## State model
 
-| Entity | Important state | Decisions |
-| --- | --- | --- |
-| Surface factory | backlog, throughput, ground inventory, energy | accept, prioritize, pause |
-| Tether | segment integrity, oscillation envelope, debris corridor, thermal load | operate, derate, evacuate |
-| Climber | cargo, position, velocity, power reserve, brake state | ascend, hold, return |
-| GEO depot | free berths, inventory, transfer craft queue | receive, quarantine, dispatch |
+| Entity          | Important state                                                        | Decisions                     |
+| --------------- | ---------------------------------------------------------------------- | ----------------------------- |
+| Surface factory | backlog, throughput, ground inventory, energy                          | accept, prioritize, pause     |
+| Tether          | segment integrity, oscillation envelope, debris corridor, thermal load | operate, derate, evacuate     |
+| Climber         | cargo, position, velocity, power reserve, brake state                  | ascend, hold, return          |
+| GEO depot       | free berths, inventory, transfer craft queue                           | receive, quarantine, dispatch |
 
 ## Safety invariants
 

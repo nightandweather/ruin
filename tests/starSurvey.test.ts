@@ -11,7 +11,13 @@ describe("stellar survey", () => {
   });
 
   it("can surface Proxima when proximity dominates", () => {
-    const ranked = rankStarSystems({ proximity: 100, stability: 0, energy: 0, materials: 0, orbitalSimplicity: 0 });
+    const ranked = rankStarSystems({
+      proximity: 100,
+      stability: 0,
+      energy: 0,
+      materials: 0,
+      orbitalSimplicity: 0,
+    });
     expect(ranked[1].id).toBe("proxima-centauri");
   });
 });

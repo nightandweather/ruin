@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_COLLECTOR_DESIGN, evaluateCollectorDesign, MAX_RADIATOR_TEMPERATURE_K, safeDeploymentFraction } from "../src/collectorDesign";
+import {
+  DEFAULT_COLLECTOR_DESIGN,
+  evaluateCollectorDesign,
+  MAX_RADIATOR_TEMPERATURE_K,
+  safeDeploymentFraction,
+} from "../src/collectorDesign";
 import { CollectorSimulation } from "../src/collectorSimulation";
 
 describe("C-01 collector design", () => {

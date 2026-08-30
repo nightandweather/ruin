@@ -13,12 +13,7 @@ body {
   min-width: 1180px;
   height: 100vh;
   overflow: hidden;
-  background: radial-gradient(
-    circle at 48% 34%,
-    #111b20 0,
-    #080b0d 35%,
-    #050709 80%
-  );
+  background: radial-gradient(circle at 48% 34%, #111b20 0, #080b0d 35%, #050709 80%);
   font-size: 11px;
 }
 .ig-shell {

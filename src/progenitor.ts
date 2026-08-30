@@ -1,6 +1,7 @@
 export type ReplicationSite = "lunar" | "asteroid" | "mars";
 export type ReplicationPolicy = "conservative" | "balanced" | "exponential";
-export type ProgenitorIncident = "metrology-drift" | "controller-shortage" | "tool-wear" | "power-brownout" | "feedstock-contamination";
+export type ProgenitorIncident =
+  "metrology-drift" | "controller-shortage" | "tool-wear" | "power-brownout" | "feedstock-contamination";
 
 export interface ProgenitorConfig {
   site: ReplicationSite;
@@ -30,9 +31,19 @@ export interface ProgenitorSnapshot {
   externalDependencyTonnes: number;
   importedInventoryTonnes: number;
   usefulOutputTonnesMonth: number;
-  machineFleet: readonly { type: string; count: number; localContent: number; status: "ready" | "degraded" | "blocked" }[];
+  machineFleet: readonly {
+    type: string;
+    count: number;
+    localContent: number;
+    status: "ready" | "degraded" | "blocked";
+  }[];
   activeIncidents: readonly ProgenitorIncident[];
-  events: readonly { id: number; month: number; level: "info" | "warning" | "critical" | "recovery"; message: string }[];
+  events: readonly {
+    id: number;
+    month: number;
+    level: "info" | "warning" | "critical" | "recovery";
+    message: string;
+  }[];
 }
 
 export const DEFAULT_PROGENITOR_CONFIG: ProgenitorConfig = {
@@ -53,7 +64,10 @@ const sites: Record<ReplicationSite, { excavation: number; refining: number; not
   mars: { excavation: 0.88, refining: 1.03, note: "Mars dust isolation plan accepted" },
 };
 
-const policies: Record<ReplicationPolicy, { reproductionShare: number; qualityOffset: number; driftFactor: number }> = {
+const policies: Record<
+  ReplicationPolicy,
+  { reproductionShare: number; qualityOffset: number; driftFactor: number }
+> = {
   conservative: { reproductionShare: 0.36, qualityOffset: 7, driftFactor: 0.55 },
   balanced: { reproductionShare: 0.56, qualityOffset: 0, driftFactor: 1 },
   exponential: { reproductionShare: 0.78, qualityOffset: -9, driftFactor: 1.75 },
@@ -77,7 +91,10 @@ export class ProgenitorSimulation {
     this.record("info", `${sites[config.site].note}; seed factory lineage P-0001 registered`);
   }
 
-  updateConfig(config: ProgenitorConfig) { this.config = { ...config }; return this.snapshot(); }
+  updateConfig(config: ProgenitorConfig) {
+    this.config = { ...config };
+    return this.snapshot();
+  }
 
   inject(type: ProgenitorIncident) {
     if (this.incidents.has(type)) return this.snapshot();
@@ -103,19 +120,32 @@ export class ProgenitorSimulation {
     for (let i = 0; i < months; i++) {
       this.month++;
       const state = this.calculate();
-      if (!this.incidents.has("controller-shortage")) this.importedInventoryKg += this.config.electronicsImportKgMonth;
+      if (!this.incidents.has("controller-shortage"))
+        this.importedInventoryKg += this.config.electronicsImportKgMonth;
       if (state.mode !== "quarantine" && state.mode !== "halted") {
         this.copyProgressKg += state.reproductionKgMonth;
         const externalPerCopy = COPY_MASS_KG * (1 - state.closure / 100);
-        while (this.copyProgressKg >= COPY_MASS_KG && this.importedInventoryKg >= externalPerCopy && this.factoryCount < this.config.maxFactories) {
+        while (
+          this.copyProgressKg >= COPY_MASS_KG &&
+          this.importedInventoryKg >= externalPerCopy &&
+          this.factoryCount < this.config.maxFactories
+        ) {
           this.copyProgressKg -= COPY_MASS_KG;
           this.importedInventoryKg -= externalPerCopy;
           this.factoryCount++;
-          this.lineageDrift += Math.max(0.08, (100 - state.quality) / 20) * policies[this.config.policy].driftFactor;
-          this.record("info", `Factory P-${String(this.factoryCount).padStart(4, "0")} certified and admitted to production graph`);
+          this.lineageDrift +=
+            Math.max(0.08, (100 - state.quality) / 20) * policies[this.config.policy].driftFactor;
+          this.record(
+            "info",
+            `Factory P-${String(this.factoryCount).padStart(4, "0")} certified and admitted to production graph`,
+          );
         }
       }
-      if (this.factoryCount >= this.config.maxFactories && !this.events.some(e => e.message.includes("production ceiling"))) this.record("warning", "Human-set production ceiling reached; replication queue halted");
+      if (
+        this.factoryCount >= this.config.maxFactories &&
+        !this.events.some((e) => e.message.includes("production ceiling"))
+      )
+        this.record("warning", "Human-set production ceiling reached; replication queue halted");
     }
     return this.snapshot();
   }
@@ -123,45 +153,101 @@ export class ProgenitorSimulation {
   snapshot(): ProgenitorSnapshot {
     const x = this.calculate();
     const externalPerCopy = COPY_MASS_KG * (1 - x.closure / 100);
-    const localMonths = x.reproductionKgMonth > 0 ? Math.max(0, COPY_MASS_KG - this.copyProgressKg) / x.reproductionKgMonth : Infinity;
+    const localMonths =
+      x.reproductionKgMonth > 0
+        ? Math.max(0, COPY_MASS_KG - this.copyProgressKg) / x.reproductionKgMonth
+        : Infinity;
     const importRate = this.incidents.has("controller-shortage") ? 0 : this.config.electronicsImportKgMonth;
-    const importMonths = externalPerCopy <= this.importedInventoryKg ? 0 : importRate > 0 ? (externalPerCopy - this.importedInventoryKg) / importRate : Infinity;
-    const doubling = x.mode === "quarantine" || x.mode === "halted" || !Number.isFinite(Math.max(localMonths, importMonths)) ? null : Math.ceil(Math.max(localMonths, importMonths));
+    const importMonths =
+      externalPerCopy <= this.importedInventoryKg
+        ? 0
+        : importRate > 0
+          ? (externalPerCopy - this.importedInventoryKg) / importRate
+          : Infinity;
+    const doubling =
+      x.mode === "quarantine" || x.mode === "halted" || !Number.isFinite(Math.max(localMonths, importMonths))
+        ? null
+        : Math.ceil(Math.max(localMonths, importMonths));
     return {
-      month: this.month, mode: x.mode, factoryCount: this.factoryCount, generation: Math.floor(Math.log2(this.factoryCount)),
-      closurePercent: +x.closure.toFixed(0), qualityScore: +x.quality.toFixed(0), lineageDriftPercent: +this.lineageDrift.toFixed(1),
-      oreTonnesMonth: +x.oreTonnes.toFixed(0), manufacturedTonnesMonth: +(x.manufacturedKg / 1000).toFixed(1),
+      month: this.month,
+      mode: x.mode,
+      factoryCount: this.factoryCount,
+      generation: Math.floor(Math.log2(this.factoryCount)),
+      closurePercent: +x.closure.toFixed(0),
+      qualityScore: +x.quality.toFixed(0),
+      lineageDriftPercent: +this.lineageDrift.toFixed(1),
+      oreTonnesMonth: +x.oreTonnes.toFixed(0),
+      manufacturedTonnesMonth: +(x.manufacturedKg / 1000).toFixed(1),
       reproductionSharePercent: +(policies[this.config.policy].reproductionShare * 100).toFixed(0),
-      copyProgressPercent: Math.min(100, +(this.copyProgressKg / COPY_MASS_KG * 100).toFixed(0)), estimatedDoublingMonths: doubling,
-      externalDependencyTonnes: +(externalPerCopy / 1000).toFixed(1), importedInventoryTonnes: +(this.importedInventoryKg / 1000).toFixed(1),
-      usefulOutputTonnesMonth: +(x.manufacturedKg * (1 - policies[this.config.policy].reproductionShare) / 1000).toFixed(1),
-      machineFleet: this.fleet(x.quality), activeIncidents: [...this.incidents], events: this.events.map(e => ({ ...e })),
+      copyProgressPercent: Math.min(100, +((this.copyProgressKg / COPY_MASS_KG) * 100).toFixed(0)),
+      estimatedDoublingMonths: doubling,
+      externalDependencyTonnes: +(externalPerCopy / 1000).toFixed(1),
+      importedInventoryTonnes: +(this.importedInventoryKg / 1000).toFixed(1),
+      usefulOutputTonnesMonth: +(
+        (x.manufacturedKg * (1 - policies[this.config.policy].reproductionShare)) /
+        1000
+      ).toFixed(1),
+      machineFleet: this.fleet(x.quality),
+      activeIncidents: [...this.incidents],
+      events: this.events.map((e) => ({ ...e })),
     };
   }
 
   private calculate() {
-    const c = this.config, site = sites[c.site], policy = policies[c.policy];
+    const c = this.config,
+      site = sites[c.site],
+      policy = policies[c.policy];
     const powerFactor = this.incidents.has("power-brownout") ? 0.44 : 1;
     const wearFactor = this.incidents.has("tool-wear") ? 0.58 : 1;
     const feedFactor = this.incidents.has("feedstock-contamination") ? 0.52 : 1;
     const oreTonnes = c.powerMW * 390 * site.excavation * this.factoryCount * powerFactor;
-    const refinedKg = oreTonnes * 1000 * c.oreGradePercent / 100 * site.refining * feedFactor;
-    const automationFactor = 0.48 + c.automationPercent / 100 * 0.62;
-    const manufacturedKg = Math.min(refinedKg, c.powerMW * 10_500 * this.factoryCount * powerFactor) * automationFactor * wearFactor;
+    const refinedKg = ((oreTonnes * 1000 * c.oreGradePercent) / 100) * site.refining * feedFactor;
+    const automationFactor = 0.48 + (c.automationPercent / 100) * 0.62;
+    const manufacturedKg =
+      Math.min(refinedKg, c.powerMW * 10_500 * this.factoryCount * powerFactor) *
+      automationFactor *
+      wearFactor;
     const materialClosure = Math.min(100, 76 + c.oreGradePercent * 1.25);
-    const precisionClosure = Math.max(0, Math.min(100, c.metrologyPercent - (this.incidents.has("metrology-drift") ? 32 : 0)));
-    const closure = 0.46 * materialClosure + 0.24 * precisionClosure + 0.22 * c.localElectronicsPercent + 0.08 * c.automationPercent;
-    const quality = Math.max(0, Math.min(100, c.metrologyPercent * 0.56 + c.automationPercent * 0.34 + policy.qualityOffset - this.lineageDrift * 0.7 - (this.incidents.has("metrology-drift") ? 22 : 0) - (this.incidents.has("tool-wear") ? 10 : 0) - (this.incidents.has("feedstock-contamination") ? 12 : 0)));
+    const precisionClosure = Math.max(
+      0,
+      Math.min(100, c.metrologyPercent - (this.incidents.has("metrology-drift") ? 32 : 0)),
+    );
+    const closure =
+      0.46 * materialClosure +
+      0.24 * precisionClosure +
+      0.22 * c.localElectronicsPercent +
+      0.08 * c.automationPercent;
+    const quality = Math.max(
+      0,
+      Math.min(
+        100,
+        c.metrologyPercent * 0.56 +
+          c.automationPercent * 0.34 +
+          policy.qualityOffset -
+          this.lineageDrift * 0.7 -
+          (this.incidents.has("metrology-drift") ? 22 : 0) -
+          (this.incidents.has("tool-wear") ? 10 : 0) -
+          (this.incidents.has("feedstock-contamination") ? 12 : 0),
+      ),
+    );
     let mode: ProgenitorSnapshot["mode"] = "nominal";
     if (this.factoryCount >= c.maxFactories) mode = "halted";
     else if (quality < 68 || this.incidents.has("metrology-drift")) mode = "quarantine";
     else if (this.incidents.size > 0 || closure < 76) mode = "constrained";
-    return { oreTonnes, manufacturedKg, closure, quality, mode, reproductionKgMonth: manufacturedKg * policy.reproductionShare };
+    return {
+      oreTonnes,
+      manufacturedKg,
+      closure,
+      quality,
+      mode,
+      reproductionKgMonth: manufacturedKg * policy.reproductionShare,
+    };
   }
 
   private fleet(quality: number): ProgenitorSnapshot["machineFleet"] {
     const f = this.factoryCount;
-    const status = (incident: ProgenitorIncident, blocked = false): "ready" | "degraded" | "blocked" => this.incidents.has(incident) ? blocked ? "blocked" : "degraded" : quality < 68 ? "blocked" : "ready";
+    const status = (incident: ProgenitorIncident, blocked = false): "ready" | "degraded" | "blocked" =>
+      this.incidents.has(incident) ? (blocked ? "blocked" : "degraded") : quality < 68 ? "blocked" : "ready";
     return [
       { type: "EXCAVATOR", count: 12 * f, localContent: 92, status: status("feedstock-contamination") },
       { type: "HAULER", count: 18 * f, localContent: 88, status: status("power-brownout") },

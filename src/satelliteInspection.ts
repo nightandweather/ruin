@@ -6,10 +6,14 @@ export const angularDistance = (left: number, right: number) => {
 };
 
 const recommendation = (satellite: Satellite) => {
-  if (satellite.mode === "offline") return "Maintain hard power isolation; dispatch MENDER and reserve a replacement slot.";
-  if (satellite.mode === "isolated") return "Hold export at zero; reacquire authenticated mesh quorum before beam authorization.";
-  if (satellite.mode === "thermal") return "Derate conversion load and rotate radiator normal toward the cold-sky window.";
-  if (satellite.mode === "curtailed") return "Preserve maneuver reserve; resume export only after the local constraint clears.";
+  if (satellite.mode === "offline")
+    return "Maintain hard power isolation; dispatch MENDER and reserve a replacement slot.";
+  if (satellite.mode === "isolated")
+    return "Hold export at zero; reacquire authenticated mesh quorum before beam authorization.";
+  if (satellite.mode === "thermal")
+    return "Derate conversion load and rotate radiator normal toward the cold-sky window.";
+  if (satellite.mode === "curtailed")
+    return "Preserve maneuver reserve; resume export only after the local constraint clears.";
   return "Continue autonomous dispatch; retain present thermal and collision margins.";
 };
 
@@ -19,11 +23,16 @@ export function inspectSatellite(snapshot: SimulationSnapshot, satelliteId: numb
 
   const sameBand = snapshot.satellites
     .filter((candidate) => candidate.id !== satellite.id && candidate.band === satellite.band)
-    .sort((left, right) => angularDistance(left.phase, satellite.phase) - angularDistance(right.phase, satellite.phase));
+    .sort(
+      (left, right) =>
+        angularDistance(left.phase, satellite.phase) - angularDistance(right.phase, satellite.phase),
+    );
   const neighbors = sameBand.slice(0, 6);
   const localRadius = 0.18;
-  const localNodes = snapshot.satellites.filter((candidate) =>
-    Math.abs(candidate.band - satellite.band) <= 1 && angularDistance(candidate.phase, satellite.phase) <= localRadius,
+  const localNodes = snapshot.satellites.filter(
+    (candidate) =>
+      Math.abs(candidate.band - satellite.band) <= 1 &&
+      angularDistance(candidate.phase, satellite.phase) <= localRadius,
   );
   const localCounts = {
     nominal: localNodes.filter((candidate) => candidate.mode === "nominal").length,
@@ -32,7 +41,10 @@ export function inspectSatellite(snapshot: SimulationSnapshot, satelliteId: numb
     thermal: localNodes.filter((candidate) => candidate.mode === "thermal").length,
     offline: localNodes.filter((candidate) => candidate.mode === "offline").length,
   };
-  const meanNeighborLink = neighbors.length === 0 ? satellite.linkQuality : neighbors.reduce((sum, node) => sum + node.linkQuality, 0) / neighbors.length;
+  const meanNeighborLink =
+    neighbors.length === 0
+      ? satellite.linkQuality
+      : neighbors.reduce((sum, node) => sum + node.linkQuality, 0) / neighbors.length;
   const activeHazards = snapshot.activeScenarios.map((scenario) => scenario.type);
 
   return {

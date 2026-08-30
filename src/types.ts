@@ -1,11 +1,7 @@
 export type SatelliteMode = "nominal" | "curtailed" | "isolated" | "thermal" | "offline";
 
 export type ScenarioType =
-  | "communications-blackout"
-  | "thermal-wave"
-  | "cascade-failure"
-  | "demand-spike"
-  | "debris-corridor";
+  "communications-blackout" | "thermal-wave" | "cascade-failure" | "demand-spike" | "debris-corridor";
 
 export interface SimulationConfig {
   satelliteCount: number;

@@ -20,8 +20,8 @@ List primary scientific or engineering sources. Mark each number as:
 
 ## State model
 
-| Entity | Important state | Decisions |
-| --- | --- | --- |
+| Entity        | Important state          | Decisions                 |
+| ------------- | ------------------------ | ------------------------- |
 | Example asset | health, energy, position | continue, derate, isolate |
 
 ## Safety invariants

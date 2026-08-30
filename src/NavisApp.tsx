@@ -1,33 +1,491 @@
 import { useMemo, useState } from "react";
 import { CARTESIAN_STARS } from "./stellarAtlas";
-import { designSpacecraft, missionConfig, PROPULSION, type MissionId, type NavisConfig, type PropulsionId } from "./navis";
+import {
+  designSpacecraft,
+  missionConfig,
+  PROPULSION,
+  type MissionId,
+  type NavisConfig,
+  type PropulsionId,
+} from "./navis";
 
-const missionLabels: Record<MissionId,[string,string]> = { "orbital-tug":["TUG","CISLUNAR SERVICE"], "asteroid-freighter":["FREIGHTER","BULK INDUSTRY"], "atlas-probe":["PROBE","AUTONOMOUS SURVEY"], seedship:["SEEDSHIP","INDUSTRIAL BOOTSTRAP"] };
-const maturity = { 0:["M0","UNSUPPORTED CONCEPT"], 2:["M2","SUBSYSTEM EVIDENCE"], 5:["M5","FLIGHT-PROVEN FAMILY"] } as const;
-const n = (value:number,digits=1) => Number.isFinite(value) ? value.toLocaleString(undefined,{maximumFractionDigits:digits}) : "—";
+const missionLabels: Record<MissionId, [string, string]> = {
+  "orbital-tug": ["TUG", "CISLUNAR SERVICE"],
+  "asteroid-freighter": ["FREIGHTER", "BULK INDUSTRY"],
+  "atlas-probe": ["PROBE", "AUTONOMOUS SURVEY"],
+  seedship: ["SEEDSHIP", "INDUSTRIAL BOOTSTRAP"],
+};
+const maturity = {
+  0: ["M0", "UNSUPPORTED CONCEPT"],
+  2: ["M2", "SUBSYSTEM EVIDENCE"],
+  5: ["M5", "FLIGHT-PROVEN FAMILY"],
+} as const;
+const n = (value: number, digits = 1) =>
+  Number.isFinite(value) ? value.toLocaleString(undefined, { maximumFractionDigits: digits }) : "—";
 
-const EPSILON_ERIDANI_DISTANCE = CARTESIAN_STARS.find(star=>star.id==="epsilon-eri")!.distanceLy;
+const EPSILON_ERIDANI_DISTANCE = CARTESIAN_STARS.find((star) => star.id === "epsilon-eri")!.distanceLy;
 
 export function NavisApp() {
-  const [config,setConfig] = useState<NavisConfig>(()=>missionConfig("asteroid-freighter",EPSILON_ERIDANI_DISTANCE));
-  const result = useMemo(()=>designSpacecraft(config),[config]);
-  const targets = useMemo(()=>CARTESIAN_STARS.filter(s=>s.kind==="survey-target" || s.id==="sol").sort((a,b)=>a.distanceLy-b.distanceLy),[]);
-  const update = <K extends keyof NavisConfig>(key:K,value:NavisConfig[K])=>setConfig(c=>({...c,[key]:value}));
-  const selectMission=(mission:MissionId)=>setConfig(missionConfig(mission,config.targetDistanceLy));
-  const grade=maturity[result.maturity];
-  return <main className="nv-shell">
-    <header className="nv-top"><div className="nv-brand"><span>N//V</span><div><strong>RUIN // NAVIS</strong><small>SPACECRAFT SYSTEM ARCHITECT</small></div></div><nav><a href="./">HELIOS</a><a href="./atlas.html">ATLAS</a><b>NAVIS</b><a href="./ignis.html">IGNIS</a><a href="./odyssey.html">ODYSSEY</a><a href="./mender.html">MENDER</a></nav><div className="nv-state"><span>DESIGN TWIN · NON-FLIGHT SOFTWARE</span><b className={result.readiness.toLowerCase()}>{result.readiness}</b></div></header>
-    <section className="nv-layout">
-      <aside className="nv-panel nv-config"><Title n="01" text="MISSION FRAME"/><div className="nv-missions">{(Object.keys(missionLabels) as MissionId[]).map(id=><button key={id} className={config.mission===id?"active":""} onClick={()=>selectMission(id)}><b>{missionLabels[id][0]}</b><small>{missionLabels[id][1]}</small></button>)}</div><Title n="02" text="PROPULSION ARCHITECTURE"/><div className="nv-drives">{(Object.keys(PROPULSION) as PropulsionId[]).map(id=><button key={id} className={`${config.propulsion===id?"active":""} ${PROPULSION[id].maturity===0?"unsupported":""}`} onClick={()=>update("propulsion",id)}><span>{PROPULSION[id].name}</span><small>{n(PROPULSION[id].specificImpulseS,0)} s · {n(PROPULSION[id].thrustKN)} kN · M{PROPULSION[id].maturity}</small></button>)}</div><Title n="03" text="MASS CONTRACT"/><Control label="DRY BUS" value={config.dryMassT} unit="t" min={5} max={10000} step={config.dryMassT>1000?200:10} change={v=>update("dryMassT",v)}/><Control label="PAYLOAD" value={config.payloadT} unit="t" min={1} max={30000} step={config.payloadT>1000?500:10} change={v=>update("payloadT",v)}/><Control label="PROPELLANT" value={config.propellantT} unit="t" min={1} max={50000} step={config.propellantT>1000?500:10} change={v=>update("propellantT",v)}/><Range label="SYSTEM REDUNDANCY" value={config.redundancyPercent} min={0} max={100} suffix="%" change={v=>update("redundancyPercent",v)}/></aside>
-      <section className="nv-panel nv-stage"><div className="nv-stagehead"><Title n="04" text="PHYSICAL SPACECRAFT TWIN"/><span>{missionLabels[config.mission][0]} · {PROPULSION[config.propulsion].name}</span></div><ShipDiagram config={config} readiness={result.readiness}/><div className="nv-anatomy"><article><span>A</span><b>PROPULSION</b><small>{n(PROPULSION[config.propulsion].thrustKN)} kN / {n(PROPULSION[config.propulsion].specificImpulseS,0)} s</small></article><article><span>B</span><b>SEPARATED TANKAGE</b><small>fault isolation + center of mass</small></article><article><span>C</span><b>PAYLOAD SPINE</b><small>{n(config.payloadT,0)} t certified cargo</small></article><article><span>D</span><b>THERMAL WINGS</b><small>{n(config.radiatorAreaM2,0)} m² deployed</small></article><article><span>E</span><b>AUTONOMY CORE</b><small>{result.autonomyLevel}</small></article></div></section>
-      <aside className="nv-panel nv-output"><Title n="05" text="DESIGN VERDICT"/><div className={`nv-verdict ${result.readiness.toLowerCase()}`}><span>MISSION READINESS</span><b>{result.readiness}</b><small>{result.constraints[0]??"ALL PRELIMINARY BUDGETS POSITIVE"}</small></div><div className="nv-maturity"><div><span>{grade[0]}</span><b>{grade[1]}</b></div><p>{PROPULSION[config.propulsion].evidence}</p></div><div className="nv-metrics"><Metric label="WET MASS" value={n(result.wetMassT,0)} unit="t"/><Metric label="PAYLOAD FRACTION" value={n(result.payloadFractionPercent)} unit="%"/><Metric label="IDEAL ΔV" value={n(result.deltaVkmS,2)} unit="km/s" accent/><Metric label="INITIAL ACCEL" value={n(result.initialAccelerationMilliG,2)} unit="milli-g"/><Metric label="FULL BURN" value={n(result.burnDays??NaN,1)} unit="days"/><Metric label="THERMAL MARGIN" value={n(result.thermalMarginMW,1)} unit="MW" warning={result.thermalMarginMW<0}/></div><Title n="06" text="SYSTEM CONTRACTS"/><Control label="POWER PLANT" value={config.powerPlantMW} unit="MW" min={.5} max={10000} step={config.powerPlantMW>1000?250:config.powerPlantMW>100?20:2} change={v=>update("powerPlantMW",v)}/><Control label="HOTEL LOAD" value={config.hotelPowerMW} unit="MW" min={.1} max={2000} step={config.hotelPowerMW>100?20:1} change={v=>update("hotelPowerMW",v)}/><Control label="RADIATOR AREA" value={config.radiatorAreaM2} unit="m²" min={10} max={300000} step={config.radiatorAreaM2>10000?5000:200} change={v=>update("radiatorAreaM2",v)}/><Control label="RADIATOR TEMP" value={config.radiatorTemperatureK} unit="K" min={280} max={900} step={10} change={v=>update("radiatorTemperatureK",v)}/></aside>
-      <section className="nv-panel nv-route"><div className="nv-routeconfig"><Title n="07" text="ATLAS ROUTE CONTRACT"/><label>TARGET SYSTEM<select aria-label="Target system" value={config.targetDistanceLy} onChange={e=>update("targetDistanceLy",Number(e.target.value))}>{targets.map(star=><option key={star.id} value={star.distanceLy}>{star.name} · {n(star.distanceLy,1)} ly</option>)}</select></label><Control label="HIGH-GAIN APERTURE" value={config.antennaDiameterM} unit="m" min={.5} max={80} step={.5} change={v=>update("antennaDiameterM",v)}/></div><div className="nv-causal"><Title n="08" text="CAUSAL + TRANSIT ENVELOPE"/><div><Metric label="ONE-WAY COMMAND" value={n(result.oneWaySignalYears,2)} unit="years" accent/><Metric label="COMMAND + REPLY" value={n(result.roundTripSignalYears,2)} unit="years"/><Metric label="DIRECT LINK INDEX" value={n(result.linkIndex,1)} unit="/100" warning={result.linkIndex<1}/><Metric label="IDEAL ACCEL/DECEL TRIP" value={n(result.idealTransitYears??NaN,0)} unit="years" warning/></div><p>Transit is a non-relativistic upper-bound from total Δv split equally between acceleration and braking. It is not a trajectory solution.</p></div><div className="nv-constraints"><Title n="09" text="OPEN CONSTRAINTS"/><div>{result.constraints.length?result.constraints.map((item,i)=><article key={item}><span>C-{String(i+1).padStart(2,"0")}</span><p>{item}</p></article>):<article className="clear"><span>PASS</span><p>No preliminary budget violation detected.</p></article>}</div><small>NO WEAPONS · NO TARGETING · NO FLIGHT CERTIFICATION</small></div></section>
-    </section>
-  </main>;
+  const [config, setConfig] = useState<NavisConfig>(() =>
+    missionConfig("asteroid-freighter", EPSILON_ERIDANI_DISTANCE),
+  );
+  const result = useMemo(() => designSpacecraft(config), [config]);
+  const targets = useMemo(
+    () =>
+      CARTESIAN_STARS.filter((s) => s.kind === "survey-target" || s.id === "sol").sort(
+        (a, b) => a.distanceLy - b.distanceLy,
+      ),
+    [],
+  );
+  const update = <K extends keyof NavisConfig>(key: K, value: NavisConfig[K]) =>
+    setConfig((c) => ({ ...c, [key]: value }));
+  const selectMission = (mission: MissionId) => setConfig(missionConfig(mission, config.targetDistanceLy));
+  const grade = maturity[result.maturity];
+  return (
+    <main className="nv-shell">
+      <header className="nv-top">
+        <div className="nv-brand">
+          <span>N//V</span>
+          <div>
+            <strong>RUIN // NAVIS</strong>
+            <small>SPACECRAFT SYSTEM ARCHITECT</small>
+          </div>
+        </div>
+        <nav>
+          <a href="./">HELIOS</a>
+          <a href="./atlas.html">ATLAS</a>
+          <b>NAVIS</b>
+          <a href="./ignis.html">IGNIS</a>
+          <a href="./odyssey.html">ODYSSEY</a>
+          <a href="./mender.html">MENDER</a>
+        </nav>
+        <div className="nv-state">
+          <span>DESIGN TWIN · NON-FLIGHT SOFTWARE</span>
+          <b className={result.readiness.toLowerCase()}>{result.readiness}</b>
+        </div>
+      </header>
+      <section className="nv-layout">
+        <aside className="nv-panel nv-config">
+          <Title n="01" text="MISSION FRAME" />
+          <div className="nv-missions">
+            {(Object.keys(missionLabels) as MissionId[]).map((id) => (
+              <button
+                key={id}
+                className={config.mission === id ? "active" : ""}
+                onClick={() => selectMission(id)}
+              >
+                <b>{missionLabels[id][0]}</b>
+                <small>{missionLabels[id][1]}</small>
+              </button>
+            ))}
+          </div>
+          <Title n="02" text="PROPULSION ARCHITECTURE" />
+          <div className="nv-drives">
+            {(Object.keys(PROPULSION) as PropulsionId[]).map((id) => (
+              <button
+                key={id}
+                className={`${config.propulsion === id ? "active" : ""} ${PROPULSION[id].maturity === 0 ? "unsupported" : ""}`}
+                onClick={() => update("propulsion", id)}
+              >
+                <span>{PROPULSION[id].name}</span>
+                <small>
+                  {n(PROPULSION[id].specificImpulseS, 0)} s · {n(PROPULSION[id].thrustKN)} kN · M
+                  {PROPULSION[id].maturity}
+                </small>
+              </button>
+            ))}
+          </div>
+          <Title n="03" text="MASS CONTRACT" />
+          <Control
+            label="DRY BUS"
+            value={config.dryMassT}
+            unit="t"
+            min={5}
+            max={10000}
+            step={config.dryMassT > 1000 ? 200 : 10}
+            change={(v) => update("dryMassT", v)}
+          />
+          <Control
+            label="PAYLOAD"
+            value={config.payloadT}
+            unit="t"
+            min={1}
+            max={30000}
+            step={config.payloadT > 1000 ? 500 : 10}
+            change={(v) => update("payloadT", v)}
+          />
+          <Control
+            label="PROPELLANT"
+            value={config.propellantT}
+            unit="t"
+            min={1}
+            max={50000}
+            step={config.propellantT > 1000 ? 500 : 10}
+            change={(v) => update("propellantT", v)}
+          />
+          <Range
+            label="SYSTEM REDUNDANCY"
+            value={config.redundancyPercent}
+            min={0}
+            max={100}
+            suffix="%"
+            change={(v) => update("redundancyPercent", v)}
+          />
+        </aside>
+        <section className="nv-panel nv-stage">
+          <div className="nv-stagehead">
+            <Title n="04" text="PHYSICAL SPACECRAFT TWIN" />
+            <span>
+              {missionLabels[config.mission][0]} · {PROPULSION[config.propulsion].name}
+            </span>
+          </div>
+          <ShipDiagram config={config} readiness={result.readiness} />
+          <div className="nv-anatomy">
+            <article>
+              <span>A</span>
+              <b>PROPULSION</b>
+              <small>
+                {n(PROPULSION[config.propulsion].thrustKN)} kN /{" "}
+                {n(PROPULSION[config.propulsion].specificImpulseS, 0)} s
+              </small>
+            </article>
+            <article>
+              <span>B</span>
+              <b>SEPARATED TANKAGE</b>
+              <small>fault isolation + center of mass</small>
+            </article>
+            <article>
+              <span>C</span>
+              <b>PAYLOAD SPINE</b>
+              <small>{n(config.payloadT, 0)} t certified cargo</small>
+            </article>
+            <article>
+              <span>D</span>
+              <b>THERMAL WINGS</b>
+              <small>{n(config.radiatorAreaM2, 0)} m² deployed</small>
+            </article>
+            <article>
+              <span>E</span>
+              <b>AUTONOMY CORE</b>
+              <small>{result.autonomyLevel}</small>
+            </article>
+          </div>
+        </section>
+        <aside className="nv-panel nv-output">
+          <Title n="05" text="DESIGN VERDICT" />
+          <div className={`nv-verdict ${result.readiness.toLowerCase()}`}>
+            <span>MISSION READINESS</span>
+            <b>{result.readiness}</b>
+            <small>{result.constraints[0] ?? "ALL PRELIMINARY BUDGETS POSITIVE"}</small>
+          </div>
+          <div className="nv-maturity">
+            <div>
+              <span>{grade[0]}</span>
+              <b>{grade[1]}</b>
+            </div>
+            <p>{PROPULSION[config.propulsion].evidence}</p>
+          </div>
+          <div className="nv-metrics">
+            <Metric label="WET MASS" value={n(result.wetMassT, 0)} unit="t" />
+            <Metric label="PAYLOAD FRACTION" value={n(result.payloadFractionPercent)} unit="%" />
+            <Metric label="IDEAL ΔV" value={n(result.deltaVkmS, 2)} unit="km/s" accent />
+            <Metric label="INITIAL ACCEL" value={n(result.initialAccelerationMilliG, 2)} unit="milli-g" />
+            <Metric label="FULL BURN" value={n(result.burnDays ?? NaN, 1)} unit="days" />
+            <Metric
+              label="THERMAL MARGIN"
+              value={n(result.thermalMarginMW, 1)}
+              unit="MW"
+              warning={result.thermalMarginMW < 0}
+            />
+          </div>
+          <Title n="06" text="SYSTEM CONTRACTS" />
+          <Control
+            label="POWER PLANT"
+            value={config.powerPlantMW}
+            unit="MW"
+            min={0.5}
+            max={10000}
+            step={config.powerPlantMW > 1000 ? 250 : config.powerPlantMW > 100 ? 20 : 2}
+            change={(v) => update("powerPlantMW", v)}
+          />
+          <Control
+            label="HOTEL LOAD"
+            value={config.hotelPowerMW}
+            unit="MW"
+            min={0.1}
+            max={2000}
+            step={config.hotelPowerMW > 100 ? 20 : 1}
+            change={(v) => update("hotelPowerMW", v)}
+          />
+          <Control
+            label="RADIATOR AREA"
+            value={config.radiatorAreaM2}
+            unit="m²"
+            min={10}
+            max={300000}
+            step={config.radiatorAreaM2 > 10000 ? 5000 : 200}
+            change={(v) => update("radiatorAreaM2", v)}
+          />
+          <Control
+            label="RADIATOR TEMP"
+            value={config.radiatorTemperatureK}
+            unit="K"
+            min={280}
+            max={900}
+            step={10}
+            change={(v) => update("radiatorTemperatureK", v)}
+          />
+        </aside>
+        <section className="nv-panel nv-route">
+          <div className="nv-routeconfig">
+            <Title n="07" text="ATLAS ROUTE CONTRACT" />
+            <label>
+              TARGET SYSTEM
+              <select
+                aria-label="Target system"
+                value={config.targetDistanceLy}
+                onChange={(e) => update("targetDistanceLy", Number(e.target.value))}
+              >
+                {targets.map((star) => (
+                  <option key={star.id} value={star.distanceLy}>
+                    {star.name} · {n(star.distanceLy, 1)} ly
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Control
+              label="HIGH-GAIN APERTURE"
+              value={config.antennaDiameterM}
+              unit="m"
+              min={0.5}
+              max={80}
+              step={0.5}
+              change={(v) => update("antennaDiameterM", v)}
+            />
+          </div>
+          <div className="nv-causal">
+            <Title n="08" text="CAUSAL + TRANSIT ENVELOPE" />
+            <div>
+              <Metric label="ONE-WAY COMMAND" value={n(result.oneWaySignalYears, 2)} unit="years" accent />
+              <Metric label="COMMAND + REPLY" value={n(result.roundTripSignalYears, 2)} unit="years" />
+              <Metric
+                label="DIRECT LINK INDEX"
+                value={n(result.linkIndex, 1)}
+                unit="/100"
+                warning={result.linkIndex < 1}
+              />
+              <Metric
+                label="IDEAL ACCEL/DECEL TRIP"
+                value={n(result.idealTransitYears ?? NaN, 0)}
+                unit="years"
+                warning
+              />
+            </div>
+            <p>
+              Transit is a non-relativistic upper-bound from total Δv split equally between acceleration and
+              braking. It is not a trajectory solution.
+            </p>
+          </div>
+          <div className="nv-constraints">
+            <Title n="09" text="OPEN CONSTRAINTS" />
+            <div>
+              {result.constraints.length ? (
+                result.constraints.map((item, i) => (
+                  <article key={item}>
+                    <span>C-{String(i + 1).padStart(2, "0")}</span>
+                    <p>{item}</p>
+                  </article>
+                ))
+              ) : (
+                <article className="clear">
+                  <span>PASS</span>
+                  <p>No preliminary budget violation detected.</p>
+                </article>
+              )}
+            </div>
+            <small>NO WEAPONS · NO TARGETING · NO FLIGHT CERTIFICATION</small>
+          </div>
+        </section>
+      </section>
+    </main>
+  );
 }
 
-function ShipDiagram({config,readiness}:{config:NavisConfig;readiness:string}) { const payload=Math.min(190,70+Math.log10(config.payloadT+1)*38); const tanks=Math.min(150,55+Math.log10(config.propellantT+1)*32); const rad=Math.min(145,45+Math.log10(config.radiatorAreaM2+1)*20); return <svg className={`nv-ship ${readiness.toLowerCase()}`} viewBox="0 0 760 390" role="img" aria-label="Parametric spacecraft side and top projection"><defs><linearGradient id="hull"><stop stopColor="#e3e5df"/><stop offset=".45" stopColor="#858d89"/><stop offset="1" stopColor="#333a39"/></linearGradient><marker id="nvArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0 0L8 3 0 6Z" fill="#d49c58"/></marker></defs><g transform="translate(85 194)"><path className="exhaust" d="M0-22L-64 0 0 22"/><rect className="drive" x="0" y="-42" width="62" height="84" rx="9"/><g className="tanks"><rect x="62" y="-35" width={tanks} height="29" rx="13"/><rect x="62" y="6" width={tanks} height="29" rx="13"/></g><rect className="spine" x={62+tanks} y="-9" width={payload} height="18"/><rect className="cargo" x={70+tanks} y="-47" width={payload-18} height="94" rx="5"/><g className="radiators" transform={`translate(${100+tanks+payload*.45} 0)`}><path d={`M0-48L-${rad*.32}-${rad}H${rad*.32}Z`}/><path d={`M0 48L-${rad*.32} ${rad}H${rad*.32}Z`}/></g><g className="core" transform={`translate(${68+tanks+payload} 0)`}><rect x="0" y="-31" width="56" height="62" rx="12"/><circle cx="28" cy="0" r="12"/></g><g className="dish" transform={`translate(${142+tanks+payload} 0)`}><path d="M0-42Q48 0 0 42Q20 0 0-42"/><path d="M8 0H47"/><circle cx="49" r="4"/></g><path className="thrust-vector" d="M-3 67H155"/><text x="80" y="61">THRUST VECTOR</text></g><g className="nv-callouts"><path d="M116 150V75H52"/><text x="48" y="69">A // DRIVE</text><path d="M210 230V310H105"/><text x="101" y="325">B // TANKAGE</text><path d="M380 145V72H343"/><text x="339" y="66">C // PAYLOAD</text><path d="M438 270V331H390"/><text x="386" y="345">D // RADIATOR</text><path d="M575 153V78H614"/><text x="618" y="72">E // AUTONOMY</text><path d="M670 194V310H705"/><text x="709" y="325">F // COMMS</text></g></svg>; }
-function Title({n,text}:{n:string;text:string}){return <div className="nv-title"><span>{n}</span>{text}</div>}
-function Control({label,value,unit,min,max,step,change}:{label:string;value:number;unit:string;min:number;max:number;step:number;change:(v:number)=>void}){return <div className="nv-control"><span>{label}</span><div><button aria-label={`Decrease ${label}`} onClick={()=>change(Math.max(min,value-step))}>−</button><b>{n(value,1)}<small>{unit}</small></b><button aria-label={`Increase ${label}`} onClick={()=>change(Math.min(max,value+step))}>+</button></div></div>}
-function Range({label,value,min,max,suffix,change}:{label:string;value:number;min:number;max:number;suffix:string;change:(v:number)=>void}){return <label className="nv-range"><span>{label}<b>{value}{suffix}</b></span><input aria-label={label} type="range" min={min} max={max} value={value} onChange={e=>change(Number(e.target.value))}/></label>}
-function Metric({label,value,unit,accent,warning}:{label:string;value:string;unit:string;accent?:boolean;warning?:boolean}){return <div className={`nv-metric ${accent?"accent":""} ${warning?"warning":""}`}><span>{label}</span><b>{value}<small>{unit}</small></b></div>}
+function ShipDiagram({ config, readiness }: { config: NavisConfig; readiness: string }) {
+  const payload = Math.min(190, 70 + Math.log10(config.payloadT + 1) * 38);
+  const tanks = Math.min(150, 55 + Math.log10(config.propellantT + 1) * 32);
+  const rad = Math.min(145, 45 + Math.log10(config.radiatorAreaM2 + 1) * 20);
+  return (
+    <svg
+      className={`nv-ship ${readiness.toLowerCase()}`}
+      viewBox="0 0 760 390"
+      role="img"
+      aria-label="Parametric spacecraft side and top projection"
+    >
+      <defs>
+        <linearGradient id="hull">
+          <stop stopColor="#e3e5df" />
+          <stop offset=".45" stopColor="#858d89" />
+          <stop offset="1" stopColor="#333a39" />
+        </linearGradient>
+        <marker id="nvArrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <path d="M0 0L8 3 0 6Z" fill="#d49c58" />
+        </marker>
+      </defs>
+      <g transform="translate(85 194)">
+        <path className="exhaust" d="M0-22L-64 0 0 22" />
+        <rect className="drive" x="0" y="-42" width="62" height="84" rx="9" />
+        <g className="tanks">
+          <rect x="62" y="-35" width={tanks} height="29" rx="13" />
+          <rect x="62" y="6" width={tanks} height="29" rx="13" />
+        </g>
+        <rect className="spine" x={62 + tanks} y="-9" width={payload} height="18" />
+        <rect className="cargo" x={70 + tanks} y="-47" width={payload - 18} height="94" rx="5" />
+        <g className="radiators" transform={`translate(${100 + tanks + payload * 0.45} 0)`}>
+          <path d={`M0-48L-${rad * 0.32}-${rad}H${rad * 0.32}Z`} />
+          <path d={`M0 48L-${rad * 0.32} ${rad}H${rad * 0.32}Z`} />
+        </g>
+        <g className="core" transform={`translate(${68 + tanks + payload} 0)`}>
+          <rect x="0" y="-31" width="56" height="62" rx="12" />
+          <circle cx="28" cy="0" r="12" />
+        </g>
+        <g className="dish" transform={`translate(${142 + tanks + payload} 0)`}>
+          <path d="M0-42Q48 0 0 42Q20 0 0-42" />
+          <path d="M8 0H47" />
+          <circle cx="49" r="4" />
+        </g>
+        <path className="thrust-vector" d="M-3 67H155" />
+        <text x="80" y="61">
+          THRUST VECTOR
+        </text>
+      </g>
+      <g className="nv-callouts">
+        <path d="M116 150V75H52" />
+        <text x="48" y="69">
+          A // DRIVE
+        </text>
+        <path d="M210 230V310H105" />
+        <text x="101" y="325">
+          B // TANKAGE
+        </text>
+        <path d="M380 145V72H343" />
+        <text x="339" y="66">
+          C // PAYLOAD
+        </text>
+        <path d="M438 270V331H390" />
+        <text x="386" y="345">
+          D // RADIATOR
+        </text>
+        <path d="M575 153V78H614" />
+        <text x="618" y="72">
+          E // AUTONOMY
+        </text>
+        <path d="M670 194V310H705" />
+        <text x="709" y="325">
+          F // COMMS
+        </text>
+      </g>
+    </svg>
+  );
+}
+function Title({ n, text }: { n: string; text: string }) {
+  return (
+    <div className="nv-title">
+      <span>{n}</span>
+      {text}
+    </div>
+  );
+}
+function Control({
+  label,
+  value,
+  unit,
+  min,
+  max,
+  step,
+  change,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  min: number;
+  max: number;
+  step: number;
+  change: (v: number) => void;
+}) {
+  return (
+    <div className="nv-control">
+      <span>{label}</span>
+      <div>
+        <button aria-label={`Decrease ${label}`} onClick={() => change(Math.max(min, value - step))}>
+          −
+        </button>
+        <b>
+          {n(value, 1)}
+          <small>{unit}</small>
+        </b>
+        <button aria-label={`Increase ${label}`} onClick={() => change(Math.min(max, value + step))}>
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+function Range({
+  label,
+  value,
+  min,
+  max,
+  suffix,
+  change,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  suffix: string;
+  change: (v: number) => void;
+}) {
+  return (
+    <label className="nv-range">
+      <span>
+        {label}
+        <b>
+          {value}
+          {suffix}
+        </b>
+      </span>
+      <input
+        aria-label={label}
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        onChange={(e) => change(Number(e.target.value))}
+      />
+    </label>
+  );
+}
+function Metric({
+  label,
+  value,
+  unit,
+  accent,
+  warning,
+}: {
+  label: string;
+  value: string;
+  unit: string;
+  accent?: boolean;
+  warning?: boolean;
+}) {
+  return (
+    <div className={`nv-metric ${accent ? "accent" : ""} ${warning ? "warning" : ""}`}>
+      <span>{label}</span>
+      <b>
+        {value}
+        <small>{unit}</small>
+      </b>
+    </div>
+  );
+}

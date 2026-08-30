@@ -1,7 +1,543 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap');
-:root{color:#e3e5df;background:#080a0a;font-family:Manrope,sans-serif}*{box-sizing:border-box}body{margin:0;min-width:1220px;height:100vh;overflow:hidden;background:radial-gradient(circle at 48% 37%,#26231c,#101212 48%,#080a0a 80%)}button,input,select{font:inherit}.nv-shell{height:100vh;display:grid;grid-template-rows:66px minmax(0,1fr)}.nv-top{display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid #3b3a33;background:#0a0c0cf2}.nv-brand{min-width:340px;display:flex;align-items:center;gap:12px}.nv-brand>span{width:43px;height:38px;display:grid;place-items:center;border:1px solid #8a704e;color:#e2aa68;font:500 8px DM Mono}.nv-brand div{display:grid}.nv-brand strong{font-size:15px;letter-spacing:.17em}.nv-brand small,.nv-state{color:#77746b;font:400 7px DM Mono}.nv-top nav{display:flex;gap:3px;border:1px solid #3d3b34;padding:3px}.nv-top nav a,.nv-top nav b{padding:7px 11px;color:#817d73;text-decoration:none;font:500 7px DM Mono}.nv-top nav b{background:#292116;color:#e5aa65}.nv-state{min-width:340px;display:flex;justify-content:flex-end;gap:18px}.nv-state b{color:#71d0ab}.nv-state b.conditional{color:#e4ae62}.nv-state b.no-go{color:#ff6976}
-.nv-layout{min-height:0;padding:11px 13px;display:grid;grid-template-columns:260px minmax(600px,1fr) 300px;grid-template-rows:minmax(0,1fr) 190px;gap:10px}.nv-panel{border:1px solid #3d3b34;background:#101212ec}.nv-title{display:flex;align-items:center;gap:8px;color:#888278;font:500 7px DM Mono;letter-spacing:.13em}.nv-title>span{color:#dba05c}.nv-title:after{content:"";height:1px;background:#403d35;flex:1}.nv-config{grid-row:1/3;padding:14px;display:flex;flex-direction:column;gap:8px}.nv-missions{display:grid;grid-template-columns:1fr 1fr;gap:4px}.nv-missions button{height:43px;border:1px solid #413f38;background:#151716;color:#898379;text-align:left;padding:7px;font:500 7px DM Mono}.nv-missions small{display:block;margin-top:4px;color:#66645d;font:400 5px DM Mono}.nv-missions button.active{border-color:#8d704d;background:#2b241a;color:#e5ac67}.nv-drives{display:grid;gap:4px}.nv-drives button{height:35px;display:grid;align-content:center;border:1px solid #3f3d36;background:#151716;color:#8a857b;text-align:left;padding:5px 8px;font:500 6px DM Mono}.nv-drives small{color:#66635b;font:400 5px DM Mono}.nv-drives button.active{border-color:#8e704b;background:#282117;color:#e0a763}.nv-drives button.unsupported.active{border-color:#88424b;background:#281518;color:#ff7280}.nv-control{display:grid;gap:4px}.nv-control>span{color:#6c6962;font:400 6px DM Mono}.nv-control>div{height:29px;display:grid;grid-template-columns:29px 1fr 29px;border:1px solid #403e37}.nv-control button{border:0;background:#171918;color:#8f877a}.nv-control b{display:grid;grid-auto-flow:column;gap:5px;place-content:center;border:solid #403e37;border-width:0 1px;font:400 10px DM Mono}.nv-control small{font-size:5px;color:#6d6961}.nv-range{display:grid;gap:5px}.nv-range span{display:flex;justify-content:space-between;color:#6c6962;font:400 6px DM Mono}.nv-range b{color:#d7a464;font-weight:400}.nv-range input{width:100%;accent-color:#d59c58}
-.nv-stage{padding:13px 15px;display:flex;flex-direction:column;min-height:0;overflow:hidden;background:linear-gradient(90deg,transparent 49.9%,#282820 50%,transparent 50.1%),linear-gradient(#121514,#0d0f0f)}.nv-stagehead{display:flex}.nv-stagehead .nv-title{flex:1}.nv-stagehead>span{color:#756f64;font:400 6px DM Mono}.nv-ship{width:100%;height:100%;min-height:330px;filter:drop-shadow(0 15px 18px #000b)}.nv-ship .exhaust{fill:#c98442;opacity:.6;filter:drop-shadow(-8px 0 9px #e1873a)}.nv-ship .drive{fill:#343936;stroke:#c3b8a5;stroke-width:2}.nv-ship .tanks rect{fill:#717874;stroke:#c8ccc5}.nv-ship .spine{fill:#b8bdb6}.nv-ship .cargo{fill:url(#hull);stroke:#d6d9d2}.nv-ship .cargo+*{}.nv-ship .radiators path{fill:#263f3d;stroke:#71aaa1;stroke-width:1}.nv-ship .core rect{fill:#6d736f;stroke:#d5d8d1}.nv-ship .core circle{fill:#161a19;stroke:#dda259}.nv-ship .dish path{fill:#8c938d;stroke:#d8dbd4}.nv-ship .dish circle{fill:#dfa35d}.nv-ship .thrust-vector{stroke:#d39b58;stroke-dasharray:6 5;marker-end:url(#nvArrow)}.nv-ship>g>text{fill:#866f50;font:500 6px DM Mono}.nv-callouts path{fill:none;stroke:#55534b}.nv-callouts text{fill:#777269;font:500 6px DM Mono}.nv-ship.no-go .drive,.nv-ship.no-go .core rect{stroke:#ff6674}.nv-anatomy{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.nv-anatomy article{padding:6px;border-top:1px solid #444139;display:grid;grid-template-columns:18px 1fr}.nv-anatomy span{grid-row:1/3;color:#d99e5a;font:500 8px DM Mono}.nv-anatomy b{color:#aaa398;font:500 6px DM Mono}.nv-anatomy small{color:#67645d;font:400 5px DM Mono}
-.nv-output{padding:14px;display:flex;flex-direction:column;gap:8px;overflow:auto}.nv-verdict{padding:9px;border:1px solid #3d765f;background:#11231d;display:grid;gap:3px}.nv-verdict span,.nv-verdict small{color:#6d887c;font:400 5px DM Mono}.nv-verdict b{color:#72d2ab;font:500 18px DM Mono}.nv-verdict.conditional{border-color:#795e38;background:#251e13}.nv-verdict.conditional b{color:#e4ad61}.nv-verdict.no-go{border-color:#803d46;background:#251316}.nv-verdict.no-go b{color:#ff6a78}.nv-maturity{padding:7px;border-left:2px solid #d49b58;background:#1e1a14}.nv-maturity div{display:flex;align-items:center;gap:8px}.nv-maturity span{color:#e1a660;font:500 10px DM Mono}.nv-maturity b{color:#aaa297;font:500 6px DM Mono}.nv-maturity p{margin:4px 0 0;color:#706b63;font:400 5px/1.4 DM Mono}.nv-metrics{display:grid;grid-template-columns:1fr 1fr;border:1px solid #3f3c35}.nv-metric{padding:8px;display:grid;gap:3px;border-right:1px solid #3f3c35;border-bottom:1px solid #3f3c35}.nv-metric:nth-child(even){border-right:0}.nv-metric:nth-last-child(-n+2){border-bottom:0}.nv-metric span{color:#6b6860;font:400 5px DM Mono}.nv-metric b{font:400 12px DM Mono}.nv-metric small{margin-left:4px;color:#777067;font-size:5px}.nv-metric.accent b{color:#e2a761}.nv-metric.warning b{color:#ff6c78}
-.nv-route{grid-column:2/4;padding:11px 14px;display:grid;grid-template-columns:245px 1fr 1.15fr;gap:14px;overflow:hidden}.nv-routeconfig,.nv-causal,.nv-constraints{display:flex;flex-direction:column;gap:8px;min-width:0}.nv-routeconfig>label{display:grid;gap:5px;color:#6d6961;font:400 6px DM Mono}.nv-route select{width:100%;height:31px;border:1px solid #454138;background:#171918;color:#aaa298;padding:0 7px;font:400 7px DM Mono}.nv-causal>div{display:grid;grid-template-columns:1fr 1fr;border:1px solid #3f3c35}.nv-causal p{margin:0;color:#6d6961;font:400 5px/1.45 DM Mono}.nv-constraints>div{overflow:auto}.nv-constraints article{display:grid;grid-template-columns:36px 1fr;padding:5px 7px;margin-bottom:4px;border-left:2px solid #e0a259;background:#1b1813}.nv-constraints article span{color:#dba05c;font:500 5px DM Mono}.nv-constraints article p{margin:0;color:#9b9388;font:400 6px DM Mono}.nv-constraints article.clear{border-color:#65c69f;background:#111c18}.nv-constraints article.clear span{color:#69cca4}.nv-constraints>small{margin-top:auto;color:#714d52;font:500 5px DM Mono}
-@media(max-height:830px){.nv-layout{grid-template-rows:minmax(0,1fr) 164px}.nv-ship{min-height:270px}.nv-config,.nv-output{gap:6px}.nv-control>div{height:25px}.nv-anatomy{display:none}.nv-route{gap:9px}.nv-missions button{height:37px}.nv-drives button{height:31px}}
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap");
+:root {
+  color: #e3e5df;
+  background: #080a0a;
+  font-family: Manrope, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 1220px;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 48% 37%, #26231c, #101212 48%, #080a0a 80%);
+}
+button,
+input,
+select {
+  font: inherit;
+}
+.nv-shell {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 66px minmax(0, 1fr);
+}
+.nv-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  border-bottom: 1px solid #3b3a33;
+  background: #0a0c0cf2;
+}
+.nv-brand {
+  min-width: 340px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.nv-brand > span {
+  width: 43px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #8a704e;
+  color: #e2aa68;
+  font: 500 8px DM Mono;
+}
+.nv-brand div {
+  display: grid;
+}
+.nv-brand strong {
+  font-size: 15px;
+  letter-spacing: 0.17em;
+}
+.nv-brand small,
+.nv-state {
+  color: #77746b;
+  font: 400 7px DM Mono;
+}
+.nv-top nav {
+  display: flex;
+  gap: 3px;
+  border: 1px solid #3d3b34;
+  padding: 3px;
+}
+.nv-top nav a,
+.nv-top nav b {
+  padding: 7px 11px;
+  color: #817d73;
+  text-decoration: none;
+  font: 500 7px DM Mono;
+}
+.nv-top nav b {
+  background: #292116;
+  color: #e5aa65;
+}
+.nv-state {
+  min-width: 340px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 18px;
+}
+.nv-state b {
+  color: #71d0ab;
+}
+.nv-state b.conditional {
+  color: #e4ae62;
+}
+.nv-state b.no-go {
+  color: #ff6976;
+}
+.nv-layout {
+  min-height: 0;
+  padding: 11px 13px;
+  display: grid;
+  grid-template-columns: 260px minmax(600px, 1fr) 300px;
+  grid-template-rows: minmax(0, 1fr) 190px;
+  gap: 10px;
+}
+.nv-panel {
+  border: 1px solid #3d3b34;
+  background: #101212ec;
+}
+.nv-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #888278;
+  font: 500 7px DM Mono;
+  letter-spacing: 0.13em;
+}
+.nv-title > span {
+  color: #dba05c;
+}
+.nv-title:after {
+  content: "";
+  height: 1px;
+  background: #403d35;
+  flex: 1;
+}
+.nv-config {
+  grid-row: 1/3;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.nv-missions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.nv-missions button {
+  height: 43px;
+  border: 1px solid #413f38;
+  background: #151716;
+  color: #898379;
+  text-align: left;
+  padding: 7px;
+  font: 500 7px DM Mono;
+}
+.nv-missions small {
+  display: block;
+  margin-top: 4px;
+  color: #66645d;
+  font: 400 5px DM Mono;
+}
+.nv-missions button.active {
+  border-color: #8d704d;
+  background: #2b241a;
+  color: #e5ac67;
+}
+.nv-drives {
+  display: grid;
+  gap: 4px;
+}
+.nv-drives button {
+  height: 35px;
+  display: grid;
+  align-content: center;
+  border: 1px solid #3f3d36;
+  background: #151716;
+  color: #8a857b;
+  text-align: left;
+  padding: 5px 8px;
+  font: 500 6px DM Mono;
+}
+.nv-drives small {
+  color: #66635b;
+  font: 400 5px DM Mono;
+}
+.nv-drives button.active {
+  border-color: #8e704b;
+  background: #282117;
+  color: #e0a763;
+}
+.nv-drives button.unsupported.active {
+  border-color: #88424b;
+  background: #281518;
+  color: #ff7280;
+}
+.nv-control {
+  display: grid;
+  gap: 4px;
+}
+.nv-control > span {
+  color: #6c6962;
+  font: 400 6px DM Mono;
+}
+.nv-control > div {
+  height: 29px;
+  display: grid;
+  grid-template-columns: 29px 1fr 29px;
+  border: 1px solid #403e37;
+}
+.nv-control button {
+  border: 0;
+  background: #171918;
+  color: #8f877a;
+}
+.nv-control b {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 5px;
+  place-content: center;
+  border: solid #403e37;
+  border-width: 0 1px;
+  font: 400 10px DM Mono;
+}
+.nv-control small {
+  font-size: 5px;
+  color: #6d6961;
+}
+.nv-range {
+  display: grid;
+  gap: 5px;
+}
+.nv-range span {
+  display: flex;
+  justify-content: space-between;
+  color: #6c6962;
+  font: 400 6px DM Mono;
+}
+.nv-range b {
+  color: #d7a464;
+  font-weight: 400;
+}
+.nv-range input {
+  width: 100%;
+  accent-color: #d59c58;
+}
+.nv-stage {
+  padding: 13px 15px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, transparent 49.9%, #282820 50%, transparent 50.1%),
+    linear-gradient(#121514, #0d0f0f);
+}
+.nv-stagehead {
+  display: flex;
+}
+.nv-stagehead .nv-title {
+  flex: 1;
+}
+.nv-stagehead > span {
+  color: #756f64;
+  font: 400 6px DM Mono;
+}
+.nv-ship {
+  width: 100%;
+  height: 100%;
+  min-height: 330px;
+  filter: drop-shadow(0 15px 18px #000b);
+}
+.nv-ship .exhaust {
+  fill: #c98442;
+  opacity: 0.6;
+  filter: drop-shadow(-8px 0 9px #e1873a);
+}
+.nv-ship .drive {
+  fill: #343936;
+  stroke: #c3b8a5;
+  stroke-width: 2;
+}
+.nv-ship .tanks rect {
+  fill: #717874;
+  stroke: #c8ccc5;
+}
+.nv-ship .spine {
+  fill: #b8bdb6;
+}
+.nv-ship .cargo {
+  fill: url(#hull);
+  stroke: #d6d9d2;
+}
+.nv-ship .cargo + * {
+}
+.nv-ship .radiators path {
+  fill: #263f3d;
+  stroke: #71aaa1;
+  stroke-width: 1;
+}
+.nv-ship .core rect {
+  fill: #6d736f;
+  stroke: #d5d8d1;
+}
+.nv-ship .core circle {
+  fill: #161a19;
+  stroke: #dda259;
+}
+.nv-ship .dish path {
+  fill: #8c938d;
+  stroke: #d8dbd4;
+}
+.nv-ship .dish circle {
+  fill: #dfa35d;
+}
+.nv-ship .thrust-vector {
+  stroke: #d39b58;
+  stroke-dasharray: 6 5;
+  marker-end: url(#nvArrow);
+}
+.nv-ship > g > text {
+  fill: #866f50;
+  font: 500 6px DM Mono;
+}
+.nv-callouts path {
+  fill: none;
+  stroke: #55534b;
+}
+.nv-callouts text {
+  fill: #777269;
+  font: 500 6px DM Mono;
+}
+.nv-ship.no-go .drive,
+.nv-ship.no-go .core rect {
+  stroke: #ff6674;
+}
+.nv-anatomy {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+.nv-anatomy article {
+  padding: 6px;
+  border-top: 1px solid #444139;
+  display: grid;
+  grid-template-columns: 18px 1fr;
+}
+.nv-anatomy span {
+  grid-row: 1/3;
+  color: #d99e5a;
+  font: 500 8px DM Mono;
+}
+.nv-anatomy b {
+  color: #aaa398;
+  font: 500 6px DM Mono;
+}
+.nv-anatomy small {
+  color: #67645d;
+  font: 400 5px DM Mono;
+}
+.nv-output {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+}
+.nv-verdict {
+  padding: 9px;
+  border: 1px solid #3d765f;
+  background: #11231d;
+  display: grid;
+  gap: 3px;
+}
+.nv-verdict span,
+.nv-verdict small {
+  color: #6d887c;
+  font: 400 5px DM Mono;
+}
+.nv-verdict b {
+  color: #72d2ab;
+  font: 500 18px DM Mono;
+}
+.nv-verdict.conditional {
+  border-color: #795e38;
+  background: #251e13;
+}
+.nv-verdict.conditional b {
+  color: #e4ad61;
+}
+.nv-verdict.no-go {
+  border-color: #803d46;
+  background: #251316;
+}
+.nv-verdict.no-go b {
+  color: #ff6a78;
+}
+.nv-maturity {
+  padding: 7px;
+  border-left: 2px solid #d49b58;
+  background: #1e1a14;
+}
+.nv-maturity div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nv-maturity span {
+  color: #e1a660;
+  font: 500 10px DM Mono;
+}
+.nv-maturity b {
+  color: #aaa297;
+  font: 500 6px DM Mono;
+}
+.nv-maturity p {
+  margin: 4px 0 0;
+  color: #706b63;
+  font: 400 5px/1.4 DM Mono;
+}
+.nv-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #3f3c35;
+}
+.nv-metric {
+  padding: 8px;
+  display: grid;
+  gap: 3px;
+  border-right: 1px solid #3f3c35;
+  border-bottom: 1px solid #3f3c35;
+}
+.nv-metric:nth-child(even) {
+  border-right: 0;
+}
+.nv-metric:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+.nv-metric span {
+  color: #6b6860;
+  font: 400 5px DM Mono;
+}
+.nv-metric b {
+  font: 400 12px DM Mono;
+}
+.nv-metric small {
+  margin-left: 4px;
+  color: #777067;
+  font-size: 5px;
+}
+.nv-metric.accent b {
+  color: #e2a761;
+}
+.nv-metric.warning b {
+  color: #ff6c78;
+}
+.nv-route {
+  grid-column: 2/4;
+  padding: 11px 14px;
+  display: grid;
+  grid-template-columns: 245px 1fr 1.15fr;
+  gap: 14px;
+  overflow: hidden;
+}
+.nv-routeconfig,
+.nv-causal,
+.nv-constraints {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.nv-routeconfig > label {
+  display: grid;
+  gap: 5px;
+  color: #6d6961;
+  font: 400 6px DM Mono;
+}
+.nv-route select {
+  width: 100%;
+  height: 31px;
+  border: 1px solid #454138;
+  background: #171918;
+  color: #aaa298;
+  padding: 0 7px;
+  font: 400 7px DM Mono;
+}
+.nv-causal > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #3f3c35;
+}
+.nv-causal p {
+  margin: 0;
+  color: #6d6961;
+  font: 400 5px/1.45 DM Mono;
+}
+.nv-constraints > div {
+  overflow: auto;
+}
+.nv-constraints article {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  padding: 5px 7px;
+  margin-bottom: 4px;
+  border-left: 2px solid #e0a259;
+  background: #1b1813;
+}
+.nv-constraints article span {
+  color: #dba05c;
+  font: 500 5px DM Mono;
+}
+.nv-constraints article p {
+  margin: 0;
+  color: #9b9388;
+  font: 400 6px DM Mono;
+}
+.nv-constraints article.clear {
+  border-color: #65c69f;
+  background: #111c18;
+}
+.nv-constraints article.clear span {
+  color: #69cca4;
+}
+.nv-constraints > small {
+  margin-top: auto;
+  color: #714d52;
+  font: 500 5px DM Mono;
+}
+@media (max-height: 830px) {
+  .nv-layout {
+    grid-template-rows: minmax(0, 1fr) 164px;
+  }
+  .nv-ship {
+    min-height: 270px;
+  }
+  .nv-config,
+  .nv-output {
+    gap: 6px;
+  }
+  .nv-control > div {
+    height: 25px;
+  }
+  .nv-anatomy {
+    display: none;
+  }
+  .nv-route {
+    gap: 9px;
+  }
+  .nv-missions button {
+    height: 37px;
+  }
+  .nv-drives button {
+    height: 31px;
+  }
+}

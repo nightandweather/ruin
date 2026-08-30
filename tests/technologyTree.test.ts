@@ -11,12 +11,24 @@ describe("technology tree", () => {
   });
 
   it("does not unlock a stellar collector grid before its complete supply chain", () => {
-    const plan = planTechnology(["closed-loop-autonomy", "in-situ-refining", "machine-replication", "fusion-grid", "beamed-power"]);
+    const plan = planTechnology([
+      "closed-loop-autonomy",
+      "in-situ-refining",
+      "machine-replication",
+      "fusion-grid",
+      "beamed-power",
+    ]);
     expect(plan.next.some(({ id }) => id === "stellar-collector-grid")).toBe(false);
-    expect(plan.blocked.find(({ technology }) => technology.id === "stellar-collector-grid")?.missing).toContain("rare-material-ledger");
+    expect(
+      plan.blocked.find(({ technology }) => technology.id === "stellar-collector-grid")?.missing,
+    ).toContain("rare-material-ledger");
   });
 
   it("keeps every technology tied to an operational failure", () => {
-    expect(TECHNOLOGY_TREE.every(({ operationalQuestion, failureMode }) => operationalQuestion.length > 10 && failureMode.length > 10)).toBe(true);
+    expect(
+      TECHNOLOGY_TREE.every(
+        ({ operationalQuestion, failureMode }) => operationalQuestion.length > 10 && failureMode.length > 10,
+      ),
+    ).toBe(true);
   });
 });

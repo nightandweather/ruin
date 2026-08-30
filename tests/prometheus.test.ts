@@ -1,1 +1,31 @@
-import{describe,it,expect}from"vitest";import{evaluatePrometheus,prometheusConfig}from"../src/prometheus";describe("PROMETHEUS",()=>{it("converts only a fraction of reactor heat",()=>{const r=evaluatePrometheus(prometheusConfig());expect(r.electricKW).toBeLessThan(r.thermalKW)});it("more radiator improves thermal margin",()=>{const c=prometheusConfig(),a=evaluatePrometheus(c),b=evaluatePrometheus({...c,radiatorAreaM2:c.radiatorAreaM2*2});expect(b.thermalMarginKW).toBeGreaterThan(a.thermalMarginKW)});it("electric thrust follows available power",()=>{const c=prometheusConfig();expect(evaluatePrometheus({...c,units:3}).thrustN).toBeGreaterThan(evaluatePrometheus({...c,units:2}).thrustN)});it("fails closed on coolant loss",()=>{const r=evaluatePrometheus({...prometheusConfig(),incident:"coolant-loss",radiatorAreaM2:20});expect(r.readiness).toBe("NO-GO");expect(r.thrustN).toBe(0)});it("distance and shielding reduce dose proxy",()=>{const c=prometheusConfig(),a=evaluatePrometheus(c),b=evaluatePrometheus({...c,crewDistanceM:c.crewDistanceM*2,shieldKg:c.shieldKg*2});expect(b.doseIndex).toBeLessThan(a.doseIndex)});});
+import { describe, it, expect } from "vitest";
+import { evaluatePrometheus, prometheusConfig } from "../src/prometheus";
+describe("PROMETHEUS", () => {
+  it("converts only a fraction of reactor heat", () => {
+    const r = evaluatePrometheus(prometheusConfig());
+    expect(r.electricKW).toBeLessThan(r.thermalKW);
+  });
+  it("more radiator improves thermal margin", () => {
+    const c = prometheusConfig(),
+      a = evaluatePrometheus(c),
+      b = evaluatePrometheus({ ...c, radiatorAreaM2: c.radiatorAreaM2 * 2 });
+    expect(b.thermalMarginKW).toBeGreaterThan(a.thermalMarginKW);
+  });
+  it("electric thrust follows available power", () => {
+    const c = prometheusConfig();
+    expect(evaluatePrometheus({ ...c, units: 3 }).thrustN).toBeGreaterThan(
+      evaluatePrometheus({ ...c, units: 2 }).thrustN,
+    );
+  });
+  it("fails closed on coolant loss", () => {
+    const r = evaluatePrometheus({ ...prometheusConfig(), incident: "coolant-loss", radiatorAreaM2: 20 });
+    expect(r.readiness).toBe("NO-GO");
+    expect(r.thrustN).toBe(0);
+  });
+  it("distance and shielding reduce dose proxy", () => {
+    const c = prometheusConfig(),
+      a = evaluatePrometheus(c),
+      b = evaluatePrometheus({ ...c, crewDistanceM: c.crewDistanceM * 2, shieldKg: c.shieldKg * 2 });
+    expect(b.doseIndex).toBeLessThan(a.doseIndex);
+  });
+});

@@ -4,11 +4,11 @@
 
 “Teleportation” describes at least three different ideas. RUIN keeps them separate so a real quantum protocol is not presented as evidence for fictional human transport.
 
-| Mode | What moves | Current scientific status | RUIN problem |
-| --- | --- | --- | --- |
-| Quantum teleportation | An unknown quantum state | Real protocol; requires shared entanglement and classical communication | Entanglement inventory, noise, fidelity, and delayed completion |
-| Traversable wormhole | Matter through a spacetime shortcut | Theoretical and highly speculative; physical creation and stability are unknown | Gate stability, causality, traffic control, and safe shutdown |
-| Reconstruction transit | A measured description used to reconstruct matter | Fictional for people and macroscopic objects | Identity, destructive commit, verification, and duplicate prevention |
+| Mode                   | What moves                                        | Current scientific status                                                       | RUIN problem                                                         |
+| ---------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Quantum teleportation  | An unknown quantum state                          | Real protocol; requires shared entanglement and classical communication         | Entanglement inventory, noise, fidelity, and delayed completion      |
+| Traversable wormhole   | Matter through a spacetime shortcut               | Theoretical and highly speculative; physical creation and stability are unknown | Gate stability, causality, traffic control, and safe shutdown        |
+| Reconstruction transit | A measured description used to reconstruct matter | Fictional for people and macroscopic objects                                    | Identity, destructive commit, verification, and duplicate prevention |
 
 ## Sourced foundations
 
@@ -22,14 +22,14 @@ Primary references:
 
 ## State model
 
-| Entity | Important state | Decisions |
-| --- | --- | --- |
-| Gate endpoint | peer identity, synchronization, capacity, quarantine state | pair, open, hold, sever |
-| Transit manifest | payload identity, consent, destination, integrity digest | accept, reject, expire |
-| Quantum link | entangled pairs, measured fidelity, classical acknowledgement | reserve, consume, regenerate |
-| Wormhole model | throat stability, tidal bound, mouth clock offset, energy reserve | stabilize, derate, close |
-| Reconstruction transaction | source lock, destination readiness, verification, commit record | prepare, commit, abort |
-| Causality ledger | event order, clock uncertainty, forbidden cycles | authorize, delay, isolate |
+| Entity                     | Important state                                                   | Decisions                    |
+| -------------------------- | ----------------------------------------------------------------- | ---------------------------- |
+| Gate endpoint              | peer identity, synchronization, capacity, quarantine state        | pair, open, hold, sever      |
+| Transit manifest           | payload identity, consent, destination, integrity digest          | accept, reject, expire       |
+| Quantum link               | entangled pairs, measured fidelity, classical acknowledgement     | reserve, consume, regenerate |
+| Wormhole model             | throat stability, tidal bound, mouth clock offset, energy reserve | stabilize, derate, close     |
+| Reconstruction transaction | source lock, destination readiness, verification, commit record   | prepare, commit, abort       |
+| Causality ledger           | event order, clock uncertainty, forbidden cycles                  | authorize, delay, isolate    |
 
 ## Safety invariants
 

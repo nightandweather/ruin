@@ -87,7 +87,7 @@ REACQUIRE AUTHENTICATED MESH QUORUM BEFORE BEAM AUTHORIZATION.
 
 화면 속에서 임태호가 현관문을 닫고 있었다.
 
-* * *
+---
 
 “오늘도 늦어?”
 
@@ -135,7 +135,7 @@ REACQUIRE AUTHENTICATED MESH QUORUM BEFORE BEAM AUTHORIZATION.
 
 남은 시간은 마흔두 분이었다.
 
-* * *
+---
 
 외곽 19진료소의 간호사 장미라는 전력이 끊긴 순간 커피부터 엎질렀다.
 
@@ -197,7 +197,7 @@ MNEMOSYNE MEMORIAL VAULT — 25%
 
 그 순간 천팔백사십이만 천구백삼 명의 죽은 사람이 두 번째로 죽기 시작했다.
 
-* * *
+---
 
 서하는 재구성을 멈췄다.
 

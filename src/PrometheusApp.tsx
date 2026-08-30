@@ -1,4 +1,366 @@
-import{useMemo,useState}from"react";import{evaluatePrometheus,prometheusConfig,REACTORS,type PrometheusConfig,type PrometheusIncident,type ReactorClass}from"./prometheus";const f=(v:number,d=1)=>Number.isFinite(v)?v.toLocaleString(undefined,{maximumFractionDigits:d}):"∞";
-export function PrometheusApp(){const[c,setC]=useState<PrometheusConfig>(()=>prometheusConfig()),r=useMemo(()=>evaluatePrometheus(c),[c]);const u=<K extends keyof PrometheusConfig>(k:K,v:PrometheusConfig[K])=>setC(x=>({...x,[k]:v}));const select=(id:ReactorClass)=>{const n=prometheusConfig(id);setC({...n,units:c.units})};return <main className="cx-shell"><Header code="P//R" name="PROMETHEUS" sub="CIVILIAN FISSION POWER + NUCLEAR-ELECTRIC PROPULSION" state={r.readiness}/><section className="cx-layout"><aside className="cx-panel cx-left"><Title n="01" t="REACTOR ARCHITECTURE"/>{(Object.keys(REACTORS)as ReactorClass[]).map(x=><button className={`cx-option ${c.reactorClass===x?"active":""}`} onClick={()=>select(x)} key={x}><b>{REACTORS[x].name}</b><small>{REACTORS[x].maturity}</small></button>)}<Title n="02" t="REDUNDANCY"/><Step label="REACTOR UNITS" value={c.units} min={1} max={12} step={1} change={v=>u("units",v)}/><Step label="FAILED UNITS" value={c.failedUnits} min={0} max={c.units} step={1} change={v=>u("failedUnits",v)}/><Step label="THERMAL / UNIT" value={c.thermalPowerKW} min={5} max={10000} step={25} unit="kWt" change={v=>u("thermalPowerKW",v)}/><Range label="CONVERSION" value={c.conversionEfficiency*100} min={10} max={50} step={1} unit="%" change={v=>u("conversionEfficiency",v/100)}/></aside><section className="cx-panel cx-stage"><Title n="03" t="ENERGY CONVERSION CHAIN"/><EnergyDiagram r={r}/><div className="cx-metric-row"><Metric l="REACTOR HEAT" v={f(r.thermalKW,0)} u="kWt"/><Metric l="ELECTRIC BUS" v={f(r.electricKW,0)} u="kWe" a/><Metric l="PROPULSION BUS" v={f(r.propulsionKW,0)} u="kWe"/><Metric l="WASTE HEAT" v={f(r.wasteHeatKW,0)} u="kW" w={r.thermalMarginKW<0}/></div></section><aside className="cx-panel cx-right"><Title n="04" t="MISSION AUTHORITY"/><div className={`cx-verdict ${r.readiness.toLowerCase()}`}><span>SYSTEM READINESS</span><b>{r.readiness}</b><small>{r.constraints[0]??"POWER, THERMAL, SHIELDING, AND THRUST CONTRACTS POSITIVE"}</small></div><div className="cx-metrics"><Metric l="SAFE STATE" v={r.safeState} u="" a/><Metric l="ACTIVE CORES" v={`${r.active}/${r.units}`} u=""/><Metric l="THERMAL MARGIN" v={f(r.thermalMarginKW,0)} u="kW" w={r.thermalMarginKW<0}/><Metric l="NEP THRUST" v={f(r.thrustN,2)} u="N"/><Metric l="ΔV BUDGET" v={f(r.deltaVMS/1000,2)} u="km/s"/><Metric l="BURN ENDURANCE" v={f(r.burnEnduranceDays,0)} u="days"/><Metric l="FACTORY POWER" v={f(r.bootstrapPowerKW,0)} u="kW" a/><Metric l="DOSE INDEX" v={f(r.doseIndex,2)} u="" w={r.doseIndex>1}/></div><Title n="05" t="INCIDENT"/><div className="cx-incidents">{(["none","conversion-loss","coolant-loss","thruster-out"]as PrometheusIncident[]).map(x=><button className={c.incident===x?"active":""} onClick={()=>u("incident",x)} key={x}>{x.replace("-"," ").toUpperCase()}</button>)}</div></aside><section className="cx-panel cx-bottom"><div><Title n="06" t="LOAD CONTRACT"/><Step label="SURVIVAL LOAD" value={c.hotelPowerKW} min={1} max={1000} step={5} unit="kW" change={v=>u("hotelPowerKW",v)}/><Step label="SEED FACTORY" value={c.factoryPowerKW} min={0} max={5000} step={10} unit="kW" change={v=>u("factoryPowerKW",v)}/></div><div><Title n="07" t="HEAT REJECTION"/><Step label="RADIATOR AREA" value={c.radiatorAreaM2} min={1} max={50000} step={25} unit="m²" change={v=>u("radiatorAreaM2",v)}/><Step label="RADIATOR TEMP" value={c.radiatorTempK} min={250} max={1000} step={25} unit="K" change={v=>u("radiatorTempK",v)}/></div><div><Title n="08" t="SEPARATION + SHIELD"/><Step label="SHIELD MASS" value={c.shieldKg} min={100} max={50000} step={500} unit="kg" change={v=>u("shieldKg",v)}/><Step label="CREW DISTANCE" value={c.crewDistanceM} min={5} max={500} step={5} unit="m" change={v=>u("crewDistanceM",v)}/></div><div className="cx-register"><Title n="09" t="CONSTRAINT REGISTER"/>{r.constraints.length?r.constraints.map((x,i)=><p key={x}><span>C-{i+1}</span>{x}</p>):<p className="pass"><span>PASS</span>Seed industry and electric cruise are admitted.</p>}<small>CIVILIAN DESIGN TWIN · NO REACTOR CONSTRUCTION DATA · NO WEAPONS</small></div></section></section></main>}
-function EnergyDiagram({r}:{r:ReturnType<typeof evaluatePrometheus>}){return <svg className="cx-diagram" viewBox="0 0 820 300" role="img" aria-label="Reactor heat to electricity propulsion factory and radiator energy chain"><defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><path d="M0 0L8 3 0 6Z"/></marker></defs><g className="reactor"><circle cx="120" cy="145" r="58"/><circle cx="120" cy="145" r="38"/><path d="M120 92V198M67 145H173"/><text x="120" y="150">FISSION CORE</text></g><path className="flow" d="M180 145H300"/><g className="box"><rect x="300" y="105" width="140" height="80"/><text x="370" y="140">POWER</text><text x="370" y="158">CONVERSION</text></g><path className="flow" d="M440 145H545"/><g className="box"><rect x="545" y="65" width="160" height="60"/><text x="625" y="100">SEED FACTORY</text><rect x="545" y="165" width="160" height="60"/><text x="625" y="200">ELECTRIC THRUSTER</text></g><path className="flow waste" d="M370 190V255H680"/><g className="radiator"><path d="M680 238H790M680 252H790M680 266H790"/><text x="735" y="288">RADIATOR {f(r.radiatorCapacityKW,0)} kW</text></g></svg>}
-function Header({code,name,sub,state}:{code:string;name:string;sub:string;state:string}){return <header className="cx-top"><div className="cx-brand"><span>{code}</span><div><strong>RUIN // {name}</strong><small>{sub}</small></div></div><nav><a href="./ignis.html">IGNIS</a><a href="./corvus.html">CORVUS</a><a href="./genesis.html">GENESIS</a><a href="./sentinel.html">SENTINEL</a></nav><div className="cx-state">DESIGN TWIN · <b className={state.toLowerCase()}>{state}</b></div></header>}function Title({n,t}:{n:string;t:string}){return <div className="cx-title"><span>{n}</span>{t}</div>}function Step({label,value,min,max,step,unit="",change}:{label:string;value:number;min:number;max:number;step:number;unit?:string;change:(v:number)=>void}){return <div className="cx-step"><span>{label}</span><div><button aria-label={`Decrease ${label}`} onClick={()=>change(Math.max(min,value-step))}>−</button><b>{f(value,value<10?2:0)}<small>{unit}</small></b><button aria-label={`Increase ${label}`} onClick={()=>change(Math.min(max,value+step))}>+</button></div></div>}function Range({label,value,min,max,step,unit,change}:{label:string;value:number;min:number;max:number;step:number;unit:string;change:(v:number)=>void}){return <label className="cx-range"><span>{label}<b>{f(value,0)}{unit}</b></span><input type="range" aria-label={label} value={value} min={min} max={max} step={step} onChange={e=>change(+e.target.value)}/></label>}function Metric({l,v,u,a,w}:{l:string;v:string;u:string;a?:boolean;w?:boolean}){return <div className={`cx-metric ${a?"accent":""} ${w?"warning":""}`}><span>{l}</span><b>{v}<small>{u}</small></b></div>}
+import { useMemo, useState } from "react";
+import {
+  evaluatePrometheus,
+  prometheusConfig,
+  REACTORS,
+  type PrometheusConfig,
+  type PrometheusIncident,
+  type ReactorClass,
+} from "./prometheus";
+const f = (v: number, d = 1) =>
+  Number.isFinite(v) ? v.toLocaleString(undefined, { maximumFractionDigits: d }) : "∞";
+export function PrometheusApp() {
+  const [c, setC] = useState<PrometheusConfig>(() => prometheusConfig()),
+    r = useMemo(() => evaluatePrometheus(c), [c]);
+  const u = <K extends keyof PrometheusConfig>(k: K, v: PrometheusConfig[K]) =>
+    setC((x) => ({ ...x, [k]: v }));
+  const select = (id: ReactorClass) => {
+    const n = prometheusConfig(id);
+    setC({ ...n, units: c.units });
+  };
+  return (
+    <main className="cx-shell">
+      <Header
+        code="P//R"
+        name="PROMETHEUS"
+        sub="CIVILIAN FISSION POWER + NUCLEAR-ELECTRIC PROPULSION"
+        state={r.readiness}
+      />
+      <section className="cx-layout">
+        <aside className="cx-panel cx-left">
+          <Title n="01" t="REACTOR ARCHITECTURE" />
+          {(Object.keys(REACTORS) as ReactorClass[]).map((x) => (
+            <button
+              className={`cx-option ${c.reactorClass === x ? "active" : ""}`}
+              onClick={() => select(x)}
+              key={x}
+            >
+              <b>{REACTORS[x].name}</b>
+              <small>{REACTORS[x].maturity}</small>
+            </button>
+          ))}
+          <Title n="02" t="REDUNDANCY" />
+          <Step
+            label="REACTOR UNITS"
+            value={c.units}
+            min={1}
+            max={12}
+            step={1}
+            change={(v) => u("units", v)}
+          />
+          <Step
+            label="FAILED UNITS"
+            value={c.failedUnits}
+            min={0}
+            max={c.units}
+            step={1}
+            change={(v) => u("failedUnits", v)}
+          />
+          <Step
+            label="THERMAL / UNIT"
+            value={c.thermalPowerKW}
+            min={5}
+            max={10000}
+            step={25}
+            unit="kWt"
+            change={(v) => u("thermalPowerKW", v)}
+          />
+          <Range
+            label="CONVERSION"
+            value={c.conversionEfficiency * 100}
+            min={10}
+            max={50}
+            step={1}
+            unit="%"
+            change={(v) => u("conversionEfficiency", v / 100)}
+          />
+        </aside>
+        <section className="cx-panel cx-stage">
+          <Title n="03" t="ENERGY CONVERSION CHAIN" />
+          <EnergyDiagram r={r} />
+          <div className="cx-metric-row">
+            <Metric l="REACTOR HEAT" v={f(r.thermalKW, 0)} u="kWt" />
+            <Metric l="ELECTRIC BUS" v={f(r.electricKW, 0)} u="kWe" a />
+            <Metric l="PROPULSION BUS" v={f(r.propulsionKW, 0)} u="kWe" />
+            <Metric l="WASTE HEAT" v={f(r.wasteHeatKW, 0)} u="kW" w={r.thermalMarginKW < 0} />
+          </div>
+        </section>
+        <aside className="cx-panel cx-right">
+          <Title n="04" t="MISSION AUTHORITY" />
+          <div className={`cx-verdict ${r.readiness.toLowerCase()}`}>
+            <span>SYSTEM READINESS</span>
+            <b>{r.readiness}</b>
+            <small>{r.constraints[0] ?? "POWER, THERMAL, SHIELDING, AND THRUST CONTRACTS POSITIVE"}</small>
+          </div>
+          <div className="cx-metrics">
+            <Metric l="SAFE STATE" v={r.safeState} u="" a />
+            <Metric l="ACTIVE CORES" v={`${r.active}/${r.units}`} u="" />
+            <Metric l="THERMAL MARGIN" v={f(r.thermalMarginKW, 0)} u="kW" w={r.thermalMarginKW < 0} />
+            <Metric l="NEP THRUST" v={f(r.thrustN, 2)} u="N" />
+            <Metric l="ΔV BUDGET" v={f(r.deltaVMS / 1000, 2)} u="km/s" />
+            <Metric l="BURN ENDURANCE" v={f(r.burnEnduranceDays, 0)} u="days" />
+            <Metric l="FACTORY POWER" v={f(r.bootstrapPowerKW, 0)} u="kW" a />
+            <Metric l="DOSE INDEX" v={f(r.doseIndex, 2)} u="" w={r.doseIndex > 1} />
+          </div>
+          <Title n="05" t="INCIDENT" />
+          <div className="cx-incidents">
+            {(["none", "conversion-loss", "coolant-loss", "thruster-out"] as PrometheusIncident[]).map(
+              (x) => (
+                <button className={c.incident === x ? "active" : ""} onClick={() => u("incident", x)} key={x}>
+                  {x.replace("-", " ").toUpperCase()}
+                </button>
+              ),
+            )}
+          </div>
+        </aside>
+        <section className="cx-panel cx-bottom">
+          <div>
+            <Title n="06" t="LOAD CONTRACT" />
+            <Step
+              label="SURVIVAL LOAD"
+              value={c.hotelPowerKW}
+              min={1}
+              max={1000}
+              step={5}
+              unit="kW"
+              change={(v) => u("hotelPowerKW", v)}
+            />
+            <Step
+              label="SEED FACTORY"
+              value={c.factoryPowerKW}
+              min={0}
+              max={5000}
+              step={10}
+              unit="kW"
+              change={(v) => u("factoryPowerKW", v)}
+            />
+          </div>
+          <div>
+            <Title n="07" t="HEAT REJECTION" />
+            <Step
+              label="RADIATOR AREA"
+              value={c.radiatorAreaM2}
+              min={1}
+              max={50000}
+              step={25}
+              unit="m²"
+              change={(v) => u("radiatorAreaM2", v)}
+            />
+            <Step
+              label="RADIATOR TEMP"
+              value={c.radiatorTempK}
+              min={250}
+              max={1000}
+              step={25}
+              unit="K"
+              change={(v) => u("radiatorTempK", v)}
+            />
+          </div>
+          <div>
+            <Title n="08" t="SEPARATION + SHIELD" />
+            <Step
+              label="SHIELD MASS"
+              value={c.shieldKg}
+              min={100}
+              max={50000}
+              step={500}
+              unit="kg"
+              change={(v) => u("shieldKg", v)}
+            />
+            <Step
+              label="CREW DISTANCE"
+              value={c.crewDistanceM}
+              min={5}
+              max={500}
+              step={5}
+              unit="m"
+              change={(v) => u("crewDistanceM", v)}
+            />
+          </div>
+          <div className="cx-register">
+            <Title n="09" t="CONSTRAINT REGISTER" />
+            {r.constraints.length ? (
+              r.constraints.map((x, i) => (
+                <p key={x}>
+                  <span>C-{i + 1}</span>
+                  {x}
+                </p>
+              ))
+            ) : (
+              <p className="pass">
+                <span>PASS</span>Seed industry and electric cruise are admitted.
+              </p>
+            )}
+            <small>CIVILIAN DESIGN TWIN · NO REACTOR CONSTRUCTION DATA · NO WEAPONS</small>
+          </div>
+        </section>
+      </section>
+    </main>
+  );
+}
+function EnergyDiagram({ r }: { r: ReturnType<typeof evaluatePrometheus> }) {
+  return (
+    <svg
+      className="cx-diagram"
+      viewBox="0 0 820 300"
+      role="img"
+      aria-label="Reactor heat to electricity propulsion factory and radiator energy chain"
+    >
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <path d="M0 0L8 3 0 6Z" />
+        </marker>
+      </defs>
+      <g className="reactor">
+        <circle cx="120" cy="145" r="58" />
+        <circle cx="120" cy="145" r="38" />
+        <path d="M120 92V198M67 145H173" />
+        <text x="120" y="150">
+          FISSION CORE
+        </text>
+      </g>
+      <path className="flow" d="M180 145H300" />
+      <g className="box">
+        <rect x="300" y="105" width="140" height="80" />
+        <text x="370" y="140">
+          POWER
+        </text>
+        <text x="370" y="158">
+          CONVERSION
+        </text>
+      </g>
+      <path className="flow" d="M440 145H545" />
+      <g className="box">
+        <rect x="545" y="65" width="160" height="60" />
+        <text x="625" y="100">
+          SEED FACTORY
+        </text>
+        <rect x="545" y="165" width="160" height="60" />
+        <text x="625" y="200">
+          ELECTRIC THRUSTER
+        </text>
+      </g>
+      <path className="flow waste" d="M370 190V255H680" />
+      <g className="radiator">
+        <path d="M680 238H790M680 252H790M680 266H790" />
+        <text x="735" y="288">
+          RADIATOR {f(r.radiatorCapacityKW, 0)} kW
+        </text>
+      </g>
+    </svg>
+  );
+}
+function Header({ code, name, sub, state }: { code: string; name: string; sub: string; state: string }) {
+  return (
+    <header className="cx-top">
+      <div className="cx-brand">
+        <span>{code}</span>
+        <div>
+          <strong>RUIN // {name}</strong>
+          <small>{sub}</small>
+        </div>
+      </div>
+      <nav>
+        <a href="./ignis.html">IGNIS</a>
+        <a href="./corvus.html">CORVUS</a>
+        <a href="./genesis.html">GENESIS</a>
+        <a href="./sentinel.html">SENTINEL</a>
+      </nav>
+      <div className="cx-state">
+        DESIGN TWIN · <b className={state.toLowerCase()}>{state}</b>
+      </div>
+    </header>
+  );
+}
+function Title({ n, t }: { n: string; t: string }) {
+  return (
+    <div className="cx-title">
+      <span>{n}</span>
+      {t}
+    </div>
+  );
+}
+function Step({
+  label,
+  value,
+  min,
+  max,
+  step,
+  unit = "",
+  change,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  unit?: string;
+  change: (v: number) => void;
+}) {
+  return (
+    <div className="cx-step">
+      <span>{label}</span>
+      <div>
+        <button aria-label={`Decrease ${label}`} onClick={() => change(Math.max(min, value - step))}>
+          −
+        </button>
+        <b>
+          {f(value, value < 10 ? 2 : 0)}
+          <small>{unit}</small>
+        </b>
+        <button aria-label={`Increase ${label}`} onClick={() => change(Math.min(max, value + step))}>
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+function Range({
+  label,
+  value,
+  min,
+  max,
+  step,
+  unit,
+  change,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  unit: string;
+  change: (v: number) => void;
+}) {
+  return (
+    <label className="cx-range">
+      <span>
+        {label}
+        <b>
+          {f(value, 0)}
+          {unit}
+        </b>
+      </span>
+      <input
+        type="range"
+        aria-label={label}
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        onChange={(e) => change(+e.target.value)}
+      />
+    </label>
+  );
+}
+function Metric({ l, v, u, a, w }: { l: string; v: string; u: string; a?: boolean; w?: boolean }) {
+  return (
+    <div className={`cx-metric ${a ? "accent" : ""} ${w ? "warning" : ""}`}>
+      <span>{l}</span>
+      <b>
+        {v}
+        <small>{u}</small>
+      </b>
+    </div>
+  );
+}

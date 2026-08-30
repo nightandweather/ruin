@@ -26,7 +26,12 @@ describe("IGNIS propulsion engine", () => {
   });
 
   it("limits a burn when the thermal sink saturates", () => {
-    const config = { ...engineConfig("cryo-chemical"), radiatorAreaM2: 0, thermalSinkGJ: 1, requestedBurnHours: 2 };
+    const config = {
+      ...engineConfig("cryo-chemical"),
+      radiatorAreaM2: 0,
+      thermalSinkGJ: 1,
+      requestedBurnHours: 2,
+    };
     const result = evaluateEngine(config);
     expect(result.allowedBurnHours).toBeLessThan(config.requestedBurnHours);
     expect(result.readiness).toBe("NO-GO");
@@ -35,7 +40,7 @@ describe("IGNIS propulsion engine", () => {
   it("retains reduced thrust after one clustered unit fails", () => {
     const result = evaluateEngine({ ...engineConfig("nuclear-thermal"), units: 3, failedUnits: 1 });
     expect(result.engineOutThrustPercent).toBeCloseTo(200 / 3);
-    expect(result.constraints.some(item => item.includes("isolated"))).toBe(true);
+    expect(result.constraints.some((item) => item.includes("isolated"))).toBe(true);
   });
 
   it("never marks an unsupported fusion drive ready", () => {

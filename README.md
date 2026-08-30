@@ -174,12 +174,12 @@ The simulation engine in `src/simulation.ts` has no browser dependency. That kee
 
 HELIOS begins with the operating problems of a civilization using a meaningful fraction of one star. The next scales are less about finding more energy and more about governing systems that can no longer share a present moment.
 
-| Scale | Operational problem | Candidate simulation |
-| --- | --- | --- |
-| Planetary | Climate, orbital debris, and globally coupled infrastructure | Multi-objective planetary control with hard safety limits |
-| Stellar | Heat rejection, beam safety, solar weather, and swarm autonomy | The current HELIOS mission |
-| Interstellar | Years of communication delay and colonies with diverging goals | Policy replication without a global leader |
-| Galactic | Stellar lifecycles, relativistic travel, and million-year plans | Eventually consistent governance across causal horizons |
+| Scale         | Operational problem                                                         | Candidate simulation                                      |
+| ------------- | --------------------------------------------------------------------------- | --------------------------------------------------------- |
+| Planetary     | Climate, orbital debris, and globally coupled infrastructure                | Multi-objective planetary control with hard safety limits |
+| Stellar       | Heat rejection, beam safety, solar weather, and swarm autonomy              | The current HELIOS mission                                |
+| Interstellar  | Years of communication delay and colonies with diverging goals              | Policy replication without a global leader                |
+| Galactic      | Stellar lifecycles, relativistic travel, and million-year plans             | Eventually consistent governance across causal horizons   |
 | Post-galactic | Entropy budgets, black-hole energy, and survival across cosmological change | Deep-time resource allocation with irreversible decisions |
 
 These are storytelling frames, not settled extensions to the Kardashev scale. Each future module should turn one frame into explicit state, constraints, failure modes, and testable policies.

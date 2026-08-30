@@ -20,14 +20,14 @@ Every collector is independently represented with health, orbital band and phase
 
 The dashboard's **RUN FIRST LIGHT** control executes the same fixed seed and action ledger twice:
 
-| Control tick | Event | Expected control consequence |
-| ---: | --- | --- |
-| 10 | Relay blackout | Isolate uncommandable orbital sectors |
-| 24 | Demand spike | Dispatch only verified safe capacity |
-| 38 | Replacement order | Move demand through factory and orbital logistics |
-| 55 | Thermal wave | Derate or trip collectors before thermal redline |
-| 82 | Debris corridor at 315° | Curtail export and perform bounded avoidance |
-| 140 | Recovery checkpoint | Expired incidents clear without erasing evidence |
+| Control tick | Event                   | Expected control consequence                      |
+| -----------: | ----------------------- | ------------------------------------------------- |
+|           10 | Relay blackout          | Isolate uncommandable orbital sectors             |
+|           24 | Demand spike            | Dispatch only verified safe capacity              |
+|           38 | Replacement order       | Move demand through factory and orbital logistics |
+|           55 | Thermal wave            | Derate or trip collectors before thermal redline  |
+|           82 | Debris corridor at 315° | Curtail export and perform bounded avoidance      |
+|          140 | Recovery checkpoint     | Expired incidents clear without erasing evidence  |
 
 Evidence is sampled on the control tick after each command, not at command receipt. The two executions must produce the same FNV-1a trace hash before the UI reports **REPLAY MATCHED**.
 

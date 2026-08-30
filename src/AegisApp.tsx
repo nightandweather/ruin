@@ -1,39 +1,484 @@
 import { useEffect, useState } from "react";
-import { AegisSimulation, DEFAULT_AEGIS_CONFIG, type AegisConfig, type SuitIncident, type SuitMission } from "./aegis";
+import {
+  AegisSimulation,
+  DEFAULT_AEGIS_CONFIG,
+  type AegisConfig,
+  type SuitIncident,
+  type SuitMission,
+} from "./aegis";
 
-const missionNames: Record<SuitMission, string> = { "orbital-service": "ORBITAL", "lunar-mining": "LUNAR", "mars-field": "MARS", rescue: "RESCUE" };
+const missionNames: Record<SuitMission, string> = {
+  "orbital-service": "ORBITAL",
+  "lunar-mining": "LUNAR",
+  "mars-field": "MARS",
+  rescue: "RESCUE",
+};
 const missionNotes: Record<SuitMission, string> = {
-  "orbital-service": "ZERO-G INERTIA · MMOD · HANDRAILS", "lunar-mining": "1/6 G · SHARP DUST · HARD LABOR",
-  "mars-field": "0.38 G · MASS CRITICAL · FIELD RANGE", rescue: "SHORT EVA · REDUNDANT O₂ · RAPID RETURN",
+  "orbital-service": "ZERO-G INERTIA · MMOD · HANDRAILS",
+  "lunar-mining": "1/6 G · SHARP DUST · HARD LABOR",
+  "mars-field": "0.38 G · MASS CRITICAL · FIELD RANGE",
+  rescue: "SHORT EVA · REDUNDANT O₂ · RAPID RETURN",
 };
 const incidentMeta: Record<SuitIncident, [string, string]> = {
-  puncture: ["ΔP", "PUNCTURE"], "coolant-loss": ["H₂O", "COOLANT LOSS"], "comms-loss": ["RF", "COMMS LOSS"], "dust-seal": ["DUST", "SEAL CONTAMINATION"],
+  puncture: ["ΔP", "PUNCTURE"],
+  "coolant-loss": ["H₂O", "COOLANT LOSS"],
+  "comms-loss": ["RF", "COMMS LOSS"],
+  "dust-seal": ["DUST", "SEAL CONTAMINATION"],
 };
-const formatTime = (minutes: number) => `${Math.floor(minutes / 60)}h ${String(Math.round(minutes % 60)).padStart(2, "0")}m`;
+const formatTime = (minutes: number) =>
+  `${Math.floor(minutes / 60)}h ${String(Math.round(minutes % 60)).padStart(2, "0")}m`;
 
 export function AegisApp() {
   const [config, setConfig] = useState<AegisConfig>({ ...DEFAULT_AEGIS_CONFIG });
   const [sim, setSim] = useState(() => new AegisSimulation());
   const [snap, setSnap] = useState(() => sim.snapshot());
   const [running, setRunning] = useState(true);
-  useEffect(() => { if (!running) return; const timer = window.setInterval(() => setSnap(sim.step()), 900); return () => clearInterval(timer); }, [running, sim]);
-  const update = <K extends keyof AegisConfig>(key: K, value: AegisConfig[K]) => { const next = { ...config, [key]: value }; setConfig(next); setSnap(sim.updateConfig(next)); };
-  const reset = () => { const next = new AegisSimulation(); setSim(next); setConfig({ ...DEFAULT_AEGIS_CONFIG }); setSnap(next.snapshot()); setRunning(true); };
+  useEffect(() => {
+    if (!running) return;
+    const timer = window.setInterval(() => setSnap(sim.step()), 900);
+    return () => clearInterval(timer);
+  }, [running, sim]);
+  const update = <K extends keyof AegisConfig>(key: K, value: AegisConfig[K]) => {
+    const next = { ...config, [key]: value };
+    setConfig(next);
+    setSnap(sim.updateConfig(next));
+  };
+  const reset = () => {
+    const next = new AegisSimulation();
+    setSim(next);
+    setConfig({ ...DEFAULT_AEGIS_CONFIG });
+    setSnap(next.snapshot());
+    setRunning(true);
+  };
   const active = (type: SuitIncident) => snap.activeIncidents.includes(type);
-  return <main className="aegis-shell">
-    <header className="ae-top"><div className="ae-brand"><span>Λ//G</span><div><strong>RUIN // AEGIS</strong><small>EXTRAVEHICULAR SYSTEM ARCHITECT</small></div></div><nav><a href="./">HELIOS</a><a href="./foundry.html">FOUNDRY</a><a href="./datacore.html">DATACORE</a><a href="./agraria.html">AGRARIA</a><b>AEGIS</b></nav><div className="ae-status"><span>SUIT AX-07 · τ{String(snap.tick).padStart(5, "0")}</span><b className={snap.mode}>{snap.mode.toUpperCase()}</b></div></header>
-    <section className="ae-grid">
-      <aside className="ae-panel ae-config"><Section n="01" title="MISSION ENVELOPE"/><div className="mission-tabs">{(Object.keys(missionNames) as SuitMission[]).map(m => <button key={m} className={config.mission === m ? "selected" : ""} onClick={() => update("mission", m)}>{missionNames[m]}<small>{missionNotes[m]}</small></button>)}</div><Section n="02" title="PRESSURE GARMENT"/><Control label="OPERATING PRESSURE" value={config.pressureKpa} unit="kPa" min={25} max={55} step={1} onChange={v => update("pressureKpa", v)}/><Control label="MOBILITY BEARINGS" value={config.mobilityBearings} unit="joints" min={4} max={18} step={1} onChange={v => update("mobilityBearings", v)}/><Control label="PROTECTIVE LAYERS" value={config.protectionLayers} unit="layers" min={2} max={12} step={1} onChange={v => update("protectionLayers", v)}/><Section n="03" title="PLSS CONTRACT"/><Control label="NOMINAL ENDURANCE" value={config.enduranceHours} unit="hours" min={2} max={12} step={1} onChange={v => update("enduranceHours", v)}/><Control label="COOLING CAPACITY" value={config.coolingCapacityW} unit="W" min={300} max={1000} step={50} onChange={v => update("coolingCapacityW", v)}/><Control label="EMERGENCY OXYGEN" value={config.emergencyOxygenMinutes} unit="min" min={15} max={120} step={15} onChange={v => update("emergencyOxygenMinutes", v)}/><label className="dust-slider"><span>DUST MITIGATION <b>{config.dustMitigation}%</b></span><input aria-label="Dust mitigation" type="range" min="0" max="100" value={config.dustMitigation} onChange={e => update("dustMitigation", +e.target.value)}/></label></aside>
-      <section className="ae-panel suit-stage"><div className="stage-head"><Section n="04" title="SUIT DIGITAL TWIN"/><span>{missionNames[config.mission]} CONFIGURATION</span></div><SuitDiagram config={config} mode={snap.mode}/><div className="layer-key"><span><i className="pressure"/>PRESSURE BLADDER</span><span><i className="thermal"/>THERMAL / MMOD</span><span><i className="dust"/>DUST REJECTION</span><span><i className="plss"/>PLSS</span></div><div className="callouts"><article><span>A</span><b>HELMET / VISOR</b><small>sunshade · comms · HUD</small></article><article><span>B</span><b>HARD UPPER TORSO</b><small>bearings · pressure interface</small></article><article><span>C</span><b>PRIMARY LIFE SUPPORT</b><small>O₂ · CO₂ · cooling · power</small></article><article><span>D</span><b>BOOTS / SEALS</b><small>traction · abrasion barrier</small></article></div></section>
-      <aside className="ae-panel ae-output"><Section n="05" title="PERFORMANCE SOLUTION"/><div className={`go-state ${snap.readiness.toLowerCase()}`}><span>MISSION READINESS</span><b>{snap.readiness}</b><small>{snap.readiness === "READY" ? "ALL DESIGN MARGINS POSITIVE" : snap.readiness === "CONDITIONAL" ? "REVIEW FLAGGED CONSTRAINTS" : "DO NOT BEGIN EVA"}</small></div><div className="ae-metrics"><Metric label="SYSTEM MASS" value={snap.massKg} unit="kg" accent/><Metric label="LOCAL WEIGHT" value={snap.localWeightKg} unit="kg-eq"/><Metric label="SAFE EVA" value={formatTime(snap.evaMinutes)} unit=""/><Metric label="MOBILITY" value={snap.mobilityScore} unit="/ 100" warning={snap.mobilityScore < 55}/><Metric label="METABOLIC LOAD" value={snap.metabolicLoadW} unit="W"/><Metric label="THERMAL MARGIN" value={`${snap.thermalMarginW > 0 ? "+" : ""}${snap.thermalMarginW}`} unit="W" warning={snap.thermalMarginW < 0}/></div><div className="integrity"><Bar label="PRESSURE" value={Math.min(100, snap.pressureKpa / config.pressureKpa * 100)} text={`${snap.pressureKpa} kPa`}/><Bar label="SEAL INTEGRITY" value={snap.sealIntegrity} text={`${snap.sealIntegrity}%`}/><Bar label="DUST EXPOSURE" value={100 - snap.dustRisk} text={`${snap.dustRisk}% risk`} inverse/></div><div className="engineering-note"><b>DESIGN NOTE // MASS ≠ WEIGHT</b><p>Zero gravity removes weight, not inertia. On Mars, the same lunar-class suit becomes a mobility and metabolic burden.</p></div><p className="disclaimer">Conceptual trade study only. It is not certified life-support design, operational guidance, or a substitute for vacuum-chamber and human-rating tests.</p></aside>
-      <section className="ae-panel ae-ops"><div className="incident-bank"><Section n="06" title="FAILURE INJECTION"/><div>{(Object.keys(incidentMeta) as SuitIncident[]).map(type => <button key={type} className={active(type) ? "active" : ""} onClick={() => setSnap(active(type) ? sim.resolve(type) : sim.inject(type))}><b>{incidentMeta[type][0]}</b><span>{incidentMeta[type][1]}<small>{active(type) ? "SELECT TO ISOLATE" : "INJECT SCENARIO"}</small></span></button>)}</div></div><div className="event-log"><Section n="07" title="EVA EVENT LEDGER"/><div>{snap.events.slice(0, 6).map(e => <article key={e.id} className={e.level}><time>τ{String(e.tick).padStart(5, "0")}</time><p>{e.message}</p></article>)}</div></div></section>
-    </section>
-    <footer className="ae-controls"><div><button className="run" onClick={() => setRunning(v => !v)}>{running ? "Ⅱ PAUSE" : "▶ RUN"}</button><button disabled={running} onClick={() => setSnap(sim.step())}>STEP +5 MIN</button><button onClick={reset}>RESET SUIT</button></div><span>{snap.massKg} KG · {formatTime(snap.evaMinutes)} EVA · {snap.mobilityScore}/100 MOBILITY · {snap.emergencyMinutesRemaining} MIN RESERVE</span></footer>
-  </main>;
+  return (
+    <main className="aegis-shell">
+      <header className="ae-top">
+        <div className="ae-brand">
+          <span>Λ//G</span>
+          <div>
+            <strong>RUIN // AEGIS</strong>
+            <small>EXTRAVEHICULAR SYSTEM ARCHITECT</small>
+          </div>
+        </div>
+        <nav>
+          <a href="./">HELIOS</a>
+          <a href="./foundry.html">FOUNDRY</a>
+          <a href="./datacore.html">DATACORE</a>
+          <a href="./agraria.html">AGRARIA</a>
+          <b>AEGIS</b>
+        </nav>
+        <div className="ae-status">
+          <span>SUIT AX-07 · τ{String(snap.tick).padStart(5, "0")}</span>
+          <b className={snap.mode}>{snap.mode.toUpperCase()}</b>
+        </div>
+      </header>
+      <section className="ae-grid">
+        <aside className="ae-panel ae-config">
+          <Section n="01" title="MISSION ENVELOPE" />
+          <div className="mission-tabs">
+            {(Object.keys(missionNames) as SuitMission[]).map((m) => (
+              <button
+                key={m}
+                className={config.mission === m ? "selected" : ""}
+                onClick={() => update("mission", m)}
+              >
+                {missionNames[m]}
+                <small>{missionNotes[m]}</small>
+              </button>
+            ))}
+          </div>
+          <Section n="02" title="PRESSURE GARMENT" />
+          <Control
+            label="OPERATING PRESSURE"
+            value={config.pressureKpa}
+            unit="kPa"
+            min={25}
+            max={55}
+            step={1}
+            onChange={(v) => update("pressureKpa", v)}
+          />
+          <Control
+            label="MOBILITY BEARINGS"
+            value={config.mobilityBearings}
+            unit="joints"
+            min={4}
+            max={18}
+            step={1}
+            onChange={(v) => update("mobilityBearings", v)}
+          />
+          <Control
+            label="PROTECTIVE LAYERS"
+            value={config.protectionLayers}
+            unit="layers"
+            min={2}
+            max={12}
+            step={1}
+            onChange={(v) => update("protectionLayers", v)}
+          />
+          <Section n="03" title="PLSS CONTRACT" />
+          <Control
+            label="NOMINAL ENDURANCE"
+            value={config.enduranceHours}
+            unit="hours"
+            min={2}
+            max={12}
+            step={1}
+            onChange={(v) => update("enduranceHours", v)}
+          />
+          <Control
+            label="COOLING CAPACITY"
+            value={config.coolingCapacityW}
+            unit="W"
+            min={300}
+            max={1000}
+            step={50}
+            onChange={(v) => update("coolingCapacityW", v)}
+          />
+          <Control
+            label="EMERGENCY OXYGEN"
+            value={config.emergencyOxygenMinutes}
+            unit="min"
+            min={15}
+            max={120}
+            step={15}
+            onChange={(v) => update("emergencyOxygenMinutes", v)}
+          />
+          <label className="dust-slider">
+            <span>
+              DUST MITIGATION <b>{config.dustMitigation}%</b>
+            </span>
+            <input
+              aria-label="Dust mitigation"
+              type="range"
+              min="0"
+              max="100"
+              value={config.dustMitigation}
+              onChange={(e) => update("dustMitigation", +e.target.value)}
+            />
+          </label>
+        </aside>
+        <section className="ae-panel suit-stage">
+          <div className="stage-head">
+            <Section n="04" title="SUIT DIGITAL TWIN" />
+            <span>{missionNames[config.mission]} CONFIGURATION</span>
+          </div>
+          <SuitDiagram config={config} mode={snap.mode} />
+          <div className="layer-key">
+            <span>
+              <i className="pressure" />
+              PRESSURE BLADDER
+            </span>
+            <span>
+              <i className="thermal" />
+              THERMAL / MMOD
+            </span>
+            <span>
+              <i className="dust" />
+              DUST REJECTION
+            </span>
+            <span>
+              <i className="plss" />
+              PLSS
+            </span>
+          </div>
+          <div className="callouts">
+            <article>
+              <span>A</span>
+              <b>HELMET / VISOR</b>
+              <small>sunshade · comms · HUD</small>
+            </article>
+            <article>
+              <span>B</span>
+              <b>HARD UPPER TORSO</b>
+              <small>bearings · pressure interface</small>
+            </article>
+            <article>
+              <span>C</span>
+              <b>PRIMARY LIFE SUPPORT</b>
+              <small>O₂ · CO₂ · cooling · power</small>
+            </article>
+            <article>
+              <span>D</span>
+              <b>BOOTS / SEALS</b>
+              <small>traction · abrasion barrier</small>
+            </article>
+          </div>
+        </section>
+        <aside className="ae-panel ae-output">
+          <Section n="05" title="PERFORMANCE SOLUTION" />
+          <div className={`go-state ${snap.readiness.toLowerCase()}`}>
+            <span>MISSION READINESS</span>
+            <b>{snap.readiness}</b>
+            <small>
+              {snap.readiness === "READY"
+                ? "ALL DESIGN MARGINS POSITIVE"
+                : snap.readiness === "CONDITIONAL"
+                  ? "REVIEW FLAGGED CONSTRAINTS"
+                  : "DO NOT BEGIN EVA"}
+            </small>
+          </div>
+          <div className="ae-metrics">
+            <Metric label="SYSTEM MASS" value={snap.massKg} unit="kg" accent />
+            <Metric label="LOCAL WEIGHT" value={snap.localWeightKg} unit="kg-eq" />
+            <Metric label="SAFE EVA" value={formatTime(snap.evaMinutes)} unit="" />
+            <Metric
+              label="MOBILITY"
+              value={snap.mobilityScore}
+              unit="/ 100"
+              warning={snap.mobilityScore < 55}
+            />
+            <Metric label="METABOLIC LOAD" value={snap.metabolicLoadW} unit="W" />
+            <Metric
+              label="THERMAL MARGIN"
+              value={`${snap.thermalMarginW > 0 ? "+" : ""}${snap.thermalMarginW}`}
+              unit="W"
+              warning={snap.thermalMarginW < 0}
+            />
+          </div>
+          <div className="integrity">
+            <Bar
+              label="PRESSURE"
+              value={Math.min(100, (snap.pressureKpa / config.pressureKpa) * 100)}
+              text={`${snap.pressureKpa} kPa`}
+            />
+            <Bar label="SEAL INTEGRITY" value={snap.sealIntegrity} text={`${snap.sealIntegrity}%`} />
+            <Bar label="DUST EXPOSURE" value={100 - snap.dustRisk} text={`${snap.dustRisk}% risk`} inverse />
+          </div>
+          <div className="engineering-note">
+            <b>DESIGN NOTE // MASS ≠ WEIGHT</b>
+            <p>
+              Zero gravity removes weight, not inertia. On Mars, the same lunar-class suit becomes a mobility
+              and metabolic burden.
+            </p>
+          </div>
+          <p className="disclaimer">
+            Conceptual trade study only. It is not certified life-support design, operational guidance, or a
+            substitute for vacuum-chamber and human-rating tests.
+          </p>
+        </aside>
+        <section className="ae-panel ae-ops">
+          <div className="incident-bank">
+            <Section n="06" title="FAILURE INJECTION" />
+            <div>
+              {(Object.keys(incidentMeta) as SuitIncident[]).map((type) => (
+                <button
+                  key={type}
+                  className={active(type) ? "active" : ""}
+                  onClick={() => setSnap(active(type) ? sim.resolve(type) : sim.inject(type))}
+                >
+                  <b>{incidentMeta[type][0]}</b>
+                  <span>
+                    {incidentMeta[type][1]}
+                    <small>{active(type) ? "SELECT TO ISOLATE" : "INJECT SCENARIO"}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="event-log">
+            <Section n="07" title="EVA EVENT LEDGER" />
+            <div>
+              {snap.events.slice(0, 6).map((e) => (
+                <article key={e.id} className={e.level}>
+                  <time>τ{String(e.tick).padStart(5, "0")}</time>
+                  <p>{e.message}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      </section>
+      <footer className="ae-controls">
+        <div>
+          <button className="run" onClick={() => setRunning((v) => !v)}>
+            {running ? "Ⅱ PAUSE" : "▶ RUN"}
+          </button>
+          <button disabled={running} onClick={() => setSnap(sim.step())}>
+            STEP +5 MIN
+          </button>
+          <button onClick={reset}>RESET SUIT</button>
+        </div>
+        <span>
+          {snap.massKg} KG · {formatTime(snap.evaMinutes)} EVA · {snap.mobilityScore}/100 MOBILITY ·{" "}
+          {snap.emergencyMinutesRemaining} MIN RESERVE
+        </span>
+      </footer>
+    </main>
+  );
 }
 
-function SuitDiagram({ config, mode }: { config: AegisConfig; mode: string }) { const bulk = 1 + config.protectionLayers * .012; const pack = 44 + config.enduranceHours * 2.7; const dust = config.dustMitigation / 100; return <svg className={`suit-svg ${mode}`} viewBox="0 0 420 480" role="img" aria-label="Parametric AEGIS spacesuit diagram"><defs><linearGradient id="body" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#d7ddd9"/><stop offset="1" stopColor="#687378"/></linearGradient><linearGradient id="visor"><stop stopColor="#d6fcff" stopOpacity=".9"/><stop offset=".7" stopColor="#47747d" stopOpacity=".45"/><stop offset="1" stopColor="#101a1d"/></linearGradient></defs><g transform={`translate(210 245) scale(${bulk}) translate(-210 -245)`}><rect className="pack" x={279} y="142" width={pack} height="166" rx="8"/><path className="body" d="M151 151 Q210 125 269 151 L277 278 Q251 304 244 339 L176 339 Q169 304 143 278Z"/><path className="limb" d="M152 168 L104 190 72 270 99 284 136 219 165 211Z"/><path className="limb" d="M268 168 L316 190 348 270 321 284 284 219 255 211Z"/><path className="limb" d="M181 325 L154 429 186 442 211 344Z"/><path className="limb" d="M239 325 L266 429 234 442 209 344Z"/><circle className="joint" cx="146" cy="194" r={9 + config.mobilityBearings * .12}/><circle className="joint" cx="274" cy="194" r={9 + config.mobilityBearings * .12}/><circle className="joint" cx="187" cy="331" r="10"/><circle className="joint" cx="233" cy="331" r="10"/><path className="helmet" d="M160 137 Q158 63 210 51 Q262 63 260 137 L240 159 180 159Z"/><path className="visor" d="M174 126 Q170 78 210 69 Q250 78 246 126 L230 140 190 140Z"/><path className="boot" style={{strokeOpacity:.45 + dust * .55}} d="M153 423 L187 428 191 455 137 455Z"/><path className="boot" style={{strokeOpacity:.45 + dust * .55}} d="M267 423 L233 428 229 455 283 455Z"/><rect className="chest" x="176" y="188" width="68" height="68" rx="5"/><text x="210" y="218">AEGIS</text><text x="210" y="235">AX–07</text><path className="life" d="M290 173h18v100h-18M296 191h12M296 253h12"/><path className="hose" d="M288 180 Q265 155 246 153"/></g><g className="annotation"><path d="M146 89H38"/><text x="34" y="84">A // OPTICAL ASSEMBLY</text><path d="M153 205H38"/><text x="34" y="200">B // PRESSURE TORSO</text><path d="M303 200h82"/><text x="309" y="194">C // PLSS</text><path d="M270 447h115"/><text x="298" y="440">D // REGOLITH BOOT</text></g></svg>; }
-function Section({ n, title }: { n: string; title: string }) { return <div className="ae-section"><span>{n}</span>{title}</div>; }
-function Control({ label, value, unit, min, max, step, onChange }: { label: string; value: number; unit: string; min: number; max: number; step: number; onChange: (v: number) => void }) { return <div className="ae-control"><span>{label}</span><div><button aria-label={`Decrease ${label}`} onClick={() => onChange(Math.max(min, +(value - step).toFixed(1)))}>−</button><b>{value}<small>{unit}</small></b><button aria-label={`Increase ${label}`} onClick={() => onChange(Math.min(max, +(value + step).toFixed(1)))}>+</button></div></div>; }
-function Metric({ label, value, unit, accent, warning }: { label: string; value: number | string; unit: string; accent?: boolean; warning?: boolean }) { return <div className={`ae-metric ${accent ? "accent" : ""} ${warning ? "warning" : ""}`}><span>{label}</span><b>{value}<small>{unit}</small></b></div>; }
-function Bar({ label, value, text, inverse }: { label: string; value: number; text: string; inverse?: boolean }) { return <div className={inverse ? "inverse" : ""}><span>{label}<b>{text}</b></span><i><em style={{ width: `${Math.max(0, value)}%` }}/></i></div>; }
+function SuitDiagram({ config, mode }: { config: AegisConfig; mode: string }) {
+  const bulk = 1 + config.protectionLayers * 0.012;
+  const pack = 44 + config.enduranceHours * 2.7;
+  const dust = config.dustMitigation / 100;
+  return (
+    <svg
+      className={`suit-svg ${mode}`}
+      viewBox="0 0 420 480"
+      role="img"
+      aria-label="Parametric AEGIS spacesuit diagram"
+    >
+      <defs>
+        <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+          <stop stopColor="#d7ddd9" />
+          <stop offset="1" stopColor="#687378" />
+        </linearGradient>
+        <linearGradient id="visor">
+          <stop stopColor="#d6fcff" stopOpacity=".9" />
+          <stop offset=".7" stopColor="#47747d" stopOpacity=".45" />
+          <stop offset="1" stopColor="#101a1d" />
+        </linearGradient>
+      </defs>
+      <g transform={`translate(210 245) scale(${bulk}) translate(-210 -245)`}>
+        <rect className="pack" x={279} y="142" width={pack} height="166" rx="8" />
+        <path
+          className="body"
+          d="M151 151 Q210 125 269 151 L277 278 Q251 304 244 339 L176 339 Q169 304 143 278Z"
+        />
+        <path className="limb" d="M152 168 L104 190 72 270 99 284 136 219 165 211Z" />
+        <path className="limb" d="M268 168 L316 190 348 270 321 284 284 219 255 211Z" />
+        <path className="limb" d="M181 325 L154 429 186 442 211 344Z" />
+        <path className="limb" d="M239 325 L266 429 234 442 209 344Z" />
+        <circle className="joint" cx="146" cy="194" r={9 + config.mobilityBearings * 0.12} />
+        <circle className="joint" cx="274" cy="194" r={9 + config.mobilityBearings * 0.12} />
+        <circle className="joint" cx="187" cy="331" r="10" />
+        <circle className="joint" cx="233" cy="331" r="10" />
+        <path className="helmet" d="M160 137 Q158 63 210 51 Q262 63 260 137 L240 159 180 159Z" />
+        <path className="visor" d="M174 126 Q170 78 210 69 Q250 78 246 126 L230 140 190 140Z" />
+        <path
+          className="boot"
+          style={{ strokeOpacity: 0.45 + dust * 0.55 }}
+          d="M153 423 L187 428 191 455 137 455Z"
+        />
+        <path
+          className="boot"
+          style={{ strokeOpacity: 0.45 + dust * 0.55 }}
+          d="M267 423 L233 428 229 455 283 455Z"
+        />
+        <rect className="chest" x="176" y="188" width="68" height="68" rx="5" />
+        <text x="210" y="218">
+          AEGIS
+        </text>
+        <text x="210" y="235">
+          AX–07
+        </text>
+        <path className="life" d="M290 173h18v100h-18M296 191h12M296 253h12" />
+        <path className="hose" d="M288 180 Q265 155 246 153" />
+      </g>
+      <g className="annotation">
+        <path d="M146 89H38" />
+        <text x="34" y="84">
+          A // OPTICAL ASSEMBLY
+        </text>
+        <path d="M153 205H38" />
+        <text x="34" y="200">
+          B // PRESSURE TORSO
+        </text>
+        <path d="M303 200h82" />
+        <text x="309" y="194">
+          C // PLSS
+        </text>
+        <path d="M270 447h115" />
+        <text x="298" y="440">
+          D // REGOLITH BOOT
+        </text>
+      </g>
+    </svg>
+  );
+}
+function Section({ n, title }: { n: string; title: string }) {
+  return (
+    <div className="ae-section">
+      <span>{n}</span>
+      {title}
+    </div>
+  );
+}
+function Control({
+  label,
+  value,
+  unit,
+  min,
+  max,
+  step,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  min: number;
+  max: number;
+  step: number;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="ae-control">
+      <span>{label}</span>
+      <div>
+        <button
+          aria-label={`Decrease ${label}`}
+          onClick={() => onChange(Math.max(min, +(value - step).toFixed(1)))}
+        >
+          −
+        </button>
+        <b>
+          {value}
+          <small>{unit}</small>
+        </b>
+        <button
+          aria-label={`Increase ${label}`}
+          onClick={() => onChange(Math.min(max, +(value + step).toFixed(1)))}
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+function Metric({
+  label,
+  value,
+  unit,
+  accent,
+  warning,
+}: {
+  label: string;
+  value: number | string;
+  unit: string;
+  accent?: boolean;
+  warning?: boolean;
+}) {
+  return (
+    <div className={`ae-metric ${accent ? "accent" : ""} ${warning ? "warning" : ""}`}>
+      <span>{label}</span>
+      <b>
+        {value}
+        <small>{unit}</small>
+      </b>
+    </div>
+  );
+}
+function Bar({
+  label,
+  value,
+  text,
+  inverse,
+}: {
+  label: string;
+  value: number;
+  text: string;
+  inverse?: boolean;
+}) {
+  return (
+    <div className={inverse ? "inverse" : ""}>
+      <span>
+        {label}
+        <b>{text}</b>
+      </span>
+      <i>
+        <em style={{ width: `${Math.max(0, value)}%` }} />
+      </i>
+    </div>
+  );
+}

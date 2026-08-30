@@ -1,33 +1,496 @@
 import { useEffect, useState } from "react";
-import { ARCHITECTURE_PRESETS, DEFAULT_GRAVITAS_CONFIG, GravitasSimulation, type GravitasConfig, type GravitasIncident, type GravityArchitecture } from "./gravitas";
+import {
+  ARCHITECTURE_PRESETS,
+  DEFAULT_GRAVITAS_CONFIG,
+  GravitasSimulation,
+  type GravitasConfig,
+  type GravitasIncident,
+  type GravityArchitecture,
+} from "./gravitas";
 
-const architectures: Record<GravityArchitecture, [string, string]> = { ring: ["RING", "CONTINUOUS HABITAT"], tether: ["TETHER", "TWO-BODY SPIN"], "short-arm": ["CENTRIFUGE", "INTERMITTENT CREW"], "field-core": ["FIELD CORE", "NO KNOWN MECHANISM"] };
-const incidents: Record<GravitasIncident, [string, string]> = { "mass-imbalance": ["ΔM", "MASS IMBALANCE"], "bearing-loss": ["BRG", "BEARING LOSS"], "pressure-sector": ["ΔP", "PRESSURE SECTOR"], "spin-drive": ["DRV", "SPIN DRIVE LOSS"], "vestibular-event": ["BIO", "VESTIBULAR EVENT"] };
-const show = (value: number | null, digits = 1) => value === null ? "—" : value.toLocaleString(undefined, { maximumFractionDigits: digits });
+const architectures: Record<GravityArchitecture, [string, string]> = {
+  ring: ["RING", "CONTINUOUS HABITAT"],
+  tether: ["TETHER", "TWO-BODY SPIN"],
+  "short-arm": ["CENTRIFUGE", "INTERMITTENT CREW"],
+  "field-core": ["FIELD CORE", "NO KNOWN MECHANISM"],
+};
+const incidents: Record<GravitasIncident, [string, string]> = {
+  "mass-imbalance": ["ΔM", "MASS IMBALANCE"],
+  "bearing-loss": ["BRG", "BEARING LOSS"],
+  "pressure-sector": ["ΔP", "PRESSURE SECTOR"],
+  "spin-drive": ["DRV", "SPIN DRIVE LOSS"],
+  "vestibular-event": ["BIO", "VESTIBULAR EVENT"],
+};
+const show = (value: number | null, digits = 1) =>
+  value === null ? "—" : value.toLocaleString(undefined, { maximumFractionDigits: digits });
 
 export function GravitasApp() {
   const [config, setConfig] = useState<GravitasConfig>({ ...DEFAULT_GRAVITAS_CONFIG });
   const [sim, setSim] = useState(() => new GravitasSimulation());
   const [snap, setSnap] = useState(() => sim.snapshot());
   const [running, setRunning] = useState(true);
-  useEffect(() => { if (!running) return; const timer = window.setInterval(() => setSnap(sim.step()), 650); return () => clearInterval(timer); }, [running, sim]);
-  const update = <K extends keyof GravitasConfig>(key: K, value: GravitasConfig[K]) => { const next = { ...config, [key]: value }; setConfig(next); setSnap(sim.updateConfig(next)); };
-  const architecture = (value: GravityArchitecture) => { const next = { ...config, ...ARCHITECTURE_PRESETS[value], architecture: value }; setConfig(next); setSnap(sim.updateConfig(next)); };
+  useEffect(() => {
+    if (!running) return;
+    const timer = window.setInterval(() => setSnap(sim.step()), 650);
+    return () => clearInterval(timer);
+  }, [running, sim]);
+  const update = <K extends keyof GravitasConfig>(key: K, value: GravitasConfig[K]) => {
+    const next = { ...config, [key]: value };
+    setConfig(next);
+    setSnap(sim.updateConfig(next));
+  };
+  const architecture = (value: GravityArchitecture) => {
+    const next = { ...config, ...ARCHITECTURE_PRESETS[value], architecture: value };
+    setConfig(next);
+    setSnap(sim.updateConfig(next));
+  };
   const active = (type: GravitasIncident) => snap.activeIncidents.includes(type);
-  const reset = () => { const next = new GravitasSimulation(); setSim(next); setConfig({ ...DEFAULT_GRAVITAS_CONFIG }); setSnap(next.snapshot()); setRunning(true); };
-  return <main className="gr-shell">
-    <header className="gr-top"><div className="gr-brand"><span>G//V</span><div><strong>RUIN // GRAVITAS</strong><small>ARTIFICIAL GRAVITY ARCHITECT</small></div></div><nav><a href="./">HELIOS</a><a href="./aegis.html">AEGIS</a><a href="./progenitor.html">PROGENITOR</a><b>GRAVITAS</b></nav><div className="gr-state"><span>AG-01 · τ{String(snap.tick).padStart(5, "0")}</span><b className={snap.mode}>{snap.mode.toUpperCase()}</b></div></header>
-    <section className="gr-grid">
-      <aside className="gr-panel gr-config"><Title n="01" text="GRAVITY ARCHITECTURE"/><div className="arch-tabs">{(Object.keys(architectures) as GravityArchitecture[]).map(type => <button key={type} className={config.architecture === type ? "selected" : ""} onClick={() => architecture(type)}>{architectures[type][0]}<small>{architectures[type][1]}</small></button>)}</div><Title n="02" text="ROTATION CONTRACT"/><Control label="HABITAT RADIUS" value={config.radiusM} unit="m" min={3} max={800} step={config.radiusM < 20 ? 1 : 10} change={v => update("radiusM", v)}/><Control label="TARGET GRAVITY" value={config.targetG} unit="g" min={0.05} max={1.5} step={0.05} change={v => update("targetG", +v.toFixed(2))}/><Control label="ROTATING MASS" value={config.rotatingMassTonnes} unit="t" min={20} max={20_000} step={100} change={v => update("rotatingMassTonnes", v)}/><Control label="DECK HEIGHT" value={config.deckHeightM} unit="m" min={1} max={5} step={0.25} change={v => update("deckHeightM", +v.toFixed(2))}/><Control label="RADIAL WALK SPEED" value={config.radialWalkingSpeedMS} unit="m/s" min={0.2} max={3} step={0.2} change={v => update("radialWalkingSpeedMS", +v.toFixed(1))}/><Control label="SPIN-UP WINDOW" value={config.spinupHours} unit="h" min={0.25} max={120} step={config.spinupHours < 2 ? .25 : 2} change={v => update("spinupHours", +v.toFixed(2))}/><label className="balance-slider"><span>COUNTER-ROTATION <b>{config.counterRotationPercent}%</b></span><input aria-label="Counter rotation" type="range" min="0" max="100" value={config.counterRotationPercent} onChange={e => update("counterRotationPercent", +e.target.value)}/></label></aside>
-      <section className="gr-panel gr-stage"><div className="gr-stage-head"><Title n="03" text="DYNAMIC STRUCTURE TWIN"/><span>{snap.feasibility}</span></div><GravityDiagram config={config} mode={snap.mode} rpm={snap.rpm}/><div className="gr-vector"><div><span>RADIAL ACCELERATION</span><b>a = ω²r</b></div><div><span>FOOT</span><b>{show(snap.footG, 2)} g</b></div><i>→</i><div><span>HEAD</span><b>{show(snap.headG, 2)} g</b></div><div><span>GRADIENT</span><b>{show(snap.gravityGradientPercent)}%</b></div></div><div className="gr-design-notes"><article><span>A</span><b>NON-ROTATING HUB</b><small>docking · zero-g lab · bearings</small></article><article><span>B</span><b>COUNTER-ROTOR</b><small>angular momentum cancellation</small></article><article><span>C</span><b>PRESSURE SECTORS</b><small>independent isolation doors</small></article><article><span>D</span><b>AXIAL TRAFFIC</b><small>avoid radial crew movement</small></article></div></section>
-      <aside className="gr-panel gr-output"><Title n="04" text="HUMAN + STRUCTURE ENVELOPE"/><div className={`gr-go ${snap.readiness.toLowerCase()}`}><span>DESIGN READINESS</span><b>{snap.readiness}</b><small>{snap.feasibility === "UNSUPPORTED" ? "NO EMPIRICAL GRAVITY-FIELD MECHANISM" : `${snap.comfort} HUMAN ROTATION ENVELOPE`}</small></div><div className="gr-metrics"><Metric label="ROTATION RATE" value={show(snap.rpm, 2)} unit="rpm" accent/><Metric label="RIM SPEED" value={show(snap.rimSpeedMS)} unit="m/s"/><Metric label="CORIOLIS AT WALK" value={show(snap.coriolisG, 3)} unit="g" warning={(snap.coriolisG ?? 0) > .08}/><Metric label="HEAD–FOOT GRADIENT" value={show(snap.gravityGradientPercent)} unit="%" warning={(snap.gravityGradientPercent ?? 0) > 15}/><Metric label="SPIN ENERGY" value={show(snap.spinEnergyGJ)} unit="GJ"/><Metric label="SPIN-UP POWER" value={show(snap.spinupPowerMW, 2)} unit="MW"/><Metric label="EFFECTIVE STRESS" value={show(snap.effectiveStressMPa)} unit="MPa"/><Metric label="RESIDUAL MOMENTUM" value={show(snap.residualAngularMomentumMNs, 0)} unit="MN·m·s"/></div>{snap.feasibility === "UNSUPPORTED" ? <div className="field-warning"><b>PHYSICS BOUNDARY</b><p>No verified compact device can generate a useful gravitational field. Mass-energy would curve spacetime, but this interface has no defensible conversion model, energy budget, or engineering path.</p></div> : <><Bar label="ROTATION COMFORT" value={snap.comfort === "GOOD" ? 90 : snap.comfort === "ADAPTATION" ? 58 : 24}/><Bar label="COUNTER-MOMENTUM" value={config.counterRotationPercent}/><div className="gr-rule"><b>LARGE RADIUS, SLOW ROTATION</b><p>Increasing radius lowers RPM, Coriolis acceleration, and head-to-foot gravity gradient for the same floor gravity.</p></div></>}<p className="gr-disclaimer">Trade-study model only. Structural stress uses a simplified rotating-ring estimate and cannot certify a human-rated habitat.</p></aside>
-      <section className="gr-panel gr-ops"><div className="gr-faults"><Title n="05" text="ROTATION FAULTS"/><div>{(Object.keys(incidents) as GravitasIncident[]).map(type => <button key={type} className={active(type) ? "active" : ""} onClick={() => setSnap(active(type) ? sim.resolve(type) : sim.inject(type))}><b>{incidents[type][0]}</b><span>{incidents[type][1]}<small>{active(type) ? "SELECT TO VERIFY" : "INJECT SCENARIO"}</small></span></button>)}</div></div><div className="gr-log"><Title n="06" text="DYNAMICS EVENT LOG"/><div>{snap.events.slice(0, 7).map(event => <article key={event.id} className={event.level}><time>τ{String(event.tick).padStart(5, "0")}</time><p>{event.message}</p></article>)}</div></div></section>
-    </section><footer className="gr-controls"><div><button className="run" onClick={() => setRunning(v => !v)}>{running ? "Ⅱ PAUSE" : "▶ RUN"}</button><button disabled={running} onClick={() => setSnap(sim.step())}>STEP</button><button onClick={reset}>RESET DESIGN</button></div><span>{show(snap.rpm,2)} RPM · {show(snap.footG,2)} g FLOOR · {show(snap.gravityGradientPercent)}% GRADIENT · {snap.comfort}</span></footer>
-  </main>;
+  const reset = () => {
+    const next = new GravitasSimulation();
+    setSim(next);
+    setConfig({ ...DEFAULT_GRAVITAS_CONFIG });
+    setSnap(next.snapshot());
+    setRunning(true);
+  };
+  return (
+    <main className="gr-shell">
+      <header className="gr-top">
+        <div className="gr-brand">
+          <span>G//V</span>
+          <div>
+            <strong>RUIN // GRAVITAS</strong>
+            <small>ARTIFICIAL GRAVITY ARCHITECT</small>
+          </div>
+        </div>
+        <nav>
+          <a href="./">HELIOS</a>
+          <a href="./aegis.html">AEGIS</a>
+          <a href="./progenitor.html">PROGENITOR</a>
+          <b>GRAVITAS</b>
+        </nav>
+        <div className="gr-state">
+          <span>AG-01 · τ{String(snap.tick).padStart(5, "0")}</span>
+          <b className={snap.mode}>{snap.mode.toUpperCase()}</b>
+        </div>
+      </header>
+      <section className="gr-grid">
+        <aside className="gr-panel gr-config">
+          <Title n="01" text="GRAVITY ARCHITECTURE" />
+          <div className="arch-tabs">
+            {(Object.keys(architectures) as GravityArchitecture[]).map((type) => (
+              <button
+                key={type}
+                className={config.architecture === type ? "selected" : ""}
+                onClick={() => architecture(type)}
+              >
+                {architectures[type][0]}
+                <small>{architectures[type][1]}</small>
+              </button>
+            ))}
+          </div>
+          <Title n="02" text="ROTATION CONTRACT" />
+          <Control
+            label="HABITAT RADIUS"
+            value={config.radiusM}
+            unit="m"
+            min={3}
+            max={800}
+            step={config.radiusM < 20 ? 1 : 10}
+            change={(v) => update("radiusM", v)}
+          />
+          <Control
+            label="TARGET GRAVITY"
+            value={config.targetG}
+            unit="g"
+            min={0.05}
+            max={1.5}
+            step={0.05}
+            change={(v) => update("targetG", +v.toFixed(2))}
+          />
+          <Control
+            label="ROTATING MASS"
+            value={config.rotatingMassTonnes}
+            unit="t"
+            min={20}
+            max={20_000}
+            step={100}
+            change={(v) => update("rotatingMassTonnes", v)}
+          />
+          <Control
+            label="DECK HEIGHT"
+            value={config.deckHeightM}
+            unit="m"
+            min={1}
+            max={5}
+            step={0.25}
+            change={(v) => update("deckHeightM", +v.toFixed(2))}
+          />
+          <Control
+            label="RADIAL WALK SPEED"
+            value={config.radialWalkingSpeedMS}
+            unit="m/s"
+            min={0.2}
+            max={3}
+            step={0.2}
+            change={(v) => update("radialWalkingSpeedMS", +v.toFixed(1))}
+          />
+          <Control
+            label="SPIN-UP WINDOW"
+            value={config.spinupHours}
+            unit="h"
+            min={0.25}
+            max={120}
+            step={config.spinupHours < 2 ? 0.25 : 2}
+            change={(v) => update("spinupHours", +v.toFixed(2))}
+          />
+          <label className="balance-slider">
+            <span>
+              COUNTER-ROTATION <b>{config.counterRotationPercent}%</b>
+            </span>
+            <input
+              aria-label="Counter rotation"
+              type="range"
+              min="0"
+              max="100"
+              value={config.counterRotationPercent}
+              onChange={(e) => update("counterRotationPercent", +e.target.value)}
+            />
+          </label>
+        </aside>
+        <section className="gr-panel gr-stage">
+          <div className="gr-stage-head">
+            <Title n="03" text="DYNAMIC STRUCTURE TWIN" />
+            <span>{snap.feasibility}</span>
+          </div>
+          <GravityDiagram config={config} mode={snap.mode} rpm={snap.rpm} />
+          <div className="gr-vector">
+            <div>
+              <span>RADIAL ACCELERATION</span>
+              <b>a = ω²r</b>
+            </div>
+            <div>
+              <span>FOOT</span>
+              <b>{show(snap.footG, 2)} g</b>
+            </div>
+            <i>→</i>
+            <div>
+              <span>HEAD</span>
+              <b>{show(snap.headG, 2)} g</b>
+            </div>
+            <div>
+              <span>GRADIENT</span>
+              <b>{show(snap.gravityGradientPercent)}%</b>
+            </div>
+          </div>
+          <div className="gr-design-notes">
+            <article>
+              <span>A</span>
+              <b>NON-ROTATING HUB</b>
+              <small>docking · zero-g lab · bearings</small>
+            </article>
+            <article>
+              <span>B</span>
+              <b>COUNTER-ROTOR</b>
+              <small>angular momentum cancellation</small>
+            </article>
+            <article>
+              <span>C</span>
+              <b>PRESSURE SECTORS</b>
+              <small>independent isolation doors</small>
+            </article>
+            <article>
+              <span>D</span>
+              <b>AXIAL TRAFFIC</b>
+              <small>avoid radial crew movement</small>
+            </article>
+          </div>
+        </section>
+        <aside className="gr-panel gr-output">
+          <Title n="04" text="HUMAN + STRUCTURE ENVELOPE" />
+          <div className={`gr-go ${snap.readiness.toLowerCase()}`}>
+            <span>DESIGN READINESS</span>
+            <b>{snap.readiness}</b>
+            <small>
+              {snap.feasibility === "UNSUPPORTED"
+                ? "NO EMPIRICAL GRAVITY-FIELD MECHANISM"
+                : `${snap.comfort} HUMAN ROTATION ENVELOPE`}
+            </small>
+          </div>
+          <div className="gr-metrics">
+            <Metric label="ROTATION RATE" value={show(snap.rpm, 2)} unit="rpm" accent />
+            <Metric label="RIM SPEED" value={show(snap.rimSpeedMS)} unit="m/s" />
+            <Metric
+              label="CORIOLIS AT WALK"
+              value={show(snap.coriolisG, 3)}
+              unit="g"
+              warning={(snap.coriolisG ?? 0) > 0.08}
+            />
+            <Metric
+              label="HEAD–FOOT GRADIENT"
+              value={show(snap.gravityGradientPercent)}
+              unit="%"
+              warning={(snap.gravityGradientPercent ?? 0) > 15}
+            />
+            <Metric label="SPIN ENERGY" value={show(snap.spinEnergyGJ)} unit="GJ" />
+            <Metric label="SPIN-UP POWER" value={show(snap.spinupPowerMW, 2)} unit="MW" />
+            <Metric label="EFFECTIVE STRESS" value={show(snap.effectiveStressMPa)} unit="MPa" />
+            <Metric
+              label="RESIDUAL MOMENTUM"
+              value={show(snap.residualAngularMomentumMNs, 0)}
+              unit="MN·m·s"
+            />
+          </div>
+          {snap.feasibility === "UNSUPPORTED" ? (
+            <div className="field-warning">
+              <b>PHYSICS BOUNDARY</b>
+              <p>
+                No verified compact device can generate a useful gravitational field. Mass-energy would curve
+                spacetime, but this interface has no defensible conversion model, energy budget, or
+                engineering path.
+              </p>
+            </div>
+          ) : (
+            <>
+              <Bar
+                label="ROTATION COMFORT"
+                value={snap.comfort === "GOOD" ? 90 : snap.comfort === "ADAPTATION" ? 58 : 24}
+              />
+              <Bar label="COUNTER-MOMENTUM" value={config.counterRotationPercent} />
+              <div className="gr-rule">
+                <b>LARGE RADIUS, SLOW ROTATION</b>
+                <p>
+                  Increasing radius lowers RPM, Coriolis acceleration, and head-to-foot gravity gradient for
+                  the same floor gravity.
+                </p>
+              </div>
+            </>
+          )}
+          <p className="gr-disclaimer">
+            Trade-study model only. Structural stress uses a simplified rotating-ring estimate and cannot
+            certify a human-rated habitat.
+          </p>
+        </aside>
+        <section className="gr-panel gr-ops">
+          <div className="gr-faults">
+            <Title n="05" text="ROTATION FAULTS" />
+            <div>
+              {(Object.keys(incidents) as GravitasIncident[]).map((type) => (
+                <button
+                  key={type}
+                  className={active(type) ? "active" : ""}
+                  onClick={() => setSnap(active(type) ? sim.resolve(type) : sim.inject(type))}
+                >
+                  <b>{incidents[type][0]}</b>
+                  <span>
+                    {incidents[type][1]}
+                    <small>{active(type) ? "SELECT TO VERIFY" : "INJECT SCENARIO"}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="gr-log">
+            <Title n="06" text="DYNAMICS EVENT LOG" />
+            <div>
+              {snap.events.slice(0, 7).map((event) => (
+                <article key={event.id} className={event.level}>
+                  <time>τ{String(event.tick).padStart(5, "0")}</time>
+                  <p>{event.message}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      </section>
+      <footer className="gr-controls">
+        <div>
+          <button className="run" onClick={() => setRunning((v) => !v)}>
+            {running ? "Ⅱ PAUSE" : "▶ RUN"}
+          </button>
+          <button disabled={running} onClick={() => setSnap(sim.step())}>
+            STEP
+          </button>
+          <button onClick={reset}>RESET DESIGN</button>
+        </div>
+        <span>
+          {show(snap.rpm, 2)} RPM · {show(snap.footG, 2)} g FLOOR · {show(snap.gravityGradientPercent)}%
+          GRADIENT · {snap.comfort}
+        </span>
+      </footer>
+    </main>
+  );
 }
 
-function GravityDiagram({ config, mode, rpm }: { config: GravitasConfig; mode: string; rpm: number | null }) { const ringR = config.architecture === "short-arm" ? 100 : config.architecture === "tether" ? 185 : 155; return <svg className={`gravity-svg ${mode} ${config.architecture}`} viewBox="0 0 620 440" role="img" aria-label="Artificial gravity rotating habitat diagram"><defs><radialGradient id="hub"><stop stopColor="#d5e1df"/><stop offset="1" stopColor="#51615f"/></radialGradient><marker id="gArrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><path d="M0 0L9 3.5 0 7Z" fill="#7be1cd"/></marker></defs><g transform="translate(310 220)"><circle className="orbit-guide" r={ringR}/>{config.architecture === "field-core" ? <><circle className="field-core-ring" r="86"/><circle className="field-core-ring second" r="125"/><path className="unknown" d="M-120 0H120M0-120V120"/><text className="unsupported-text" y="8">UNSUPPORTED FIELD CORE</text></> : config.architecture === "tether" ? <><path className="tether-line" d={`M-${ringR} 0H${ringR}`}/><rect className="tether-hab" x={-ringR-43} y="-31" width="86" height="62" rx="8"/><rect className="tether-hab" x={ringR-43} y="-31" width="86" height="62" rx="8"/></> : <><circle className="hab-ring" r={ringR}/><circle className="counter-ring" r={ringR-24}/>{Array.from({length:12},(_,i)=>{const a=i*Math.PI/6;return <path key={i} className="sector" d={`M${Math.cos(a)*(ringR-12)} ${Math.sin(a)*(ringR-12)}L${Math.cos(a)*(ringR+12)} ${Math.sin(a)*(ringR+12)}`}/>})}</>}<circle className="hub" r="48"/><circle className="dock" r="22"/><path className="spoke" d={`M0-${ringR-12}V-48M${ringR-12} 0H48M0 ${ringR-12}V48M-${ringR-12} 0H-48`}/>{config.architecture !== "field-core" && <><path className="spin-arrow" d={`M-${ringR*.72}-${ringR*.72}A${ringR} ${ringR} 0 0 1 ${ringR*.72}-${ringR*.72}`}/><path className="gravity-arrow" d={`M0 ${ringR-52}V${ringR+28}`}/><text className="rpm" y="7">{rpm} RPM</text><text className="g-label" y={ringR+48}>{config.targetG} g FLOOR VECTOR</text></>}</g><g className="gr-annotations"><path d="M310 173V85H130"/><text x="126" y="79">A // INERTIAL HUB + DOCK</text><path d="M420 232H570"/><text x="574" y="226">B // COUNTER-ROTOR</text><path d="M202 326H70"/><text x="66" y="320">C // PRESSURE SECTOR</text><path d="M310 267V376H470"/><text x="474" y="370">D // AXIAL TRANSFER</text></g></svg>; }
-function Title({ n, text }: { n: string; text: string }) { return <div className="gr-title"><span>{n}</span>{text}</div>; }
-function Control({ label, value, unit, min, max, step, change }: { label: string; value: number; unit: string; min: number; max: number; step: number; change: (value: number) => void }) { return <div className="gr-control"><span>{label}</span><div><button aria-label={`Decrease ${label}`} onClick={() => change(Math.max(min, value - step))}>−</button><b>{show(value,2)}<small>{unit}</small></b><button aria-label={`Increase ${label}`} onClick={() => change(Math.min(max, value + step))}>+</button></div></div>; }
-function Metric({ label, value, unit, accent, warning }: { label: string; value: string; unit: string; accent?: boolean; warning?: boolean }) { return <div className={`gr-metric ${accent ? "accent" : ""} ${warning ? "warning" : ""}`}><span>{label}</span><b>{value}<small>{unit}</small></b></div>; }
-function Bar({ label, value }: { label: string; value: number }) { return <div className="gr-bar"><span>{label}<b>{value}%</b></span><i><em style={{width:`${value}%`}}/></i></div>; }
+function GravityDiagram({ config, mode, rpm }: { config: GravitasConfig; mode: string; rpm: number | null }) {
+  const ringR = config.architecture === "short-arm" ? 100 : config.architecture === "tether" ? 185 : 155;
+  return (
+    <svg
+      className={`gravity-svg ${mode} ${config.architecture}`}
+      viewBox="0 0 620 440"
+      role="img"
+      aria-label="Artificial gravity rotating habitat diagram"
+    >
+      <defs>
+        <radialGradient id="hub">
+          <stop stopColor="#d5e1df" />
+          <stop offset="1" stopColor="#51615f" />
+        </radialGradient>
+        <marker id="gArrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+          <path d="M0 0L9 3.5 0 7Z" fill="#7be1cd" />
+        </marker>
+      </defs>
+      <g transform="translate(310 220)">
+        <circle className="orbit-guide" r={ringR} />
+        {config.architecture === "field-core" ? (
+          <>
+            <circle className="field-core-ring" r="86" />
+            <circle className="field-core-ring second" r="125" />
+            <path className="unknown" d="M-120 0H120M0-120V120" />
+            <text className="unsupported-text" y="8">
+              UNSUPPORTED FIELD CORE
+            </text>
+          </>
+        ) : config.architecture === "tether" ? (
+          <>
+            <path className="tether-line" d={`M-${ringR} 0H${ringR}`} />
+            <rect className="tether-hab" x={-ringR - 43} y="-31" width="86" height="62" rx="8" />
+            <rect className="tether-hab" x={ringR - 43} y="-31" width="86" height="62" rx="8" />
+          </>
+        ) : (
+          <>
+            <circle className="hab-ring" r={ringR} />
+            <circle className="counter-ring" r={ringR - 24} />
+            {Array.from({ length: 12 }, (_, i) => {
+              const a = (i * Math.PI) / 6;
+              return (
+                <path
+                  key={i}
+                  className="sector"
+                  d={`M${Math.cos(a) * (ringR - 12)} ${Math.sin(a) * (ringR - 12)}L${Math.cos(a) * (ringR + 12)} ${Math.sin(a) * (ringR + 12)}`}
+                />
+              );
+            })}
+          </>
+        )}
+        <circle className="hub" r="48" />
+        <circle className="dock" r="22" />
+        <path
+          className="spoke"
+          d={`M0-${ringR - 12}V-48M${ringR - 12} 0H48M0 ${ringR - 12}V48M-${ringR - 12} 0H-48`}
+        />
+        {config.architecture !== "field-core" && (
+          <>
+            <path
+              className="spin-arrow"
+              d={`M-${ringR * 0.72}-${ringR * 0.72}A${ringR} ${ringR} 0 0 1 ${ringR * 0.72}-${ringR * 0.72}`}
+            />
+            <path className="gravity-arrow" d={`M0 ${ringR - 52}V${ringR + 28}`} />
+            <text className="rpm" y="7">
+              {rpm} RPM
+            </text>
+            <text className="g-label" y={ringR + 48}>
+              {config.targetG} g FLOOR VECTOR
+            </text>
+          </>
+        )}
+      </g>
+      <g className="gr-annotations">
+        <path d="M310 173V85H130" />
+        <text x="126" y="79">
+          A // INERTIAL HUB + DOCK
+        </text>
+        <path d="M420 232H570" />
+        <text x="574" y="226">
+          B // COUNTER-ROTOR
+        </text>
+        <path d="M202 326H70" />
+        <text x="66" y="320">
+          C // PRESSURE SECTOR
+        </text>
+        <path d="M310 267V376H470" />
+        <text x="474" y="370">
+          D // AXIAL TRANSFER
+        </text>
+      </g>
+    </svg>
+  );
+}
+function Title({ n, text }: { n: string; text: string }) {
+  return (
+    <div className="gr-title">
+      <span>{n}</span>
+      {text}
+    </div>
+  );
+}
+function Control({
+  label,
+  value,
+  unit,
+  min,
+  max,
+  step,
+  change,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  min: number;
+  max: number;
+  step: number;
+  change: (value: number) => void;
+}) {
+  return (
+    <div className="gr-control">
+      <span>{label}</span>
+      <div>
+        <button aria-label={`Decrease ${label}`} onClick={() => change(Math.max(min, value - step))}>
+          −
+        </button>
+        <b>
+          {show(value, 2)}
+          <small>{unit}</small>
+        </b>
+        <button aria-label={`Increase ${label}`} onClick={() => change(Math.min(max, value + step))}>
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+function Metric({
+  label,
+  value,
+  unit,
+  accent,
+  warning,
+}: {
+  label: string;
+  value: string;
+  unit: string;
+  accent?: boolean;
+  warning?: boolean;
+}) {
+  return (
+    <div className={`gr-metric ${accent ? "accent" : ""} ${warning ? "warning" : ""}`}>
+      <span>{label}</span>
+      <b>
+        {value}
+        <small>{unit}</small>
+      </b>
+    </div>
+  );
+}
+function Bar({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="gr-bar">
+      <span>
+        {label}
+        <b>{value}%</b>
+      </span>
+      <i>
+        <em style={{ width: `${value}%` }} />
+      </i>
+    </div>
+  );
+}

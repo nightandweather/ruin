@@ -26,12 +26,12 @@ These equations do not constitute a construction design. Coil geometry, switchin
 
 ## State model
 
-| Entity | Important state | Decisions |
-| --- | --- | --- |
-| Cargo capsule | mass, acceleration limit, destination, integrity | accept, reject, repackage |
-| Accelerator | stored energy, thermal state, segment availability | charge, launch, cool, isolate |
-| Flight corridor | launch window, uncertainty, exclusion zones | clear, delay, cancel |
-| Orbital catcher | predicted position, capture capacity, confidence | acknowledge, receive, abort |
+| Entity          | Important state                                    | Decisions                     |
+| --------------- | -------------------------------------------------- | ----------------------------- |
+| Cargo capsule   | mass, acceleration limit, destination, integrity   | accept, reject, repackage     |
+| Accelerator     | stored energy, thermal state, segment availability | charge, launch, cool, isolate |
+| Flight corridor | launch window, uncertainty, exclusion zones        | clear, delay, cancel          |
+| Orbital catcher | predicted position, capture capacity, confidence   | acknowledge, receive, abort   |
 
 ## Safety invariants
 

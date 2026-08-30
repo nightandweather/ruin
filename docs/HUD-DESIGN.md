@@ -18,12 +18,12 @@ The concept image fixes the composition and visual language. The shipped interfa
 
 ## Signal semantics
 
-| Signal | Meaning | Usage rule |
-| --- | --- | --- |
-| Bone white / oxidized gray | archival structure and unverified context | default typography, borders, orbital records |
-| Teal | verified nominal state | safe dispatch, validated institutions, connected nodes |
-| Amber | uncertainty or bounded degradation | isolated links, thermal load, incomplete confidence |
-| Red | irreversible or physically lost state | confirmed loss, critical status, terminal causal projection only |
+| Signal                     | Meaning                                   | Usage rule                                                       |
+| -------------------------- | ----------------------------------------- | ---------------------------------------------------------------- |
+| Bone white / oxidized gray | archival structure and unverified context | default typography, borders, orbital records                     |
+| Teal                       | verified nominal state                    | safe dispatch, validated institutions, connected nodes           |
+| Amber                      | uncertainty or bounded degradation        | isolated links, thermal load, incomplete confidence              |
+| Red                        | irreversible or physically lost state     | confirmed loss, critical status, terminal causal projection only |
 
 Purple neon, glassmorphism, rounded consumer cards, bloom-heavy holograms, and decorative targeting reticles are explicitly excluded.
 

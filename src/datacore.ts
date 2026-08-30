@@ -1,6 +1,7 @@
 import { DeterministicRandom } from "./prng";
 
-export type DatacoreIncident = "radiation-storm" | "coolant-loop-loss" | "optical-link-loss" | "collector-curtailment";
+export type DatacoreIncident =
+  "radiation-storm" | "coolant-loop-loss" | "optical-link-loss" | "collector-curtailment";
 export type JobKind = "swarm-control" | "telescope-ingest" | "physics-ensemble" | "factory-twins";
 
 export interface DatacoreConfig {
@@ -41,7 +42,12 @@ export interface DatacoreSnapshot {
   queue: readonly ComputeJob[];
   tileStates: readonly ("active" | "standby" | "scrub" | "offline")[];
   activeIncidents: readonly { type: DatacoreIncident; endsAt: number }[];
-  events: readonly { id: number; tick: number; level: "info" | "warning" | "critical" | "recovery"; message: string }[];
+  events: readonly {
+    id: number;
+    tick: number;
+    level: "info" | "warning" | "critical" | "recovery";
+    message: string;
+  }[];
 }
 
 export const DEFAULT_DATACORE_CONFIG: DatacoreConfig = {
@@ -93,20 +99,36 @@ export class OrbitalDatacoreSimulation {
   updateConfig(config: DatacoreConfig): DatacoreSnapshot {
     const previousTiles = this.tileStates;
     this.config = { ...config, gpuTiles: Math.max(8, Math.min(256, Math.round(config.gpuTiles))) };
-    this.tileStates = Array.from({ length: this.config.gpuTiles }, (_, index) => previousTiles[index] ?? "active");
+    this.tileStates = Array.from(
+      { length: this.config.gpuTiles },
+      (_, index) => previousTiles[index] ?? "active",
+    );
     return this.snapshot();
   }
 
   submit(kind: JobKind): DatacoreSnapshot {
     const definition = JOBS[kind];
-    this.queue.push({ id: ++this.jobId, kind, label: definition.label, remainingPetaOps: definition.petaOps, originalPetaOps: definition.petaOps, priority: definition.priority, status: "queued" });
+    this.queue.push({
+      id: ++this.jobId,
+      kind,
+      label: definition.label,
+      remainingPetaOps: definition.petaOps,
+      originalPetaOps: definition.petaOps,
+      priority: definition.priority,
+      status: "queued",
+    });
     this.record("info", `${definition.label} accepted into verified compute queue`);
     return this.snapshot();
   }
 
   inject(type: DatacoreIncident): DatacoreSnapshot {
     if (this.incidents.some((incident) => incident.type === type)) return this.snapshot();
-    const duration: Record<DatacoreIncident, number> = { "radiation-storm": 24, "coolant-loop-loss": 18, "optical-link-loss": 22, "collector-curtailment": 20 };
+    const duration: Record<DatacoreIncident, number> = {
+      "radiation-storm": 24,
+      "coolant-loop-loss": 18,
+      "optical-link-loss": 22,
+      "collector-curtailment": 20,
+    };
     const message: Record<DatacoreIncident, string> = {
       "radiation-storm": "Particle flux elevated; checkpoint, scrub, and result quorum policy active",
       "coolant-loop-loss": "Coolant loop B isolated; scheduler enforcing radiator-safe power cap",
@@ -114,7 +136,10 @@ export class OrbitalDatacoreSimulation {
       "collector-curtailment": "C-01 power allocation reduced; low-priority tiles entering standby",
     };
     this.incidents.push({ type, endsAt: this.tick + duration[type] });
-    this.record(type === "radiation-storm" || type === "coolant-loop-loss" ? "critical" : "warning", message[type]);
+    this.record(
+      type === "radiation-storm" || type === "coolant-loop-loss" ? "critical" : "warning",
+      message[type],
+    );
     return this.snapshot();
   }
 
@@ -125,7 +150,13 @@ export class OrbitalDatacoreSimulation {
       const state = this.computeState();
       this.tileStates = state.tileStates;
       const running = [...this.queue].sort((left, right) => right.priority - left.priority)[0];
-      for (const job of this.queue) job.status = job.id === running?.id ? "running" : this.has("optical-link-loss") && job.kind === "telescope-ingest" ? "blocked" : "queued";
+      for (const job of this.queue)
+        job.status =
+          job.id === running?.id
+            ? "running"
+            : this.has("optical-link-loss") && job.kind === "telescope-ingest"
+              ? "blocked"
+              : "queued";
       if (running && running.status === "running") {
         // One tick represents one minute; PFLOP/s × 60 = peta-operations per tick.
         running.remainingPetaOps = Math.max(0, running.remainingPetaOps - state.verifiedComputePflops * 60);
@@ -147,52 +178,85 @@ export class OrbitalDatacoreSimulation {
   snapshot(): DatacoreSnapshot {
     const state = this.computeState();
     return {
-      tick: this.tick, mode: state.mode, availableTiles: state.availableTiles, totalTiles: this.config.gpuTiles,
-      utilizationPercent: state.utilizationPercent, rawComputePflops: state.rawComputePflops, verifiedComputePflops: state.verifiedComputePflops,
-      facilityPowerMW: state.facilityPowerMW, availablePowerMW: state.availablePowerMW, radiatorTemperatureK: state.radiatorTemperatureK,
-      downlinkMbps: this.has("optical-link-loss") ? 0 : this.config.opticalLinkMbps, correctedErrors: this.correctedErrors,
-      rejectedResults: this.rejectedResults, completedJobs: this.completedJobs, queue: this.queue.map((job) => ({ ...job })),
-      tileStates: [...state.tileStates], activeIncidents: this.incidents.map((incident) => ({ ...incident })), events: this.events.map((event) => ({ ...event })),
+      tick: this.tick,
+      mode: state.mode,
+      availableTiles: state.availableTiles,
+      totalTiles: this.config.gpuTiles,
+      utilizationPercent: state.utilizationPercent,
+      rawComputePflops: state.rawComputePflops,
+      verifiedComputePflops: state.verifiedComputePflops,
+      facilityPowerMW: state.facilityPowerMW,
+      availablePowerMW: state.availablePowerMW,
+      radiatorTemperatureK: state.radiatorTemperatureK,
+      downlinkMbps: this.has("optical-link-loss") ? 0 : this.config.opticalLinkMbps,
+      correctedErrors: this.correctedErrors,
+      rejectedResults: this.rejectedResults,
+      completedJobs: this.completedJobs,
+      queue: this.queue.map((job) => ({ ...job })),
+      tileStates: [...state.tileStates],
+      activeIncidents: this.incidents.map((incident) => ({ ...incident })),
+      events: this.events.map((event) => ({ ...event })),
     };
   }
 
   private computeState() {
-    const availablePowerMW = this.config.sourceCollectors * C01_DELIVERY_MW * (this.has("collector-curtailment") ? 0.32 : 1);
+    const availablePowerMW =
+      this.config.sourceCollectors * C01_DELIVERY_MW * (this.has("collector-curtailment") ? 0.32 : 1);
     const radiatorArea = this.config.radiatorAreaM2 * (this.has("coolant-loop-loss") ? 0.5 : 1);
-    const maxThermalPowerMW = EMISSIVITY * SIGMA * radiatorArea * MAX_COOLANT_K ** 4 / 1e6;
-    const facilityPowerPerTileMW = this.config.tilePowerKw * 1.24 / 1000;
+    const maxThermalPowerMW = (EMISSIVITY * SIGMA * radiatorArea * MAX_COOLANT_K ** 4) / 1e6;
+    const facilityPowerPerTileMW = (this.config.tilePowerKw * 1.24) / 1000;
     const tilesByPower = Math.floor(availablePowerMW / facilityPowerPerTileMW);
     const tilesByThermal = Math.floor(maxThermalPowerMW / facilityPowerPerTileMW);
     const scrubFraction = this.has("radiation-storm") ? 0.25 : 0;
     const tilesAfterScrub = Math.floor(this.config.gpuTiles * (1 - scrubFraction));
-    const availableTiles = Math.max(0, Math.min(this.config.gpuTiles, tilesByPower, tilesByThermal, tilesAfterScrub));
-    const tileStates = Array.from({ length: this.config.gpuTiles }, (_, index): DatacoreSnapshot["tileStates"][number] => {
-      if (this.has("radiation-storm") && index >= tilesAfterScrub) return "scrub";
-      return index < availableTiles ? "active" : "standby";
-    });
-    const rawComputePflops = availableTiles * this.config.tileComputeTflops / 1000;
+    const availableTiles = Math.max(
+      0,
+      Math.min(this.config.gpuTiles, tilesByPower, tilesByThermal, tilesAfterScrub),
+    );
+    const tileStates = Array.from(
+      { length: this.config.gpuTiles },
+      (_, index): DatacoreSnapshot["tileStates"][number] => {
+        if (this.has("radiation-storm") && index >= tilesAfterScrub) return "scrub";
+        return index < availableTiles ? "active" : "standby";
+      },
+    );
+    const rawComputePflops = (availableTiles * this.config.tileComputeTflops) / 1000;
     const verifiedComputePflops = rawComputePflops / this.config.verificationReplicas;
     const facilityPowerMW = availableTiles * facilityPowerPerTileMW;
-    const radiatorTemperatureK = facilityPowerMW <= 0 ? 0 : Math.pow(facilityPowerMW * 1e6 / (EMISSIVITY * SIGMA * radiatorArea), 0.25);
+    const radiatorTemperatureK =
+      facilityPowerMW <= 0
+        ? 0
+        : Math.pow((facilityPowerMW * 1e6) / (EMISSIVITY * SIGMA * radiatorArea), 0.25);
     let mode: DatacoreSnapshot["mode"] = "compute";
     if (this.has("radiation-storm")) mode = "radiation-scrub";
     else if (this.has("coolant-loop-loss") || tilesByThermal < this.config.gpuTiles) mode = "thermal-cap";
     else if (this.has("optical-link-loss")) mode = "link-isolated";
     else if (this.has("collector-curtailment") || tilesByPower < this.config.gpuTiles) mode = "power-cap";
     return {
-      mode, availableTiles, tileStates, rawComputePflops: Number(rawComputePflops.toFixed(2)), verifiedComputePflops: Number(verifiedComputePflops.toFixed(2)),
-      facilityPowerMW: Number(facilityPowerMW.toFixed(3)), availablePowerMW: Number(availablePowerMW.toFixed(2)),
-      radiatorTemperatureK: Number(radiatorTemperatureK.toFixed(1)), utilizationPercent: Number((availableTiles / this.config.gpuTiles * 100).toFixed(1)),
+      mode,
+      availableTiles,
+      tileStates,
+      rawComputePflops: Number(rawComputePflops.toFixed(2)),
+      verifiedComputePflops: Number(verifiedComputePflops.toFixed(2)),
+      facilityPowerMW: Number(facilityPowerMW.toFixed(3)),
+      availablePowerMW: Number(availablePowerMW.toFixed(2)),
+      radiatorTemperatureK: Number(radiatorTemperatureK.toFixed(1)),
+      utilizationPercent: Number(((availableTiles / this.config.gpuTiles) * 100).toFixed(1)),
     };
   }
 
-  private has(type: DatacoreIncident): boolean { return this.incidents.some((incident) => incident.type === type); }
+  private has(type: DatacoreIncident): boolean {
+    return this.incidents.some((incident) => incident.type === type);
+  }
   private expireIncidents(): void {
-    for (let index = this.incidents.length - 1; index >= 0; index -= 1) if (this.incidents[index].endsAt <= this.tick) {
-      const [resolved] = this.incidents.splice(index, 1); this.record("recovery", `${resolved.type} recovery completed; capacity re-admitted`);
-    }
+    for (let index = this.incidents.length - 1; index >= 0; index -= 1)
+      if (this.incidents[index].endsAt <= this.tick) {
+        const [resolved] = this.incidents.splice(index, 1);
+        this.record("recovery", `${resolved.type} recovery completed; capacity re-admitted`);
+      }
   }
   private record(level: DatacoreSnapshot["events"][number]["level"], message: string): void {
-    this.events.unshift({ id: ++this.eventId, tick: this.tick, level, message }); if (this.events.length > 48) this.events.length = 48;
+    this.events.unshift({ id: ++this.eventId, tick: this.tick, level, message });
+    if (this.events.length > 48) this.events.length = 48;
   }
 }

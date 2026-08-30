@@ -27,7 +27,12 @@ export interface AegisSnapshot {
   emergencyMinutesRemaining: number;
   readiness: "READY" | "CONDITIONAL" | "NO-GO";
   activeIncidents: readonly SuitIncident[];
-  events: readonly { id: number; tick: number; level: "info" | "warning" | "critical" | "recovery"; message: string }[];
+  events: readonly {
+    id: number;
+    tick: number;
+    level: "info" | "warning" | "critical" | "recovery";
+    message: string;
+  }[];
 }
 
 export const DEFAULT_AEGIS_CONFIG: AegisConfig = {
@@ -41,7 +46,10 @@ export const DEFAULT_AEGIS_CONFIG: AegisConfig = {
   emergencyOxygenMinutes: 60,
 };
 
-const missions: Record<SuitMission, { gravity: number; baseMass: number; workload: number; dust: number; thermal: number }> = {
+const missions: Record<
+  SuitMission,
+  { gravity: number; baseMass: number; workload: number; dust: number; thermal: number }
+> = {
   "orbital-service": { gravity: 0, baseMass: 72, workload: 370, dust: 0, thermal: 420 },
   "lunar-mining": { gravity: 0.166, baseMass: 76, workload: 470, dust: 1, thermal: 500 },
   "mars-field": { gravity: 0.38, baseMass: 61, workload: 520, dust: 0.72, thermal: 390 },
@@ -62,7 +70,10 @@ export class AegisSimulation {
     this.record("info", "AEGIS pressure garment and PLSS passed pre-breathe interface checks");
   }
 
-  updateConfig(config: AegisConfig) { this.config = { ...config }; return this.snapshot(); }
+  updateConfig(config: AegisConfig) {
+    this.config = { ...config };
+    return this.snapshot();
+  }
 
   inject(type: SuitIncident) {
     if (this.incidents.has(type)) return this.snapshot();
@@ -88,7 +99,8 @@ export class AegisSimulation {
     for (let i = 0; i < ticks; i++) {
       this.tick++;
       if (this.incidents.has("puncture")) this.emergencyUsed += 5;
-      if (this.incidents.has("dust-seal")) this.sealIntegrity = Math.max(0, this.sealIntegrity - (1.6 - this.config.dustMitigation / 100));
+      if (this.incidents.has("dust-seal"))
+        this.sealIntegrity = Math.max(0, this.sealIntegrity - (1.6 - this.config.dustMitigation / 100));
     }
     return this.snapshot();
   }
@@ -96,30 +108,75 @@ export class AegisSimulation {
   snapshot(): AegisSnapshot {
     const c = this.config;
     const mission = missions[c.mission];
-    const mass = mission.baseMass + 48 + c.enduranceHours * 4 + c.protectionLayers * 2.25 + c.mobilityBearings * 0.7 + c.dustMitigation * mission.dust * 0.09 + c.emergencyOxygenMinutes * 0.07;
+    const mass =
+      mission.baseMass +
+      48 +
+      c.enduranceHours * 4 +
+      c.protectionLayers * 2.25 +
+      c.mobilityBearings * 0.7 +
+      c.dustMitigation * mission.dust * 0.09 +
+      c.emergencyOxygenMinutes * 0.07;
     const localWeight = mass * mission.gravity;
     const pressurePenalty = Math.max(0, c.pressureKpa - 25) * 0.95;
     const gravityPenalty = localWeight * 0.32;
-    const mobility = Math.max(0, Math.min(100, 64 + c.mobilityBearings * 2.4 - c.protectionLayers * 1.7 - pressurePenalty - gravityPenalty - (this.incidents.has("dust-seal") ? 18 : 0)));
+    const mobility = Math.max(
+      0,
+      Math.min(
+        100,
+        64 +
+          c.mobilityBearings * 2.4 -
+          c.protectionLayers * 1.7 -
+          pressurePenalty -
+          gravityPenalty -
+          (this.incidents.has("dust-seal") ? 18 : 0),
+      ),
+    );
     const metabolic = mission.workload * (1 + (100 - mobility) / 190);
     const cooling = this.incidents.has("coolant-loss") ? c.coolingCapacityW * 0.38 : c.coolingCapacityW;
     const thermalMargin = cooling - Math.max(mission.thermal, metabolic);
     const nominalMinutes = c.enduranceHours * 60;
     const thermalFactor = thermalMargin >= 0 ? 1 : Math.max(0.18, 1 + thermalMargin / 700);
     const emergencyRemaining = Math.max(0, c.emergencyOxygenMinutes - this.emergencyUsed);
-    const evaMinutes = this.incidents.has("puncture") ? Math.min(nominalMinutes, emergencyRemaining) : nominalMinutes * thermalFactor;
-    const dustRisk = Math.max(0, Math.min(100, mission.dust * (100 - c.dustMitigation) + (100 - this.sealIntegrity) * 1.2));
-    const pressure = this.incidents.has("puncture") ? Math.max(0, c.pressureKpa - this.emergencyUsed * 0.06) : c.pressureKpa;
+    const evaMinutes = this.incidents.has("puncture")
+      ? Math.min(nominalMinutes, emergencyRemaining)
+      : nominalMinutes * thermalFactor;
+    const dustRisk = Math.max(
+      0,
+      Math.min(100, mission.dust * (100 - c.dustMitigation) + (100 - this.sealIntegrity) * 1.2),
+    );
+    const pressure = this.incidents.has("puncture")
+      ? Math.max(0, c.pressureKpa - this.emergencyUsed * 0.06)
+      : c.pressureKpa;
     let readiness: AegisSnapshot["readiness"] = "READY";
-    if (pressure < 25 || thermalMargin < -180 || mobility < 35 || this.sealIntegrity < 55) readiness = "NO-GO";
-    else if (thermalMargin < 0 || mobility < 55 || dustRisk > 28 || (c.mission === "mars-field" && mass > 150)) readiness = "CONDITIONAL";
-    let mode: AegisSnapshot["mode"] = readiness === "NO-GO" ? "critical" : readiness === "CONDITIONAL" ? "limited" : "nominal";
-    if (this.incidents.has("puncture") || this.incidents.has("comms-loss")) mode = emergencyRemaining > 0 ? "return" : "critical";
+    if (pressure < 25 || thermalMargin < -180 || mobility < 35 || this.sealIntegrity < 55)
+      readiness = "NO-GO";
+    else if (
+      thermalMargin < 0 ||
+      mobility < 55 ||
+      dustRisk > 28 ||
+      (c.mission === "mars-field" && mass > 150)
+    )
+      readiness = "CONDITIONAL";
+    let mode: AegisSnapshot["mode"] =
+      readiness === "NO-GO" ? "critical" : readiness === "CONDITIONAL" ? "limited" : "nominal";
+    if (this.incidents.has("puncture") || this.incidents.has("comms-loss"))
+      mode = emergencyRemaining > 0 ? "return" : "critical";
     return {
-      tick: this.tick, mode, massKg: +mass.toFixed(1), localWeightKg: +localWeight.toFixed(1), mobilityScore: +mobility.toFixed(0),
-      evaMinutes: +evaMinutes.toFixed(0), metabolicLoadW: +metabolic.toFixed(0), thermalMarginW: +thermalMargin.toFixed(0),
-      sealIntegrity: +this.sealIntegrity.toFixed(0), dustRisk: +dustRisk.toFixed(0), pressureKpa: +pressure.toFixed(1),
-      emergencyMinutesRemaining: emergencyRemaining, readiness, activeIncidents: [...this.incidents], events: this.events.map(e => ({ ...e })),
+      tick: this.tick,
+      mode,
+      massKg: +mass.toFixed(1),
+      localWeightKg: +localWeight.toFixed(1),
+      mobilityScore: +mobility.toFixed(0),
+      evaMinutes: +evaMinutes.toFixed(0),
+      metabolicLoadW: +metabolic.toFixed(0),
+      thermalMarginW: +thermalMargin.toFixed(0),
+      sealIntegrity: +this.sealIntegrity.toFixed(0),
+      dustRisk: +dustRisk.toFixed(0),
+      pressureKpa: +pressure.toFixed(1),
+      emergencyMinutesRemaining: emergencyRemaining,
+      readiness,
+      activeIncidents: [...this.incidents],
+      events: this.events.map((e) => ({ ...e })),
     };
   }
 

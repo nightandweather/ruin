@@ -19,7 +19,8 @@ describe("fleet operations", () => {
   it("is deterministic for the same seed", () => {
     const left = new FleetOperationsSimulation(17);
     const right = new FleetOperationsSimulation(17);
-    left.inject("debris-strike"); right.inject("debris-strike");
+    left.inject("debris-strike");
+    right.inject("debris-strike");
     expect(left.step(8)).toEqual(right.step(8));
   });
 });
