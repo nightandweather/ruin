@@ -43,6 +43,12 @@ Definition of done:
 - No launch without a validated corridor and receiver confidence.
 - FOUNDRY output and C-01 replacement demand use the same cargo ledger.
 
+### P1 · [WAYSTATION orbital port](https://github.com/nightandweather/ruin/issues/6)
+
+Turn the handoff between ASCENT logistics and a future civilian fleet into an executable port: traffic corridors, compatible berths, propellant and power service, radiator capacity, cargo quarantine, repair cells, emergency tugs, and departure windows.
+
+First executable question: **which vessel misses a safe departure window when every shared service has a different queue and failure state?**
+
 ## Release 0.3 — sustain people and industry
 
 ### P1 · PROSPECT resource geography

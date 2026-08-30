@@ -12,6 +12,7 @@ export default defineConfig({
         datacore: "datacore.html",
         agraria: "agraria.html",
         aegis: "aegis.html",
+        progenitor: "progenitor.html",
       },
     },
   },
