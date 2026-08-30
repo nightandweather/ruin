@@ -18,6 +18,7 @@ export default defineConfig({
         navis: "navis.html",
         mender: "mender.html",
         sentinel: "sentinel.html",
+        ignis: "ignis.html",
       },
     },
   },

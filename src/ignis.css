@@ -1,0 +1,520 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Rajdhani:wght@500;600;700&display=swap");
+:root {
+  font-family: "IBM Plex Mono", monospace;
+  color: #d9dfdf;
+  background: #07090b;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 1180px;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 48% 34%,
+    #111b20 0,
+    #080b0d 35%,
+    #050709 80%
+  );
+  font-size: 11px;
+}
+.ig-shell {
+  height: 100vh;
+  min-height: 0;
+  padding: 14px;
+  display: grid;
+  grid-template-rows: 54px minmax(0, 1fr);
+  gap: 10px;
+}
+.ig-top,
+.ig-panel {
+  border: 1px solid #334047;
+  background: rgba(8, 12, 15, 0.93);
+}
+.ig-top {
+  display: flex;
+  align-items: center;
+  padding: 0 13px;
+}
+.ig-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 310px;
+}
+.ig-brand > span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #c66d42;
+  color: #f0a56c;
+  font-size: 9px;
+}
+.ig-brand strong {
+  font-family: Rajdhani, sans-serif;
+  font-size: 18px;
+  letter-spacing: 3px;
+}
+.ig-brand small {
+  display: block;
+  color: #6d7a80;
+  font-size: 7px;
+  letter-spacing: 1.5px;
+}
+.ig-top nav {
+  display: flex;
+  margin: auto;
+  border: 1px solid #283238;
+}
+.ig-top nav a,
+.ig-top nav b {
+  padding: 9px 16px;
+  color: #6f7e84;
+  text-decoration: none;
+  font-size: 8px;
+  font-weight: 400;
+}
+.ig-top nav b {
+  color: #ffc28e;
+  background: #2a1712;
+}
+.ig-state {
+  width: 315px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  color: #728087;
+  font-size: 8px;
+}
+.ig-state b {
+  letter-spacing: 1px;
+}
+.ig-state .go {
+  color: #69e5b2;
+}
+.ig-state .conditional {
+  color: #f1bd68;
+}
+.ig-state .no-go {
+  color: #ef6e67;
+}
+.ig-layout {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 242px minmax(530px, 1fr) 290px;
+  grid-template-rows: minmax(0, 1fr) 190px;
+  gap: 10px;
+}
+.ig-panel {
+  min-width: 0;
+  padding: 13px;
+  overflow: hidden;
+}
+.ig-title {
+  height: 23px;
+  border-bottom: 1px solid #2e3a40;
+  color: #a7b3b5;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+}
+.ig-title span {
+  color: #e9854f;
+  margin-right: 10px;
+}
+.ig-config {
+  grid-row: 1/3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ig-engines {
+  display: grid;
+  gap: 5px;
+}
+.ig-engines button {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  border: 1px solid #2d383e;
+  background: #0b1013;
+  color: #bbc4c5;
+  padding: 9px;
+  cursor: pointer;
+}
+.ig-engines button > i {
+  color: #e68450;
+  font-style: normal;
+  font-size: 8px;
+  width: 30px;
+}
+.ig-engines button span {
+  display: flex;
+  flex-direction: column;
+}
+.ig-engines button b {
+  font:
+    600 11px Rajdhani,
+    sans-serif;
+  letter-spacing: 0.6px;
+}
+.ig-engines button small {
+  color: #68767c;
+  font-size: 7px;
+  margin-top: 2px;
+}
+.ig-engines button.active {
+  border-color: #d97949;
+  background: #281712;
+}
+.ig-engines button.unsupported {
+  border-style: dashed;
+}
+.ig-range {
+  display: block;
+}
+.ig-range > span {
+  display: flex;
+  justify-content: space-between;
+  color: #76848a;
+  font-size: 8px;
+}
+.ig-range b {
+  color: #d8dfdf;
+}
+.ig-range input {
+  width: 100%;
+  height: 2px;
+  margin-top: 10px;
+  accent-color: #e87d48;
+}
+.ig-stepper > span {
+  display: block;
+  color: #77868b;
+  font-size: 8px;
+  margin-bottom: 4px;
+}
+.ig-stepper > div {
+  display: grid;
+  grid-template-columns: 26px 1fr 26px;
+  border: 1px solid #2c373c;
+}
+.ig-stepper button {
+  border: 0;
+  background: #11171a;
+  color: #d98556;
+  cursor: pointer;
+}
+.ig-stepper b {
+  padding: 6px;
+  text-align: center;
+  font-weight: 500;
+}
+.ig-stepper small,
+.ig-metric small {
+  font-size: 7px;
+  color: #78868b;
+  margin-left: 4px;
+}
+.ig-evidence {
+  margin-top: auto;
+  border-left: 2px solid #df7544;
+  background: #1f1311;
+  padding: 10px;
+}
+.ig-evidence b {
+  display: block;
+  color: #ef9b68;
+  font-size: 8px;
+  margin-bottom: 5px;
+}
+.ig-evidence span {
+  color: #7f8c90;
+  line-height: 1.5;
+  font-size: 8px;
+}
+.ig-stage {
+  grid-column: 2;
+  grid-row: 1;
+  padding: 13px 15px;
+}
+.ig-stagehead {
+  display: flex;
+  justify-content: space-between;
+}
+.ig-stagehead > .ig-title {
+  width: 190px;
+}
+.ig-stagehead > span {
+  color: #708087;
+  font-size: 8px;
+}
+.ig-engine {
+  width: 100%;
+  height: calc(100% - 104px);
+  min-height: 280px;
+}
+.ig-feed,
+.ig-tank,
+.ig-core rect,
+.ig-core path,
+.ig-core circle,
+.ig-nozzle {
+  stroke: #7b8c93;
+  fill: none;
+  stroke-width: 2;
+}
+.ig-tank {
+  fill: #0c171b;
+}
+.ig-core rect,
+.ig-nozzle {
+  fill: url(#igMetal);
+}
+.ig-core path,
+.ig-core circle {
+  stroke: #e28a53;
+}
+.ig-plume {
+  fill: url(#igPlume);
+}
+.ig-axis {
+  stroke: #39464b;
+  stroke-dasharray: 7 8;
+}
+.ig-labels {
+  fill: #84949a;
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+.ig-fault-mark circle {
+  fill: #421e1c;
+  stroke: #f16c60;
+}
+.ig-fault-mark text {
+  fill: #f58274;
+  font-size: 9px;
+  text-anchor: middle;
+}
+.ig-fault-mark text:last-child {
+  text-anchor: start;
+}
+.ig-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+.ig-flow article {
+  padding: 8px;
+  border-top: 1px solid #344148;
+  background: #0b1013;
+}
+.ig-flow span {
+  color: #e77d48;
+  font-size: 8px;
+}
+.ig-flow b {
+  display: block;
+  color: #aab5b8;
+  font-size: 8px;
+  margin: 4px 0;
+}
+.ig-flow small {
+  color: #6f7c81;
+  font-size: 7px;
+}
+.ig-output {
+  grid-column: 3;
+  grid-row: 1/3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ig-verdict {
+  padding: 13px;
+  border: 1px solid #3d484c;
+  background: #0c1314;
+}
+.ig-verdict span {
+  font-size: 8px;
+  color: #758488;
+}
+.ig-verdict b {
+  display: block;
+  font:
+    700 34px Rajdhani,
+    sans-serif;
+  letter-spacing: 3px;
+}
+.ig-verdict small {
+  display: block;
+  min-height: 26px;
+  color: #7e8b8f;
+  font-size: 8px;
+  line-height: 1.45;
+}
+.ig-verdict.go {
+  border-color: #498f78;
+}
+.ig-verdict.go b {
+  color: #6ee2b0;
+}
+.ig-verdict.conditional {
+  border-color: #a77940;
+}
+.ig-verdict.conditional b {
+  color: #efbb67;
+}
+.ig-verdict.no-go {
+  border-color: #9b4c47;
+}
+.ig-verdict.no-go b {
+  color: #ef7168;
+}
+.ig-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #2d383d;
+}
+.ig-metric {
+  padding: 9px;
+  border-right: 1px solid #273238;
+  border-bottom: 1px solid #273238;
+}
+.ig-metric span {
+  display: block;
+  color: #6e7c81;
+  font-size: 7px;
+}
+.ig-metric b {
+  display: block;
+  font:
+    600 17px Rajdhani,
+    sans-serif;
+  margin-top: 3px;
+}
+.ig-metric.accent b {
+  color: #64d9d1;
+}
+.ig-metric.warning b {
+  color: #ef7466;
+}
+.ig-gauge > span {
+  display: flex;
+  justify-content: space-between;
+  color: #758389;
+  font-size: 8px;
+}
+.ig-gauge i {
+  display: block;
+  height: 4px;
+  background: #20292d;
+  margin-top: 7px;
+}
+.ig-gauge em {
+  display: block;
+  height: 100%;
+  background: #e17b49;
+}
+.ig-interlock {
+  margin-top: auto;
+  padding: 12px;
+  border: 1px solid #885044;
+  background: #211412;
+}
+.ig-interlock b {
+  display: block;
+  color: #f08b5b;
+  font-size: 15px;
+}
+.ig-interlock span {
+  color: #81736e;
+  font-size: 7px;
+}
+.ig-contracts {
+  grid-column: 2/3;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.05fr 1.35fr;
+  gap: 12px;
+  padding: 12px;
+}
+.ig-contracts > .ig-budget,
+.ig-contracts > .ig-constraints,
+.ig-contracts > div {
+  min-width: 0;
+}
+.ig-control-grid {
+  display: grid;
+  gap: 7px;
+  margin-top: 8px;
+}
+.ig-contracts .ig-stepper > div {
+  height: 27px;
+}
+.ig-contracts .ig-stepper b {
+  padding: 4px;
+}
+.ig-budget > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.ig-budget .ig-metric {
+  padding: 6px;
+}
+.ig-budget .ig-metric b {
+  font-size: 14px;
+}
+.ig-constraints > div {
+  height: 135px;
+  overflow: auto;
+}
+.ig-constraints article {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  border-bottom: 1px solid #242e33;
+  padding: 5px;
+}
+.ig-constraints article span {
+  color: #e27e4b;
+  font-size: 7px;
+}
+.ig-constraints article p {
+  margin: 0;
+  color: #8c999d;
+  font-size: 7px;
+  line-height: 1.4;
+}
+.ig-constraints article.clear p {
+  color: #66d3a5;
+}
+.ig-constraints > small {
+  font-size: 7px;
+  color: #9d6552;
+}
+@media (max-height: 760px) {
+  body {
+    font-size: 10px;
+  }
+  .ig-shell {
+    padding: 10px;
+  }
+  .ig-engine {
+    min-height: 240px;
+  }
+  .ig-engines button {
+    padding: 7px;
+  }
+  .ig-config {
+    gap: 7px;
+  }
+  .ig-contracts {
+    padding: 9px;
+  }
+  .ig-constraints > div {
+    height: 110px;
+  }
+}
