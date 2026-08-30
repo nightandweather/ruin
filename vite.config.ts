@@ -11,6 +11,7 @@ export default defineConfig({
         collector: "collector.html",
         datacore: "datacore.html",
         agraria: "agraria.html",
+        aegis: "aegis.html",
       },
     },
   },
