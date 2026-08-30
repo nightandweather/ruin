@@ -1,0 +1,9 @@
+.hz-map {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.hz-inspector {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}

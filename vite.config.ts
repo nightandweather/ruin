@@ -25,6 +25,7 @@ export default defineConfig({
         prometheus: "prometheus.html",
         genesis: "genesis.html",
         mnemosyne: "mnemosyne.html",
+        horizons: "horizons.html",
       },
     },
   },

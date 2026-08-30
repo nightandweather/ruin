@@ -2,6 +2,8 @@
 
 This index answers three questions for every executable module: what is grounded, what is invented, and what would be required before stronger claims were justified.
 
+HORIZONS adds a fourth question: how does a speculative system fail into its neighbors? It is a causal operations model, not a claim that wormholes, star lifting, planetary propulsion, exotic relays, or stellar-scale computers can presently be built. Each of its fourteen nodes declares a constraining resource, dependency edges, catastrophic failure, safety invariant, and recovery policy. The executable claim is limited to deterministic failure propagation, dependency-gated recovery, policy tradeoffs, and century-scale consequence projection.
+
 | Module | Grounded kernel | Scenario layer | Next validation |
 | --- | --- | --- | --- |
 | HELIOS | solar flux, thermal balance, distributed control | 10,000-node Dyson operations | orbital propagation and optical beam budget |
@@ -21,6 +23,7 @@ This index answers three questions for every executable module: what is grounded
 | PROMETHEUS | heat conversion, electric thrust, radiation distance, radiators | reactor classes and dose proxy | qualified mass, shielding, conversion, and lifetime data |
 | GENESIS | conservation-oriented dependency flow | civilization growth and milestones | integrate real module snapshots and uncertainty bands |
 | MNEMOSYNE | connectomics and constrained neural decoding research | identity scores, activation thresholds, and personhood policy | non-destructive whole-brain state acquisition and validated continuity tests do not exist |
+| HORIZONS | dependency graphs, failure containment, causal ordering | fourteen connected post-stellar systems and century projections | replace each abstract node with validated domain models and uncertainty propagation |
 
 ## Proposed laboratories
 

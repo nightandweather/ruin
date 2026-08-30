@@ -1,0 +1,1 @@
+import{StrictMode}from"react";import{createRoot}from"react-dom/client";import{HorizonsApp}from"./HorizonsApp";import"./horizons.css";import"./horizons-layout.css";createRoot(document.getElementById("root")!).render(<StrictMode><HorizonsApp/></StrictMode>);
