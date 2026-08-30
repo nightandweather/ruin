@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
-import { projectCivilization } from "../src/civilizationProjection";
+import { PROJECTION_BASIS, projectCivilization } from "../src/civilizationProjection";
 import { DysonSwarmSimulation } from "../src/simulation";
 
 describe("civilization consequence projection", () => {
+  it("labels its own provenance so the HUD cannot present it as measured fact", () => {
+    const projection = projectCivilization(new DysonSwarmSimulation().snapshot());
+    expect(projection.basis).toBe(PROJECTION_BASIS);
+    expect(projection.basis).toContain("ASSUMED");
+    expect(projection.basis).not.toMatch(/confidence/i);
+  });
+
   it("keeps the nominal long horizon inside the verified envelope", () => {
     const projection = projectCivilization(new DysonSwarmSimulation().snapshot());
     expect(projection.horizons.every((point) => point.tone === "nominal")).toBe(true);

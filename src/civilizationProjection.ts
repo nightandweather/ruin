@@ -1,6 +1,18 @@
 import { DEFAULT_CONFIG } from "./simulation";
 import type { SimulationSnapshot } from "./types";
 
+/**
+ * Scenario projection, not a validated model.
+ *
+ * The stress weights and the per-horizon growth/loss/trust coefficients below
+ * are narrative assumptions chosen so that operator decisions produce legible
+ * long-term consequences on the HUD. Nothing here is fitted to data, and the
+ * HUD must not present its output as measured fact — the interface shows the
+ * `basis` field verbatim so the provenance travels with the numbers.
+ * See docs/ENGINEERING-NOTES.md for which parts of RUIN are grounded.
+ */
+export const PROJECTION_BASIS = "SCENARIO MODEL · ASSUMED COEFFICIENTS";
+
 export function projectCivilization(snapshot: SimulationSnapshot) {
   const deliveredRatio =
     snapshot.metrics.demandGW === 0 ? 1 : snapshot.metrics.deliveredGW / snapshot.metrics.demandGW;
@@ -29,6 +41,7 @@ export function projectCivilization(snapshot: SimulationSnapshot) {
   });
 
   return {
+    basis: PROJECTION_BASIS,
     population: 8.12,
     energySecurity: Math.max(0, Math.min(100, deliveredRatio * 100)),
     industrialCapacity: snapshot.metrics.availabilityPercent,

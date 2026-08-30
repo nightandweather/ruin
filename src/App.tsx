@@ -260,7 +260,8 @@ function CausalHorizon({ snapshot }: { snapshot: SimulationSnapshot }) {
     <section className="causal-horizon" aria-label="Projected civilization consequences">
       <header>
         <span>PROJECTED CONSEQUENCES</span>
-        <b>MODEL CONFIDENCE {(92 - civilization.stress * 39).toFixed(0)}%</b>
+        {/* Amber is the HUD's uncertainty channel; this projection never earns teal. */}
+        <b className="basis">{civilization.basis}</b>
       </header>
       <div className="horizon-track">
         {civilization.horizons.map((point, index) => (
