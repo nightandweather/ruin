@@ -23,6 +23,7 @@ export default defineConfig({
         corvus: "corvus.html",
         prometheus: "prometheus.html",
         genesis: "genesis.html",
+        mnemosyne: "mnemosyne.html",
       },
     },
   },

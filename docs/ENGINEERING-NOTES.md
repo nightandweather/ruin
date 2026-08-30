@@ -20,6 +20,7 @@ This index answers three questions for every executable module: what is grounded
 | CORVUS | node budgets, link range, quorum | swarm productivity score | relative orbit and covariance propagation |
 | PROMETHEUS | heat conversion, electric thrust, radiation distance, radiators | reactor classes and dose proxy | qualified mass, shielding, conversion, and lifetime data |
 | GENESIS | conservation-oriented dependency flow | civilization growth and milestones | integrate real module snapshots and uncertainty bands |
+| MNEMOSYNE | connectomics and constrained neural decoding research | identity scores, activation thresholds, and personhood policy | non-destructive whole-brain state acquisition and validated continuity tests do not exist |
 
 ## Proposed laboratories
 

@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS; the module bar links every laboratory, including `/prometheus.html` for civilian fission power and NEP, `/genesis.html` for the stellar bootstrap campaign, and `/sentinel.html` for system-wide fault response.
+Open the displayed local URL. `/` runs HELIOS; the module bar links every laboratory, including `/prometheus.html` for civilian fission power and NEP, `/genesis.html` for the stellar bootstrap campaign, `/mnemosyne.html` for neural identity evidence, and `/sentinel.html` for system-wide fault response.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -52,7 +52,8 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **CORVUS** — design autonomous civilian space-drone swarms whose propulsion, solar power, battery survival, heat rejection, crosslinks, relative separation, quorum, and delayed-command autonomy remain coupled.
 - **PROMETHEUS** — connect fission heat, power conversion, survival and factory loads, radiation separation, radiators, and low-thrust nuclear-electric propulsion without reactor-construction or weapon detail.
 - **GENESIS** — run a century-scale seed campaign from first resource survey through certified factory replication, stellar-power independence, habitation, and local self-sufficiency.
-- **SENTINEL** — inspect 48 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **MNEMOSYNE** — test structural, synaptic, dynamic, glial, molecular, memory, behavioral, embodiment, consent, and fork evidence without claiming that a mind or consciousness has been transferred.
+- **SENTINEL** — inspect 51 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
 
 ```bash
 npm test
@@ -85,7 +86,8 @@ npm run build
 - An autonomous civilian drone-swarm architect coupling per-node mass, delta-v, solar power, battery hold, and heat rejection to formation spacing, crosslink range, distributed quorum, collision reserve, and light-time autonomy.
 - A civilian fission and NEP architect coupling thermal power, conversion, electrical loads, radiators, radiation separation, propellant, thrust, and degraded safe states.
 - A cross-module stellar bootstrap campaign linking PROMETHEUS, CORVUS, FOUNDRY, PROGENITOR, HELIOS, AGRARIA, and GRAVITAS into evidence-gated milestones.
-- A cross-system FDIR registry covering 16 executable modules with 48 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
+- A neural identity-evidence laboratory that refuses to equate a connectome, behavioral imitation, or copied memory with demonstrated continuity and treats every fork as independent personhood.
+- A cross-system FDIR registry covering 17 executable modules with 51 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
