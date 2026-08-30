@@ -13,6 +13,10 @@ RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first 
 
 **[Run the public demo](https://nightandweather.github.io/ruin/)** · [Read the HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
+[![Watch the 72-second RUIN // HELIOS walkthrough](docs/assets/helios-first-light.png)](https://nightandweather.github.io/ruin/ruin-first-light-72s.mp4)
+
+**[Watch the 72-second walkthrough](https://nightandweather.github.io/ruin/ruin-first-light-72s.mp4)** · [Read the portfolio brief and 100-word application answer](docs/PORTFOLIO.md)
+
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
 The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [engineering notes](docs/ENGINEERING-NOTES.md) separate grounded kernels, scenario assumptions, and next validation work for every executable module.
