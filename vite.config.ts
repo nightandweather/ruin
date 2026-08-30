@@ -21,6 +21,8 @@ export default defineConfig({
         ignis: "ignis.html",
         odyssey: "odyssey.html",
         corvus: "corvus.html",
+        prometheus: "prometheus.html",
+        genesis: "genesis.html",
       },
     },
   },

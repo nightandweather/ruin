@@ -10,7 +10,7 @@ RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first 
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
-The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [development roadmap](ROADMAP.md) turns the remaining ideas into ordered releases; LUMEN power distribution and a unified campaign state are next.
+The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [engineering notes](docs/ENGINEERING-NOTES.md) separate grounded kernels, scenario assumptions, and next validation work for every executable module.
 
 ## The RUIN laboratory
 
@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, `/atlas.html` maps the real nearby stellar neighborhood, `/navis.html` architects spacecraft against those routes, `/ignis.html` operates the propulsion engine laboratory, `/odyssey.html` navigates a Dyson-powered interstellar relay corridor, `/mender.html` designs robotic repair systems, `/corvus.html` architects autonomous civilian drone swarms, and `/sentinel.html` coordinates system-wide fault response. The simulations begin immediately.
+Open the displayed local URL. `/` runs HELIOS; the module bar links every laboratory, including `/prometheus.html` for civilian fission power and NEP, `/genesis.html` for the stellar bootstrap campaign, and `/sentinel.html` for system-wide fault response.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -50,7 +50,9 @@ Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomo
 - **ODYSSEY** — fly between curated ATLAS stars while HELIOS and deep relays beam power and navigation references through diffraction, pointing error, receiver capture, light-time, thermal, autonomy, and relay-outage constraints.
 - **MENDER** — configure orbital and surface repair robots while reaction torque, anchoring, reach, payload, tools, energy, heat rejection, and delayed-command autonomy remain coupled.
 - **CORVUS** — design autonomous civilian space-drone swarms whose propulsion, solar power, battery survival, heat rejection, crosslinks, relative separation, quorum, and delayed-command autonomy remain coupled.
-- **SENTINEL** — inspect 42 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **PROMETHEUS** — connect fission heat, power conversion, survival and factory loads, radiation separation, radiators, and low-thrust nuclear-electric propulsion without reactor-construction or weapon detail.
+- **GENESIS** — run a century-scale seed campaign from first resource survey through certified factory replication, stellar-power independence, habitation, and local self-sufficiency.
+- **SENTINEL** — inspect 48 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
 
 ```bash
 npm test
@@ -81,7 +83,9 @@ npm run build
 - A Dyson-powered interstellar corridor linking real nearby-star distances to optical diffraction, pointing jitter, relay light-time, receiver capture, electric thrust, heat rejection, navigation uncertainty, and stored-energy survival.
 - A task-grounded robotic repair architect with two-point contact, reaction-moment stability, seven-DOF servicing arms, tool and payload contracts, battery endurance, recharge, heat rejection, and signal-delay autonomy.
 - An autonomous civilian drone-swarm architect coupling per-node mass, delta-v, solar power, battery hold, and heat rejection to formation spacing, crosslink range, distributed quorum, collision reserve, and light-time autonomy.
-- A cross-system FDIR registry covering 14 executable modules with 42 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
+- A civilian fission and NEP architect coupling thermal power, conversion, electrical loads, radiators, radiation separation, propellant, thrust, and degraded safe states.
+- A cross-module stellar bootstrap campaign linking PROMETHEUS, CORVUS, FOUNDRY, PROGENITOR, HELIOS, AGRARIA, and GRAVITAS into evidence-gated milestones.
+- A cross-system FDIR registry covering 16 executable modules with 48 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
