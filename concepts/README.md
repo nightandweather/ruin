@@ -6,6 +6,8 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | --- | --- | --- | --- |
 | [HELIOS](../README.md) | Operate and repair a 10,000-node Dyson swarm | Interactive simulator | Can safe power delivery survive partitions, heat, and debris? |
 | FOUNDRY | Mine, refine, machine, and assemble lunar resources autonomously | Interactive simulator | Which local failure becomes a civilization-wide manufacturing bottleneck? |
+| [Stellar survey](stellar-survey.md) | Rank real nearby systems for a swarm bootstrap | Deterministic scoring model | Which target wins when proximity, stability, energy, and materials conflict? |
+| [Fleet operations](fleet-operations.md) | Protect civilian and industrial convoys under delayed command | Tested simulation core | Can escorts fail closed and prioritize rescue without real-time orders? |
 | [Orbital elevator](orbital-elevator.md) | Move manufactured cargo from a surface factory to an orbital depot | Logistics model inside HELIOS | What happens when production outruns climber capacity? |
 | [Lunar mass driver](mass-driver.md) | Launch non-living bulk cargo from the Moon to an orbital catcher | Design brief | Can a launch be fail-closed when timing or catcher confidence degrades? |
 | [Transit Gate](transit-gate.md) | Move quantum state, matter, or reconstructed identity under distinct rules | Design brief | How can two endpoints prove that transit completed exactly once? |

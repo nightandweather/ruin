@@ -14,6 +14,8 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Orbital elevator](concepts/orbital-elevator.md) — factory queues, climbers, tether safety, and orbital depots.
 - [Lunar mass driver](concepts/mass-driver.md) — electromagnetic cargo launch with fail-closed corridor authorization.
 - [Transit Gate](concepts/transit-gate.md) — quantum-state transfer, speculative wormholes, and exactly-once identity reconstruction.
+- [Stellar survey](concepts/stellar-survey.md) — source-backed ranking of nearby systems for an industrial swarm bootstrap.
+- [Fleet operations](concepts/fleet-operations.md) — convoy protection, rescue, logistics, and damage control under delayed command.
 - [Concept template](concepts/template.md) — a repeatable path from a wild idea to testable software.
 
 HELIOS is the first executable module rather than the limit of the repository.
@@ -45,6 +47,8 @@ npm run build
 - Directional debris conjunctions, pre-impact power derating, avoidance burns, and residual impacts.
 - Surface factory orders, replacement production, orbital-elevator cargo cycles, orbital inventory, and automatic installation.
 - A second executable FOUNDRY module with autonomous excavation, beneficiation, refining, trace-metal inventory, machine tooling, assembly, wear, and cascading production faults.
+- Reweightable nearby-star scoring with explicit catalog sources and uncertainty notes.
+- A non-weaponized fleet-survival core for debris, thermal, contact, and communications incidents.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
