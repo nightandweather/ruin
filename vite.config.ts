@@ -9,6 +9,7 @@ export default defineConfig({
         helios: "index.html",
         foundry: "foundry.html",
         collector: "collector.html",
+        datacore: "datacore.html",
       },
     },
   },
