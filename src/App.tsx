@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_CONFIG, DysonSwarmSimulation } from "./simulation";
 import { runFirstLight, type FirstLightReport } from "./firstLight";
+import { projectCivilization } from "./civilizationProjection";
 import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
@@ -81,6 +82,34 @@ function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Sa
       context.stroke();
     }
 
+    const civilizationNodes = [
+      [0.16, 0.29], [0.27, 0.18], [0.74, 0.2], [0.86, 0.34], [0.81, 0.72], [0.63, 0.82], [0.24, 0.76], [0.12, 0.58],
+    ];
+    context.save();
+    context.strokeStyle = "rgba(151, 164, 160, .16)";
+    context.fillStyle = "rgba(201, 211, 205, .72)";
+    context.setLineDash([2, 5]);
+    for (let index = 0; index < civilizationNodes.length; index += 1) {
+      const [nx, ny] = civilizationNodes[index];
+      const x = width * nx;
+      const y = height * ny;
+      const [nextX, nextY] = civilizationNodes[(index + 1) % civilizationNodes.length];
+      context.beginPath();
+      context.moveTo(x, y);
+      context.lineTo(width * nextX, height * nextY);
+      context.stroke();
+      context.beginPath();
+      context.moveTo(x, y);
+      context.lineTo(cx, cy);
+      context.stroke();
+      context.setLineDash([]);
+      context.beginPath();
+      context.arc(x, y, index % 3 === 0 ? 3 : 2, 0, Math.PI * 2);
+      context.fill();
+      context.setLineDash([2, 5]);
+    }
+    context.restore();
+
     const sampleStep = Math.max(1, Math.floor(satellites.length / 1600));
     for (let index = 0; index < satellites.length; index += sampleStep) {
       const satellite = satellites[index];
@@ -92,7 +121,7 @@ function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Sa
         satellite.mode === "offline"
           ? "#ff4f68"
           : satellite.mode === "isolated"
-            ? "#8c7cff"
+            ? "#d49a50"
             : satellite.mode === "thermal"
               ? "#ff8b33"
               : satellite.mode === "curtailed"
@@ -108,41 +137,6 @@ function SwarmMap({ satellites, tick, debrisBearing }: { satellites: readonly Sa
   return <canvas ref={canvasRef} className="swarm-canvas" aria-label="Orbital map of sampled swarm collectors" />;
 }
 
-function PowerChart({ snapshot }: { snapshot: SimulationSnapshot }) {
-  const width = 700;
-  const height = 150;
-  const history = snapshot.history;
-  const max = Math.max(1, ...history.flatMap((point) => [point.deliveredGW, point.demandGW])) * 1.1;
-  const path = (key: "deliveredGW" | "demandGW") =>
-    history
-      .map((point, index) => {
-        const x = history.length <= 1 ? 0 : (index / (history.length - 1)) * width;
-        const y = height - (point[key] / max) * height;
-        return `${index === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(" ");
-
-  return (
-    <div className="chart-wrap">
-      <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" role="img" aria-label="Power delivery and demand history">
-        <defs>
-          <linearGradient id="power-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#64f3c2" stopOpacity=".23" />
-            <stop offset="1" stopColor="#64f3c2" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        {[0.25, 0.5, 0.75].map((line) => (
-          <line key={line} x1="0" y1={height * line} x2={width} y2={height * line} className="gridline" />
-        ))}
-        {history.length > 1 && <path d={`${path("deliveredGW")} L${width},${height} L0,${height} Z`} fill="url(#power-fill)" />}
-        <path d={path("demandGW")} className="demand-line" />
-        <path d={path("deliveredGW")} className="power-line" />
-      </svg>
-      <div className="chart-legend"><span><i className="power-dot" />Delivered</span><span><i className="demand-dot" />Demand</span></div>
-    </div>
-  );
-}
-
 function Metric({ label, value, unit, tone = "plain" }: { label: string; value: string | number; unit?: string; tone?: string }) {
   return (
     <div className={`metric ${tone}`}>
@@ -150,6 +144,21 @@ function Metric({ label, value, unit, tone = "plain" }: { label: string; value: 
       <strong>{value}<small>{unit}</small></strong>
     </div>
   );
+}
+
+function CausalHorizon({ snapshot }: { snapshot: SimulationSnapshot }) {
+  const civilization = projectCivilization(snapshot);
+  return <section className="causal-horizon" aria-label="Projected civilization consequences">
+    <header><span>PROJECTED CONSEQUENCES</span><b>MODEL CONFIDENCE {(92 - civilization.stress * 39).toFixed(0)}%</b></header>
+    <div className="horizon-track">
+      {civilization.horizons.map((point, index) => <article key={point.label} className={point.tone}>
+        <i>{String(index + 1).padStart(2, "0")}</i>
+        <span>{point.label}<small>HELIOS C.E. {2321 + point.years}.117</small></span>
+        <strong>{point.population.toFixed(2)}B<small>POPULATION</small></strong>
+        <strong>{point.trust.toFixed(0)}%<small>INSTITUTIONAL TRUST</small></strong>
+      </article>)}
+    </div>
+  </section>;
 }
 
 export function App() {
@@ -171,6 +180,7 @@ export function App() {
     if (snapshot.activeScenarios.length > 0) return { label: "DEGRADED", tone: "warning" };
     return { label: "NOMINAL", tone: "nominal" };
   }, [snapshot]);
+  const civilization = useMemo(() => projectCivilization(snapshot), [snapshot]);
 
   const inject = (type: ScenarioType) =>
     setSnapshot(simulation.inject(type, type === "debris-corridor" ? { bearingDeg: debrisBearing } : {}));
@@ -196,18 +206,22 @@ export function App() {
   return (
     <main>
       <header className="topbar">
-        <div className="brand"><span className="sun-mark">✦</span><div><strong>HELIOS</strong><small>DYSON SWARM AUTONOMY</small></div></div>
-        <div className="mission-clock"><span>SOL CONTROL TIME</span><strong>{formatElapsed(snapshot.elapsedSeconds)}</strong></div>
+        <div className="brand"><span className="sun-mark">✦</span><div><strong>RUIN // HELIOS</strong><small>CIVILIZATION OPERATIONS · C.E. 2321.117</small></div></div>
+        <div className="mission-clock"><span>CONSENSUS CONTROL TIME</span><strong>{formatElapsed(snapshot.elapsedSeconds)}</strong></div>
         <div className="module-links"><a className="module-link" href="./foundry.html">FOUNDRY ↗</a><a className="module-link" href="./collector.html">COLLECTOR ↗</a><a className="module-link" href="./datacore.html">DATACORE ↗</a><a className="module-link" href="./agraria.html">AGRARIA ↗</a><a className="module-link" href="./aegis.html">AEGIS ↗</a><a className="module-link" href="./progenitor.html">PROGENITOR ↗</a><a className="module-link" href="./gravitas.html">GRAVITAS ↗</a><a className="module-link" href="./atlas.html">ATLAS ↗</a><a className="module-link" href="./navis.html">NAVIS ↗</a><a className="module-link" href="./ignis.html">IGNIS ↗</a><a className="module-link" href="./odyssey.html">ODYSSEY ↗</a><a className="module-link" href="./mender.html">MENDER ↗</a><a className="module-link" href="./corvus.html">CORVUS ↗</a><a className="module-link" href="./prometheus.html">PROMETHEUS ↗</a><a className="module-link" href="./genesis.html">GENESIS ↗</a><a className="module-link" href="./mnemosyne.html">MNEMOSYNE ↗</a><a className="module-link" href="./sentinel.html">SENTINEL ↗</a></div>
         <div className={`system-status ${status.tone}`}><i />SYSTEM {status.label}</div>
       </header>
 
       <section className="layout">
         <aside className="left-panel panel">
-          <div className="section-title"><span>01</span> SWARM STATE</div>
-          <Metric label="COLLECTORS" value={DEFAULT_CONFIG.satelliteCount.toLocaleString()} />
-          <Metric label="AVAILABILITY" value={snapshot.metrics.availabilityPercent.toFixed(2)} unit="%" tone={snapshot.metrics.availabilityPercent < 95 ? "alert" : "good"} />
-          <Metric label="MEAN THERMAL" value={snapshot.metrics.averageTemperatureK.toFixed(1)} unit="K" />
+          <div className="section-title"><span>01</span> CIVILIZATION STATE</div>
+          <div className="civilization-vitals">
+            <Metric label="POPULATION" value={civilization.population.toFixed(2)} unit="B" />
+            <Metric label="ENERGY SECURITY" value={civilization.energySecurity.toFixed(1)} unit="%" tone={civilization.energySecurity < 90 ? "alert" : "good"} />
+            <Metric label="INDUSTRIAL CAPACITY" value={civilization.industrialCapacity.toFixed(1)} unit="%" />
+            <Metric label="INSTITUTIONAL TRUST" value={civilization.institutionalTrust.toFixed(0)} unit="%" tone={civilization.institutionalTrust < 60 ? "critical" : civilization.institutionalTrust < 75 ? "alert" : "good"} />
+          </div>
+          <div className="swarm-ledger"><span>ACTIVE COLLECTORS <b>{DEFAULT_CONFIG.satelliteCount.toLocaleString()}</b></span><span>MEAN THERMAL <b>{snapshot.metrics.averageTemperatureK.toFixed(1)} K</b></span><span>ONE-WAY SIGNAL <b>{civilization.signalDelaySeconds} s</b></span></div>
           <div className="mode-grid">
             <div><span className="dot nominal" />Dispatchable<strong>{DEFAULT_CONFIG.satelliteCount - snapshot.metrics.offlineCount - snapshot.metrics.isolatedCount}</strong></div>
             <div><span className="dot isolated" />Isolated<strong>{snapshot.metrics.isolatedCount}</strong></div>
@@ -215,7 +229,7 @@ export function App() {
             <div><span className="dot offline" />Offline<strong>{snapshot.metrics.offlineCount}</strong></div>
           </div>
 
-          <div className="section-title section-gap"><span>02</span> INCIDENT INJECTION</div>
+          <div className="section-title section-gap"><span>02</span> OPERATOR DIRECTIVES</div>
           <div className="scenario-list">
             {(Object.keys(scenarioLabels) as ScenarioType[]).map((type) => {
               const item = scenarioLabels[type];
@@ -231,15 +245,19 @@ export function App() {
 
         <section className="center-stack">
           <div className="map-panel panel">
-            <div className="panel-label">ORBITAL DISTRIBUTION // 0.40 AU</div>
+            <div className="panel-label">CIVILIZATION NETWORK // INNER SYSTEM // 0.40 AU</div>
             <SwarmMap
               satellites={snapshot.satellites}
               tick={snapshot.tick}
               debrisBearing={snapshot.activeScenarios.find((scenario) => scenario.type === "debris-corridor")?.bearingDeg}
             />
             {campaign && <FirstLightEvidence report={campaign} close={()=>setCampaign(null)} />}
-            <div className="map-readout left">BANDS<br /><strong>08</strong></div>
-            <div className="map-readout right">SAMPLE<br /><strong>1:6</strong></div>
+            <div className="map-node node-a"><i />L5 RELAY NEXUS<small>Δ 2.1 s</small></div>
+            <div className="map-node node-b"><i />INNER COLONIES<small>61 HABITATS</small></div>
+            <div className="map-node node-c"><i />OUTER SETTLEMENTS<small>Δ 199.6 s</small></div>
+            <div className="signal-key"><span>SIGNAL DELAY</span><i className="instant" />0–5 s<i className="delayed" />30–200 s<i className="lost" />PARTITION</div>
+            <div className="map-readout left">CIVILIZATION NODES<br /><strong>18,732</strong></div>
+            <div className="map-readout right">ORBITAL ASSETS<br /><strong>14,398</strong></div>
           </div>
           <div className="power-panel panel">
             <div className="power-head">
@@ -247,12 +265,12 @@ export function App() {
               <div><span>DEMAND</span><strong>{snapshot.metrics.demandGW.toFixed(2)} <small>GW</small></strong></div>
               <div><span>CURTAILED</span><strong>{snapshot.metrics.curtailedGW.toFixed(2)} <small>GW</small></strong></div>
             </div>
-            <PowerChart snapshot={snapshot} />
+            <CausalHorizon snapshot={snapshot} />
           </div>
         </section>
 
         <aside className="right-panel panel">
-          <div className="section-title"><span>03</span> EVENT STREAM</div>
+          <div className="section-title"><span>03</span> EVENT PROVENANCE</div>
           <div className="event-stream">
             {snapshot.events.map((event) => (
               <article key={event.id} className={event.level}>
@@ -276,8 +294,9 @@ export function App() {
             <button className="production-request" onClick={requestReplacements}>REQUEST 50 REPLACEMENTS</button>
           </div>
           <div className="safety-block">
-            <span>BEAM SAFETY INTERLOCKS</span>
-            <strong>{snapshot.metrics.safetyTrips === 0 ? "ARMED" : `${snapshot.metrics.safetyTrips} TRIPS`}</strong>
+            <span>INSTITUTIONAL STATUS</span>
+            <div className="institution-grid"><span>CUSTODIAN OVERSIGHT</span><b>ACTIVE</b><span>CONTINUITY PROTOCOLS</span><b>{status.label === "CRITICAL" ? "CONTESTED" : "STANDBY"}</b><span>ETHICAL FRAMEWORK</span><b>NOMINAL</b><span>AUDIT TRAIL</span><b>VERIFIED</b></div>
+            <span>BEAM SAFETY INTERLOCKS</span><strong>{snapshot.metrics.safetyTrips === 0 ? "ARMED" : `${snapshot.metrics.safetyTrips} TRIPS`}</strong>
             <div className="safety-line"><i style={{ width: `${Math.max(2, 100 - snapshot.metrics.safetyTrips)}%` }} /></div>
             <div className="avoidance-readout"><span>EVASIVE BURNS</span><b>{snapshot.metrics.avoidanceManeuvers}</b><span>IMPACTS</span><b>{snapshot.metrics.confirmedImpacts}</b></div>
           </div>
