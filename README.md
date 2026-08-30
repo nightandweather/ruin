@@ -16,6 +16,7 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Transit Gate](concepts/transit-gate.md) — quantum-state transfer, speculative wormholes, and exactly-once identity reconstruction.
 - [Stellar survey](concepts/stellar-survey.md) — source-backed ranking of nearby systems for an industrial swarm bootstrap.
 - [Fleet operations](concepts/fleet-operations.md) — convoy protection, rescue, logistics, and damage control under delayed command.
+- [Technology tree](concepts/technology-tree.md) — a tested path from autonomous foothold to system-scale and speculative infrastructure.
 - [Concept template](concepts/template.md) — a repeatable path from a wild idea to testable software.
 
 HELIOS is the first executable module rather than the limit of the repository.
