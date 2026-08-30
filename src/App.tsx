@@ -4,7 +4,7 @@ import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
   "communications-blackout": { code: "COMMS", title: "Relay blackout", detail: "Isolate 30% of nodes" },
-  "thermal-wave": { code: "FLARE", title: "Thermal wave", detail: "Heat two orbital bands" },
+  "thermal-wave": { code: "FLARE", title: "Thermal wave", detail: "Heat 20% of nodes" },
   "cascade-failure": { code: "FAULT", title: "Cascade failure", detail: "Drop 5% of collectors" },
   "demand-spike": { code: "LOAD", title: "Demand spike", detail: "Raise target by 35%" },
   "debris-corridor": { code: "ROCK", title: "Debris corridor", detail: "Predict and evade impacts" },
@@ -172,6 +172,7 @@ export function App() {
 
   const inject = (type: ScenarioType) =>
     setSnapshot(simulation.inject(type, type === "debris-corridor" ? { bearingDeg: debrisBearing } : {}));
+  const requestReplacements = () => setSnapshot(simulation.requestProduction(50));
   const reset = () => {
     const next = new DysonSwarmSimulation();
     setSimulation(next);
@@ -252,6 +253,21 @@ export function App() {
                 <time>τ {String(event.tick).padStart(5, "0")}</time><b>{event.source}</b><p>{event.message}</p>
               </article>
             ))}
+          </div>
+          <div className="logistics-block">
+            <div className="section-title compact"><span>04</span> ORBITAL SUPPLY</div>
+            <div className="logistics-grid">
+              <span>FACTORY QUEUE</span><b>{snapshot.logistics.factoryBacklog}</b>
+              <span>GROUND STOCK</span><b>{snapshot.logistics.groundInventory}</b>
+              <span>ORBITAL STOCK</span><b>{snapshot.logistics.orbitalInventory}</b>
+              <span>INSTALLED</span><b>{snapshot.logistics.replacementsInstalled}</b>
+            </div>
+            <div className="elevator-status">
+              <span>GEO CLIMBER</span>
+              <b>{snapshot.logistics.elevatorStatus === "ascending" ? `ASCENT ${snapshot.logistics.elevatorProgressPercent}% · ${snapshot.logistics.elevatorCargo} UNITS` : "STANDBY"}</b>
+              <div><i style={{ width: `${snapshot.logistics.elevatorStatus === "ascending" ? snapshot.logistics.elevatorProgressPercent : 0}%` }} /></div>
+            </div>
+            <button className="production-request" onClick={requestReplacements}>REQUEST 50 REPLACEMENTS</button>
           </div>
           <div className="safety-block">
             <span>BEAM SAFETY INTERLOCKS</span>

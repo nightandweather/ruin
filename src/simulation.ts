@@ -7,11 +7,17 @@ import type {
   SimulationEvent,
   SimulationSnapshot,
   SwarmMetrics,
+  LogisticsState,
 } from "./types";
 
 const SOLAR_IRRADIANCE_AT_1_AU = 1361;
 const STEFAN_BOLTZMANN = 5.670374419e-8;
 const BACKGROUND_TEMPERATURE_K = 3;
+const FACTORY_UNITS_PER_TICK = 4;
+const ELEVATOR_CAPACITY = 40;
+const ELEVATOR_MINIMUM_BATCH = 20;
+const ELEVATOR_TRANSIT_TICKS = 12;
+const INSTALLATIONS_PER_TICK = 2;
 
 export const DEFAULT_CONFIG: SimulationConfig = {
   satelliteCount: 10_000,
@@ -49,6 +55,17 @@ export class DysonSwarmSimulation {
   private safetyTrips = 0;
   private avoidanceManeuvers = 0;
   private confirmedImpacts = 0;
+  private readonly logistics: LogisticsState & { elevatorTicksRemaining: number } = {
+    factoryBacklog: 0,
+    groundInventory: 0,
+    totalManufactured: 0,
+    elevatorCargo: 0,
+    elevatorStatus: "standby",
+    elevatorProgressPercent: 0,
+    elevatorTicksRemaining: 0,
+    orbitalInventory: 0,
+    replacementsInstalled: 0,
+  };
   private latestMetrics: SwarmMetrics;
 
   constructor(config: Partial<SimulationConfig> = {}) {
@@ -105,6 +122,7 @@ export class DysonSwarmSimulation {
       this.currentTick += 1;
       this.expireScenarios();
       this.updateFleet();
+      this.advanceLogistics();
       this.latestMetrics = this.calculateAndDispatch();
       if (this.currentTick % 5 === 0) this.recordHistory();
       if (this.currentTick % 120 === 0) {
@@ -176,6 +194,12 @@ export class DysonSwarmSimulation {
     return this.snapshot();
   }
 
+  requestProduction(units = 50): SimulationSnapshot {
+    const safeUnits = Math.max(1, Math.min(1_000, Math.round(units)));
+    this.enqueueProduction(safeUnits, "Operator");
+    return this.snapshot();
+  }
+
   snapshot(): SimulationSnapshot {
     return {
       tick: this.currentTick,
@@ -184,6 +208,16 @@ export class DysonSwarmSimulation {
       satellites: this.fleet,
       events: this.eventLog,
       history: this.chartHistory,
+      logistics: {
+        factoryBacklog: this.logistics.factoryBacklog,
+        groundInventory: this.logistics.groundInventory,
+        totalManufactured: this.logistics.totalManufactured,
+        elevatorCargo: this.logistics.elevatorCargo,
+        elevatorStatus: this.logistics.elevatorStatus,
+        elevatorProgressPercent: this.logistics.elevatorProgressPercent,
+        orbitalInventory: this.logistics.orbitalInventory,
+        replacementsInstalled: this.logistics.replacementsInstalled,
+      },
       activeScenarios: this.scenarios.map(({ type, endsAtTick, bearingDeg, affectedIds }) => ({
         type,
         endsAtTick,
@@ -304,6 +338,7 @@ export class DysonSwarmSimulation {
           }
           this.avoidanceManeuvers += avoided;
           this.confirmedImpacts += impacts;
+          if (impacts > 0) this.enqueueProduction(impacts, "Autonomous damage control");
           this.recordEvent(
             impacts === 0 ? "recovery" : "warning",
             "COLLISION",
@@ -321,6 +356,63 @@ export class DysonSwarmSimulation {
   private angularDistance(left: number, right: number): number {
     const difference = Math.abs(left - right) % (Math.PI * 2);
     return Math.min(difference, Math.PI * 2 - difference);
+  }
+
+  private enqueueProduction(units: number, source: string): void {
+    this.logistics.factoryBacklog += units;
+    this.recordEvent("info", "FACTORY", `${source} requested ${units} replacement collector${units === 1 ? "" : "s"}`);
+  }
+
+  private advanceLogistics(): void {
+    const produced = Math.min(FACTORY_UNITS_PER_TICK, this.logistics.factoryBacklog);
+    this.logistics.factoryBacklog -= produced;
+    this.logistics.groundInventory += produced;
+    this.logistics.totalManufactured += produced;
+
+    if (this.logistics.elevatorStatus === "ascending") {
+      this.logistics.elevatorTicksRemaining -= 1;
+      this.logistics.elevatorProgressPercent = round(
+        ((ELEVATOR_TRANSIT_TICKS - this.logistics.elevatorTicksRemaining) / ELEVATOR_TRANSIT_TICKS) * 100,
+        0,
+      );
+      if (this.logistics.elevatorTicksRemaining <= 0) {
+        const delivered = this.logistics.elevatorCargo;
+        this.logistics.orbitalInventory += delivered;
+        this.logistics.elevatorCargo = 0;
+        this.logistics.elevatorStatus = "standby";
+        this.logistics.elevatorProgressPercent = 0;
+        this.recordEvent("recovery", "ELEVATOR", `${delivered} replacement collectors delivered to orbital depot`);
+      }
+    } else if (
+      this.logistics.groundInventory >= ELEVATOR_MINIMUM_BATCH ||
+      (this.logistics.groundInventory > 0 && this.logistics.factoryBacklog === 0)
+    ) {
+      const cargo = Math.min(ELEVATOR_CAPACITY, this.logistics.groundInventory);
+      this.logistics.groundInventory -= cargo;
+      this.logistics.elevatorCargo = cargo;
+      this.logistics.elevatorStatus = "ascending";
+      this.logistics.elevatorTicksRemaining = ELEVATOR_TRANSIT_TICKS;
+      this.logistics.elevatorProgressPercent = 0;
+      this.recordEvent("info", "ELEVATOR", `Climber departed with ${cargo} replacement collectors`);
+    }
+
+    const damaged = this.fleet.filter(
+      (satellite) => satellite.health <= 0.1 && satellite.affectedUntilTick <= this.currentTick,
+    );
+    const installCount = Math.min(INSTALLATIONS_PER_TICK, damaged.length, this.logistics.orbitalInventory);
+    for (let index = 0; index < installCount; index += 1) {
+      const satellite = damaged[index];
+      satellite.health = this.random.range(0.96, 1);
+      satellite.temperatureK = this.equilibriumTemperatureK();
+      satellite.linkQuality = this.random.range(0.97, 1);
+      satellite.mode = "nominal";
+      satellite.affectedUntilTick = 0;
+      this.logistics.orbitalInventory -= 1;
+      this.logistics.replacementsInstalled += 1;
+    }
+    if (installCount > 0 && (installCount === damaged.length || this.logistics.orbitalInventory === 0)) {
+      this.recordEvent("recovery", "DEPOT", `${installCount} damaged collector${installCount === 1 ? "" : "s"} replaced on orbit`);
+    }
   }
 
   private recordEvent(level: SimulationEvent["level"], source: string, message: string): void {

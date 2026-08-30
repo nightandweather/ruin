@@ -28,6 +28,7 @@ npm run build
 - Safe dispatch under demand changes, thermal derating, offline nodes, and network partitions.
 - Recovery windows and a bounded event stream.
 - Directional debris conjunctions, pre-impact power derating, avoidance burns, and residual impacts.
+- Surface factory orders, replacement production, orbital-elevator cargo cycles, orbital inventory, and automatic installation.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.
@@ -41,12 +42,14 @@ HELIOS separates sourced physical constants from invented system parameters:
 - Collector area, 42% conversion efficiency, radiator area, temperature limits, fault rates, repair times, beam delivery, and control policy are speculative scenario parameters.
 - Orbital positions are visualized, not propagated with an N-body integrator. Collisions, station keeping, diffraction, transmission losses, material degradation, and signal travel time are future model layers.
 - Debris corridors use angular proximity in the visualization plane rather than a high-fidelity ephemeris and covariance model. The detect–assess–mitigate workflow is inspired by real conjunction assessment, while its outcomes are speculative.
+- The space elevator is a logistics state machine, not a structural dynamics model. Factory throughput, batch size, transit time, and installation rate are deliberately accelerated scenario parameters.
 
 Sources:
 
 - [NASA GSFC: Radiative Transfer](https://science.gsfc.nasa.gov/earth/climate/researchareas/159/)
 - [NASA Passive Thermal Control Engineering Guidebook](https://ntrs.nasa.gov/citations/20230013900)
 - [NASA: Conjunction Assessment and Collision Avoidance](https://www.nasa.gov/cara/)
+- [NASA NTRS: Technology Development and Demonstration Concepts for the Space Elevator](https://ntrs.nasa.gov/citations/20040161582)
 - [Freeman Dyson, “Search for Artificial Stellar Sources of Infrared Radiation” (1960)](https://doi.org/10.1126/science.131.3414.1667)
 
 ## Architecture
@@ -61,6 +64,8 @@ fault and environment scenarios
 safety filter → capacity dispatcher
         ↓
 snapshot + event log + control dashboard
+
+damage report → factory order → GEO climber → orbital depot → replacement
 ```
 
 The simulation engine in `src/simulation.ts` has no browser dependency. That keeps deterministic scenarios testable and leaves room for a future CLI, server, or distributed implementation.
@@ -71,6 +76,7 @@ The simulation engine in `src/simulation.ts` has no browser dependency. That kee
 - Signal propagation delay and local consensus between orbital sectors.
 - Ephemeris and covariance-based conjunction probability instead of the current angular corridor model.
 - Power-beam destinations, exclusion corridors, and transmission loss.
+- Elevator tether health, climber energy budgets, launch windows, and debris avoidance.
 - Infrared waste-heat signature and observability from distant systems.
 - A campaign mode in which the swarm grows from hundreds to billions of collectors.
 

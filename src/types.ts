@@ -58,6 +58,17 @@ export interface SimulationEvent {
   message: string;
 }
 
+export interface LogisticsState {
+  factoryBacklog: number;
+  groundInventory: number;
+  totalManufactured: number;
+  elevatorCargo: number;
+  elevatorStatus: "standby" | "ascending";
+  elevatorProgressPercent: number;
+  orbitalInventory: number;
+  replacementsInstalled: number;
+}
+
 export interface ChartPoint {
   tick: number;
   deliveredGW: number;
@@ -72,6 +83,7 @@ export interface SimulationSnapshot {
   satellites: readonly Satellite[];
   events: readonly SimulationEvent[];
   history: readonly ChartPoint[];
+  logistics: LogisticsState;
   activeScenarios: readonly {
     type: ScenarioType;
     endsAtTick: number;

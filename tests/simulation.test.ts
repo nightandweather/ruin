@@ -44,4 +44,19 @@ describe("DysonSwarmSimulation", () => {
     expect(resolved.activeScenarios).toHaveLength(0);
     expect(resolved.metrics.avoidanceManeuvers + resolved.metrics.confirmedImpacts).toBe(15);
   });
+
+  it("manufactures requested replacements and lifts them to the orbital depot", () => {
+    const simulation = new DysonSwarmSimulation({ satelliteCount: 200 });
+    const requested = simulation.requestProduction(50);
+    expect(requested.logistics.factoryBacklog).toBe(50);
+
+    const launched = simulation.step(5);
+    expect(launched.logistics.elevatorStatus).toBe("ascending");
+    expect(launched.logistics.elevatorCargo).toBe(20);
+
+    const delivered = simulation.step(12);
+    expect(delivered.logistics.elevatorStatus).toBe("standby");
+    expect(delivered.logistics.orbitalInventory).toBe(20);
+    expect(delivered.logistics.totalManufactured).toBe(50);
+  });
 });
