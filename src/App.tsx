@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_CONFIG, DysonSwarmSimulation } from "./simulation";
+import { runFirstLight, type FirstLightReport } from "./firstLight";
 import type { Satellite, ScenarioType, SimulationSnapshot } from "./types";
 
 const scenarioLabels: Record<ScenarioType, { code: string; title: string; detail: string }> = {
@@ -157,6 +158,7 @@ export function App() {
   const [running, setRunning] = useState(true);
   const [speed, setSpeed] = useState(5);
   const [debrisBearing, setDebrisBearing] = useState(315);
+  const [campaign, setCampaign] = useState<FirstLightReport | null>(null);
 
   useEffect(() => {
     if (!running) return;
@@ -178,7 +180,9 @@ export function App() {
     setSimulation(next);
     setSnapshot(next.snapshot());
     setRunning(true);
+    setCampaign(null);
   };
+  const runCampaign = () => { const report=runFirstLight(); setRunning(false); setSnapshot(report.finalSnapshot); setCampaign(report); };
   const exportSnapshot = () => {
     const safeSnapshot = { ...snapshot, satellites: snapshot.satellites.map(({ id, band, health, temperatureK, mode }) => ({ id, band, health, temperatureK, mode })) };
     const blob = new Blob([JSON.stringify(safeSnapshot, null, 2)], { type: "application/json" });
@@ -194,7 +198,7 @@ export function App() {
       <header className="topbar">
         <div className="brand"><span className="sun-mark">✦</span><div><strong>HELIOS</strong><small>DYSON SWARM AUTONOMY</small></div></div>
         <div className="mission-clock"><span>SOL CONTROL TIME</span><strong>{formatElapsed(snapshot.elapsedSeconds)}</strong></div>
-        <div className="module-links"><a className="module-link" href="/foundry.html">FOUNDRY ↗</a><a className="module-link" href="/collector.html">COLLECTOR ↗</a><a className="module-link" href="/datacore.html">DATACORE ↗</a><a className="module-link" href="/agraria.html">AGRARIA ↗</a><a className="module-link" href="/aegis.html">AEGIS ↗</a><a className="module-link" href="/progenitor.html">PROGENITOR ↗</a><a className="module-link" href="/gravitas.html">GRAVITAS ↗</a><a className="module-link" href="/atlas.html">ATLAS ↗</a><a className="module-link" href="/navis.html">NAVIS ↗</a><a className="module-link" href="/ignis.html">IGNIS ↗</a><a className="module-link" href="/odyssey.html">ODYSSEY ↗</a><a className="module-link" href="/mender.html">MENDER ↗</a><a className="module-link" href="/corvus.html">CORVUS ↗</a><a className="module-link" href="/prometheus.html">PROMETHEUS ↗</a><a className="module-link" href="/genesis.html">GENESIS ↗</a><a className="module-link" href="/mnemosyne.html">MNEMOSYNE ↗</a><a className="module-link" href="/sentinel.html">SENTINEL ↗</a></div>
+        <div className="module-links"><a className="module-link" href="./foundry.html">FOUNDRY ↗</a><a className="module-link" href="./collector.html">COLLECTOR ↗</a><a className="module-link" href="./datacore.html">DATACORE ↗</a><a className="module-link" href="./agraria.html">AGRARIA ↗</a><a className="module-link" href="./aegis.html">AEGIS ↗</a><a className="module-link" href="./progenitor.html">PROGENITOR ↗</a><a className="module-link" href="./gravitas.html">GRAVITAS ↗</a><a className="module-link" href="./atlas.html">ATLAS ↗</a><a className="module-link" href="./navis.html">NAVIS ↗</a><a className="module-link" href="./ignis.html">IGNIS ↗</a><a className="module-link" href="./odyssey.html">ODYSSEY ↗</a><a className="module-link" href="./mender.html">MENDER ↗</a><a className="module-link" href="./corvus.html">CORVUS ↗</a><a className="module-link" href="./prometheus.html">PROMETHEUS ↗</a><a className="module-link" href="./genesis.html">GENESIS ↗</a><a className="module-link" href="./mnemosyne.html">MNEMOSYNE ↗</a><a className="module-link" href="./sentinel.html">SENTINEL ↗</a></div>
         <div className={`system-status ${status.tone}`}><i />SYSTEM {status.label}</div>
       </header>
 
@@ -233,6 +237,7 @@ export function App() {
               tick={snapshot.tick}
               debrisBearing={snapshot.activeScenarios.find((scenario) => scenario.type === "debris-corridor")?.bearingDeg}
             />
+            {campaign && <FirstLightEvidence report={campaign} close={()=>setCampaign(null)} />}
             <div className="map-readout left">BANDS<br /><strong>08</strong></div>
             <div className="map-readout right">SAMPLE<br /><strong>1:6</strong></div>
           </div>
@@ -285,9 +290,12 @@ export function App() {
           {[1, 5, 20].map((value) => <button key={value} className={speed === value ? "selected" : ""} onClick={() => setSpeed(value)}>{value}×</button>)}
           <button onClick={() => setSnapshot(simulation.step(1))} disabled={running}>STEP</button>
           <button onClick={reset}>RESET</button>
+          <button className="campaign-launch" onClick={runCampaign}>RUN FIRST LIGHT</button>
         </div>
         <div className="footer-meta"><span>SEED {DEFAULT_CONFIG.seed}</span><span>TICK {snapshot.tick.toLocaleString()}</span><button onClick={exportSnapshot}>EXPORT SNAPSHOT ↓</button></div>
       </footer>
     </main>
   );
 }
+
+function FirstLightEvidence({report,close}:{report:FirstLightReport;close:()=>void}){const invariants=report.checkpoints.at(-1)!.invariants;return <section className="campaign-evidence" aria-label="FIRST LIGHT deterministic campaign evidence"><header><div><span>COMMISSIONED SCENARIO // 001</span><b>FIRST LIGHT</b></div><button aria-label="Close FIRST LIGHT evidence" onClick={close}>×</button></header><div className="campaign-sequence">{report.checkpoints.map((c,i)=><article key={c.tick}><i>{String(i+1).padStart(2,"0")}</i><span><b>{c.label}</b><small>τ {c.tick} · AVAIL {c.availabilityPercent.toFixed(1)}% · {c.deliveredGW.toFixed(1)} GW</small></span></article>)}</div><div className="campaign-proof"><div><span>REPLAY HASH</span><b>{report.traceHash}</b><small>{report.replayVerified?"MATCHED ON SECOND EXECUTION":"REPLAY DIVERGED"}</small></div><div><span>SAFETY CONTRACT</span><b>{report.allInvariantsPass?"5 / 5 PASS":"VIOLATION"}</b><small>ALL CHECKPOINTS</small></div></div><div className="campaign-invariants">{invariants.map(x=><p key={x.id} className={x.passed?"pass":"fail"}><i>{x.passed?"✓":"×"}</i><span>{x.label}<small>{x.detail}</small></span></p>)}</div><footer>SEED {report.seed} · SAME INPUT → SAME TRACE · EVIDENCE BEFORE RESET</footer></section>}

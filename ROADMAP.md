@@ -22,6 +22,8 @@ Definition of done:
 
 Create a versioned scenario file and shared tick contract. Existing engines remain independently testable, but a campaign runner can exchange power, material, food, compute, crew exposure, and repair orders.
 
+Foundation delivered: the FIRST LIGHT commissioned HELIOS scenario now provides a fixed action ledger, control-tick checkpoints, executable invariants, and replay-hash verification. Cross-module adapters and a versioned external scenario schema remain open.
+
 First executable question: **can one local failure become a legible cross-system shortage without creating an untestable monolith?**
 
 Definition of done:

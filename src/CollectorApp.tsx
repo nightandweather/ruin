@@ -46,7 +46,7 @@ export function CollectorApp() {
     <main className="collector-shell">
       <header className="collector-topbar">
         <div className="collector-brand"><span>C//01</span><div><strong>RUIN // COLLECTOR</strong><small>PARAMETRIC STELLAR MACHINE</small></div></div>
-        <nav><a href="/">HELIOS</a><a href="/foundry.html">FOUNDRY</a><b>COLLECTOR</b><a href="/datacore.html">DATACORE</a></nav>
+        <nav><a href="./">HELIOS</a><a href="./foundry.html">FOUNDRY</a><b>COLLECTOR</b><a href="./datacore.html">DATACORE</a></nav>
         <div className="collector-clock"><span>UNIT C-01 · τ{String(snapshot.tick).padStart(5, "0")}</span><b className={snapshot.mode}>{status}</b></div>
       </header>
 

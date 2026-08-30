@@ -17,6 +17,16 @@ describe("DysonSwarmSimulation", () => {
     expect(snapshot.metrics.deliveredGW).toBeLessThan(snapshot.metrics.demandGW);
   });
 
+  it("reacquires isolated links when a communications blackout clears", () => {
+    const simulation = new DysonSwarmSimulation({ satelliteCount: 1_000 });
+    simulation.inject("communications-blackout");
+    expect(simulation.step().metrics.isolatedCount).toBe(300);
+
+    const recovered = simulation.step(89);
+    expect(recovered.metrics.isolatedCount).toBe(0);
+    expect(recovered.metrics.availabilityPercent).toBe(100);
+  });
+
   it("recovers failed collectors after the repair window", () => {
     const simulation = new DysonSwarmSimulation({ satelliteCount: 1_000 });
     simulation.inject("cascade-failure");

@@ -5,8 +5,13 @@
 [![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
+[![Live demo](https://img.shields.io/badge/live-demo-ffb456.svg)](https://nightandweather.github.io/ruin/)
 
 RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first module, is a deterministic browser simulation of an autonomous Dyson swarm: 10,000 independent solar collectors operating at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures.
+
+> I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
+
+**[Run the public demo](https://nightandweather.github.io/ruin/)** · [Read the HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
@@ -63,6 +68,7 @@ npm run build
 ## What is simulated
 
 - 10,000 individually modeled collectors across eight orbital bands.
+- A commissioned FIRST LIGHT incident sequence with checkpoint evidence, five executable safety invariants, and a second-run deterministic replay hash.
 - Seeded pseudo-random initial conditions and fault selection for reproducible runs.
 - Per-node health, link quality, thermal state, capacity, delivery, and operating mode.
 - Safe dispatch under demand changes, thermal derating, offline nodes, and network partitions.

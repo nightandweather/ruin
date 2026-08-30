@@ -16,7 +16,7 @@ export function IgnisApp() {
   return <main className="ig-shell">
     <header className="ig-top">
       <div className="ig-brand"><span>I//G</span><div><strong>RUIN // IGNIS</strong><small>PROPULSION ENGINE LABORATORY</small></div></div>
-      <nav><a href="/">HELIOS</a><a href="/navis.html">NAVIS</a><b>IGNIS</b><a href="/odyssey.html">ODYSSEY</a><a href="/sentinel.html">SENTINEL</a></nav>
+      <nav><a href="./">HELIOS</a><a href="./navis.html">NAVIS</a><b>IGNIS</b><a href="./odyssey.html">ODYSSEY</a><a href="./sentinel.html">SENTINEL</a></nav>
       <div className="ig-state"><span>DESIGN MODEL · NON-FLIGHT SOFTWARE</span><b className={result.readiness.toLowerCase()}>{result.readiness}</b></div>
     </header>
 

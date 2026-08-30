@@ -313,6 +313,12 @@ export class DysonSwarmSimulation {
     for (let index = this.scenarios.length - 1; index >= 0; index -= 1) {
       const scenario = this.scenarios[index];
       if (scenario.endsAtTick <= this.currentTick) {
+        if (scenario.type === "communications-blackout") {
+          for (const id of scenario.affectedIds) {
+            const satellite = this.fleet[id];
+            satellite.linkQuality = Math.max(satellite.linkQuality, this.random.range(0.82, 0.94));
+          }
+        }
         if (scenario.type === "cascade-failure") {
           for (const id of scenario.affectedIds) {
             const satellite = this.fleet[id];
