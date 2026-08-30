@@ -17,6 +17,7 @@ export default defineConfig({
         atlas: "atlas.html",
         navis: "navis.html",
         mender: "mender.html",
+        sentinel: "sentinel.html",
       },
     },
   },

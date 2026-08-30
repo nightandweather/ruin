@@ -1,0 +1,1 @@
+import React from"react";import ReactDOM from"react-dom/client";import{SentinelApp}from"./SentinelApp";import"./sentinel.css";ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><SentinelApp/></React.StrictMode>);

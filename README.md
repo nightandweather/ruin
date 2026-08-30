@@ -34,7 +34,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, `/atlas.html` maps the real nearby stellar neighborhood, `/navis.html` architects spacecraft against those routes, and `/mender.html` designs robotic repair systems. The simulations begin immediately.
+Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomous lunar factory, `/collector.html` opens the C-01 designer, `/datacore.html` runs the orbital GPU server, `/agraria.html` operates the crop decks, `/aegis.html` opens the spacesuit architect, `/progenitor.html` runs the guided self-production factory, `/gravitas.html` designs artificial gravity habitats, `/atlas.html` maps the real nearby stellar neighborhood, `/navis.html` architects spacecraft against those routes, `/mender.html` designs robotic repair systems, and `/sentinel.html` coordinates system-wide fault response. The simulations begin immediately.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **FOUNDRY** — order repair kits and watch robotic excavation, grading, molten-regolith refining, machining, and assembly propagate material and bottlenecks through the factory.
@@ -47,6 +47,7 @@ Open the displayed local URL. `/` runs HELIOS, `/foundry.html` runs the autonomo
 - **ATLAS** — rotate and filter a heliocentric 3D map of 30 curated real stars, inspect catalog coordinates and planet counts, and expose interstellar communication and hypothetical cruise latency.
 - **NAVIS** — couple spacecraft mass, propulsion, power, waste heat, radiator area, communications, autonomy, and ATLAS route distance while exposing model maturity and no-go boundaries.
 - **MENDER** — configure orbital and surface repair robots while reaction torque, anchoring, reach, payload, tools, energy, heat rejection, and delayed-command autonomy remain coupled.
+- **SENTINEL** — inspect 33 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
 
 ```bash
 npm test
@@ -74,6 +75,7 @@ npm run build
 - A real-coordinate nearby-star atlas that converts ICRS right ascension, declination, and distance into heliocentric XYZ positions while keeping curated coverage distinct from the full Gaia catalog.
 - A mission-configurable spacecraft architect using the ideal rocket equation, thrust-derived acceleration and burn time, radiative heat rejection, distance-squared link scoring, light-time, and explicit propulsion maturity.
 - A task-grounded robotic repair architect with two-point contact, reaction-moment stability, seven-DOF servicing arms, tool and payload contracts, battery endurance, recharge, heat rejection, and signal-delay autonomy.
+- A cross-system FDIR registry covering 11 executable modules with 33 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - Downloadable JSON snapshots for later replay or analysis.
 
 The browser draws a representative orbital sample but the controller updates all 10,000 nodes every tick.

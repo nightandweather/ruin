@@ -14,6 +14,7 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | [ATLAS](stellar-atlas.md) | Turn the real nearby stellar neighborhood into an operational map | Interactive catalog map | How does distance change command, travel, and bootstrap decisions? |
 | [NAVIS](navis-spacecraft.md) | Design ships as coupled mass, energy, heat, communication, and autonomy systems | Interactive parametric simulator | Which subsystem invalidates the mission before the ship departs? |
 | [MENDER](mender-repair-robot.md) | Repair orbital and surface infrastructure without hiding contact physics | Interactive parametric simulator | Can the robot hold itself still while applying the force needed to repair the client? |
+| [SENTINEL](sentinel-fault-response.md) | Detect, isolate, safe, and recover every executable RUIN system | Interactive FDIR registry | Does every credible fault have a containment boundary and evidence-gated return? |
 | [WAYSTATION](waystation-spaceport.md) | Coordinate docking, service, repair, cargo, and departure | Design brief | Which shared port resource makes a ship miss its safe departure window? |
 | FOUNDRY | Mine, refine, machine, and assemble lunar resources autonomously | Interactive simulator | Which local failure becomes a civilization-wide manufacturing bottleneck? |
 | [Stellar survey](stellar-survey.md) | Rank real nearby systems for a swarm bootstrap | Deterministic scoring model | Which target wins when proximity, stability, energy, and materials conflict? |
