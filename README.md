@@ -13,6 +13,7 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Concept registry](concepts/README.md) — current and proposed infrastructure modules.
 - [Orbital elevator](concepts/orbital-elevator.md) — factory queues, climbers, tether safety, and orbital depots.
 - [Lunar mass driver](concepts/mass-driver.md) — electromagnetic cargo launch with fail-closed corridor authorization.
+- [Transit Gate](concepts/transit-gate.md) — quantum-state transfer, speculative wormholes, and exactly-once identity reconstruction.
 - [Concept template](concepts/template.md) — a repeatable path from a wild idea to testable software.
 
 HELIOS is the first executable module rather than the limit of the repository.

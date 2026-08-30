@@ -7,6 +7,7 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | [HELIOS](../README.md) | Operate and repair a 10,000-node Dyson swarm | Interactive simulator | Can safe power delivery survive partitions, heat, and debris? |
 | [Orbital elevator](orbital-elevator.md) | Move manufactured cargo from a surface factory to an orbital depot | Logistics model inside HELIOS | What happens when production outruns climber capacity? |
 | [Lunar mass driver](mass-driver.md) | Launch non-living bulk cargo from the Moon to an orbital catcher | Design brief | Can a launch be fail-closed when timing or catcher confidence degrades? |
+| [Transit Gate](transit-gate.md) | Move quantum state, matter, or reconstructed identity under distinct rules | Design brief | How can two endpoints prove that transit completed exactly once? |
 
 ## Graduation rule
 
