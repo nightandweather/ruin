@@ -31,6 +31,12 @@ This is science-fiction software built from real engineering ideas. It is not a 
 
 The [session origin note](docs/SESSION-2026-08-30.md) records how the project grew from a developer-learning idea into executable civilization infrastructure. The [engineering notes](docs/ENGINEERING-NOTES.md) separate grounded kernels, scenario assumptions, and next validation work for every executable module.
 
+## Fiction prototype
+
+RUIN is also being tested as a human-scale science-fiction narrative. **Season 01 — 99.97%의 구원** follows a junior simulation verifier who discovers that a perfect civilization-survival report was produced by changing who counts as a person. The fiction uses executable laboratory incidents as causal machinery while keeping unresolved questions—simulation consciousness, recurring identity, and RUIN's creator—open.
+
+**[Read Episode 01 — 제외된 사람들](fiction/season-01/episode-01.md)** · [Narrative continuity and status](fiction/README.md)
+
 ## The RUIN laboratory
 
 RUIN is a home for executable science-fiction infrastructure. Each concept begins as a sourced engineering brief, defines what must never happen, and grows into a deterministic simulation that lets an operator experience the tradeoffs.
