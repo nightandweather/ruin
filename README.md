@@ -124,6 +124,23 @@ HELIOS begins with the operating problems of a civilization using a meaningful f
 
 These are storytelling frames, not settled extensions to the Kardashev scale. Each future module should turn one frame into explicit state, constraints, failure modes, and testable policies.
 
+## Help design what comes after Kardashev
+
+**카르다쇼프 척도 다음 단계로 가기 위한 아이디어를 모집합니다.**
+
+RUIN is looking for strange, serious questions about civilizations that do not exist yet. Propose an orbital machine, interstellar institution, deep-time failure, impossible transport system, post-biological habitat, or an entirely new category we have not imagined.
+
+A strong proposal does not need to know how to build the technology. It only needs to give us something that can become executable:
+
+- What is the system trying to accomplish?
+- What resources, energy, information, and prior technologies does it require?
+- What must never happen?
+- How does it fail when communication is late or nobody is in charge?
+- Which assumptions come from observed science, and which are deliberately speculative?
+- What would an operator be able to change and observe in a simulation?
+
+[Open an idea proposal](https://github.com/nightandweather/ruin/issues/new) or use the [concept template](concepts/template.md). Wild ideas are welcome; falsifiable assumptions, safety invariants, and interesting failure modes make them buildable.
+
 ## License
 
 MIT
