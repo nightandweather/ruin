@@ -15,6 +15,7 @@ export default defineConfig({
         progenitor: "progenitor.html",
         gravitas: "gravitas.html",
         atlas: "atlas.html",
+        navis: "navis.html",
       },
     },
   },

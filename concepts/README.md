@@ -12,6 +12,7 @@ RUIN turns speculative infrastructure into software that can be inspected, faile
 | [PROGENITOR](progenitor-self-production.md) | Expand robotic industry without hiding precision imports or quality drift | Interactive parametric simulator | How much of the machine that makes machines can really be made locally? |
 | [GRAVITAS](gravitas-artificial-gravity.md) | Create experienced gravity without hiding rotation and human-factors costs | Interactive parametric simulator | How large must a habitat be before artificial gravity becomes tolerable? |
 | [ATLAS](stellar-atlas.md) | Turn the real nearby stellar neighborhood into an operational map | Interactive catalog map | How does distance change command, travel, and bootstrap decisions? |
+| [NAVIS](navis-spacecraft.md) | Design ships as coupled mass, energy, heat, communication, and autonomy systems | Interactive parametric simulator | Which subsystem invalidates the mission before the ship departs? |
 | [WAYSTATION](waystation-spaceport.md) | Coordinate docking, service, repair, cargo, and departure | Design brief | Which shared port resource makes a ship miss its safe departure window? |
 | FOUNDRY | Mine, refine, machine, and assemble lunar resources autonomously | Interactive simulator | Which local failure becomes a civilization-wide manufacturing bottleneck? |
 | [Stellar survey](stellar-survey.md) | Rank real nearby systems for a swarm bootstrap | Deterministic scoring model | Which target wins when proximity, stability, energy, and materials conflict? |
