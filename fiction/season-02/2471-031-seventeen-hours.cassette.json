@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "valetudo",
+  "title": "C.E. 2471.031 — seventeen hours, and the same rule for everyone",
+  "notes": "Episodes 02 and 03. A child's marrow therapy is inside a held cargo with seventeen hours of shelf life, and Emma will not grant the exception because a rationing network that admits one stops being a rationing network. She is right about the rule. The model applies it evenly — first come, no clinical sorting — and returns a defensible allocation that still forgoes expected survivors against what those beds could have bought. Being right about the criterion is not the same as being right about the outcome, and the scene is the distance between them.",
+  "config": { "policy": "first-come", "decisionWindowMin": 60, "confirmationDelayMin": 20 },
+  "timeline": []
+}

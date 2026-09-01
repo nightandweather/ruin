@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "valetudo",
+  "title": "C.E. 2471.049 — the denial reaches the ward",
+  "notes": "Episode 06, from the other side of the counter. The CENSUS scene records what the accounting did; this records where it lands. A roll audit removes the unrolled from eligibility before a clinician has seen any of them, so the refusal is not a triage decision that went badly — no triage decision was made about them at all. The model refuses the criterion outright: whether a person is counted is not a clinical fact and cannot be written in a record anyone would sign.",
+  "config": { "incident": "roll-audit" },
+  "timeline": []
+}

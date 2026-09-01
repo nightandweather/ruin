@@ -18,6 +18,7 @@ import type { evaluateCensus } from "../src/census";
 import type { evaluateChronos } from "../src/chronos";
 import type { evaluateLex } from "../src/lex";
 import type { evaluatePorta } from "../src/porta";
+import type { evaluateValetudo } from "../src/valetudo";
 
 const DIR = "fiction/season-02";
 
@@ -39,7 +40,7 @@ const run = <T>(name: string): T => {
 
 describe("the season's scenes are loadable and runnable", () => {
   it("ships scenes at all", () => {
-    expect(scenes.length).toBeGreaterThanOrEqual(4);
+    expect(scenes.length).toBeGreaterThanOrEqual(6);
   });
 
   for (const name of scenes) {
@@ -110,5 +111,31 @@ describe("2471.166 — forty-three seconds", () => {
     expect(r.causalLedgerIntact).toBe(false);
     expect(r.attribution).toBe("CAUSE UNASSIGNED");
     expect(r.safeMode).toBe("LEDGERS FORKED");
+  });
+});
+
+describe("2471.031 — seventeen hours", () => {
+  it("applies one rule to everyone, defensibly, and still forgoes survivors", () => {
+    const r = run<ReturnType<typeof evaluateValetudo>>("2471-031-seventeen-hours.cassette.json");
+    // Emma is right about the criterion: nothing here is refused.
+    expect(r.defensible).toBe(true);
+    expect(r.refusals).toEqual([]);
+    // And the even-handed rule still costs lives against what the beds could buy.
+    expect(r.foregone).toBeGreaterThan(1);
+    expect(r.expectedSurvivors).toBeLessThan(r.bestPossible);
+    // The seventeen-hour clock is not the binding constraint; the check returns.
+    expect(r.confirmationArrives).toBe(true);
+  });
+});
+
+describe("2471.049 — the denial reaches the ward", () => {
+  it("removes the unrolled before any clinician sees them, and refuses the criterion", () => {
+    const r = run<ReturnType<typeof evaluateValetudo>>("2471-049-oxygen-renewal.cassette.json");
+    expect(r.defensible).toBe(false);
+    expect(r.readiness).toBe("NO-GO");
+    expect(r.unrolledTreated).toBe(0);
+    expect(r.unrolledTotal).toBeGreaterThan(0);
+    expect(r.constraints.join(" ")).toContain("before any clinician saw them");
+    expect(r.refusals[0]).toContain("not a clinical fact");
   });
 });
