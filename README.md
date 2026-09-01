@@ -1,13 +1,13 @@
-# RUIN // HELIOS
+# RUIN
 
-> Mission control for a star-sized distributed system.
+> **Executable science fiction.** Twenty-eight deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
 
 [![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
 [![Live demo](https://img.shields.io/badge/live-demo-ffb456.svg)](https://nightandweather.github.io/ruin/)
 
-RUIN is a laboratory of twenty-seven deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing. **HELIOS**, its first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures.
+**HELIOS**, the first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-seven laboratories have grown around it — factories, habitats, propulsion, archives, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
 
 > I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
 
@@ -48,7 +48,7 @@ Three of this repository's modules open a window in which their own certificate 
 
 Every fault-response plan in this repository ends with _the operator decides_. WATCHFLOOR prices that step. On the cry-wolf watch the queue peaks at 17 against a cap of 40, authority is never withdrawn, and every display stays calm — while 1.43 real critical alarms are written off as spurious by a crew that has learned not to believe them.
 
-**[Run the public demo](https://nightandweather.github.io/ruin/)** · [Read the HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
+**[Run the public demo](https://nightandweather.github.io/ruin/)** · [What fiction assumes, and what the models say](docs/WHAT-FICTION-ASSUMES.md) · [The HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
 [![Watch the 72-second RUIN // HELIOS walkthrough](docs/assets/helios-first-light.png)](https://nightandweather.github.io/ruin/ruin-first-light-72s.mp4)
 
