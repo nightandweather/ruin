@@ -12,6 +12,8 @@ This directory contains narrative prototypes derived from the executable RUIN la
 
 The first season follows a junior civilization-simulation verifier who discovers that a perfect survival report was produced by changing who counts as a person.
 
+Political conflict follows the same rule as infrastructure failure: every major position must protect something real. Outer-system autonomy, fail-closed beam safety, memory-personhood, food continuity, and care for the person immediately in front of you can all be morally defensible while demanding mutually exclusive actions. No faction exists only to be proven evil; policy becomes tragic when several individual forms of justice compete for the same finite resource.
+
 - [Episode 01 — 제외된 사람들](season-01/episode-01.md) · [incident cassette](season-01/episode-01.cassette.json)
 
 Each episode can carry an **incident cassette** — a deterministic replay file
@@ -27,12 +29,14 @@ Two civilizations that share the same technology go to war over one gate and two
 
 **The scenes are executable.** `season-02/*.cassette.json` records the module and configuration each turning point occurs in, `src/sceneRunner.ts` runs them, and `tests/season02.test.ts` asserts the figures the manuscript commits to. A change to a laboratory that would contradict a published chapter fails CI rather than being found by a reader.
 
-| Scene                              | Module  | What the model returns                                                                                                             |
-| ---------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 2471.031 — a certification refusal | LEX     | `UNGOVERNED`: no instrument in the register reaches who counts as a person, which is why classifying someone out works as a weapon |
-| 2471.049 — the first death         | CENSUS  | Twenty thousand deaths outside the roll while the reported rate stays above 99.9%                                                  |
-| 2471.099 — seventy-three           | CHRONOS | Effects filed ahead of their causes from clock rates alone; both ledgers record the other as first and neither is lying            |
-| 2471.166 — forty-three seconds     | PORTA   | The gate opens with quorum revoked at both ends, all sixty-six get through, and the causal record forks permanently                |
+| Scene                                  | Module   | What the model returns                                                                                                                  |
+| -------------------------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| 2471.031 — a certification refusal     | LEX      | `UNGOVERNED`: no instrument in the register reaches who counts as a person, which is why classifying someone out works as a weapon      |
+| 2471.049 — the first death             | CENSUS   | Twenty thousand deaths outside the roll while the reported rate stays above 99.9%                                                       |
+| 2471.099 — seventy-three               | CHRONOS  | Effects filed ahead of their causes from clock rates alone; both ledgers record the other as first and neither is lying                 |
+| 2471.031 — seventeen hours             | VALETUDO | One rule applied evenly is defensible and still forgoes survivors: being right about the criterion is not being right about the outcome |
+| 2471.049 — the denial reaches the ward | VALETUDO | A roll audit removes the unrolled before a clinician sees any of them; the criterion is refused outright                                |
+| 2471.166 — forty-three seconds         | PORTA    | The gate opens with quorum revoked at both ends, all sixty-six get through, and the causal record forks permanently                     |
 
 The direction of authority is deliberate and stated in both the runner and the tests: **the manuscript is the specification, and a failing test means a module drifted.**
 
