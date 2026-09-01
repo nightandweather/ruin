@@ -57,6 +57,7 @@ import { evaluateLumen, lumenConfig } from "../src/lumen";
 import { conciliumConfig, evaluateConcilium } from "../src/concilium";
 import { evaluatePorta, portaConfig } from "../src/porta";
 import { evaluateValetudo, valetudoConfig } from "../src/valetudo";
+import { evaluateWaystation, waystationConfig } from "../src/waystation";
 
 /**
  * One replayable run per module. Every run must start from scratch — a run
@@ -131,6 +132,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
   chronos: () => evaluateChronos(chronosConfig()),
   lex: () => evaluateLex(lexConfig()),
   ascent: () => evaluateAscent(ascentConfig()),
+  waystation: () => evaluateWaystation(waystationConfig()),
   lumen: () => evaluateLumen(lumenConfig()),
   concilium: () => evaluateConcilium(conciliumConfig()),
   porta: () => evaluatePorta(portaConfig()),

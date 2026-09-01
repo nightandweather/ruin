@@ -462,6 +462,16 @@ input {
   --lb-panel: #0d0b14ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #1a1430, #0c0a14 55%, #06050a);
 }
+.waystation {
+  --lb-accent: #d8b48a;
+  --lb-accent-strong: #f2ddc2;
+  --lb-border: #514031;
+  --lb-panel: #14100cee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #2a2014, #14100c 55%, #0a0806);
+}
+.ws-board p {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.7fr) 46px 46px 64px;
+}
 .ascent {
   --lb-accent: #8fb8e8;
   --lb-accent-strong: #cfe2f8;

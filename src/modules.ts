@@ -313,6 +313,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     group: "movement",
     blurb: "Move a foundry's output to orbit under custody rules that refuse an unsafe launch",
   },
+  {
+    id: "waystation",
+    page: "waystation.html",
+    href: "./waystation.html",
+    label: "WAYSTATION",
+    group: "movement",
+    blurb: "Run one port shift and learn which faultless vessel the shared queues cost a window",
+  },
 ];
 
 export type ModuleId = (typeof MODULES)[number]["id"];

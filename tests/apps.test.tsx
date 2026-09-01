@@ -49,6 +49,7 @@ import { ThemisApp } from "../src/ThemisApp";
 import { ValetudoApp } from "../src/ValetudoApp";
 import { VeritasApp } from "../src/VeritasApp";
 import { WatchfloorApp } from "../src/WatchfloorApp";
+import { WaystationApp } from "../src/WaystationApp";
 
 const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "helios", Component: App },
@@ -85,6 +86,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "valetudo", Component: ValetudoApp },
   { id: "veritas", Component: VeritasApp },
   { id: "watchfloor", Component: WatchfloorApp },
+  { id: "waystation", Component: WaystationApp },
 ];
 
 let root: Root | null = null;

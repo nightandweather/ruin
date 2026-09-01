@@ -28,6 +28,7 @@ import { evaluatePorta, portaConfig } from "./porta";
 import { evaluateValetudo, valetudoConfig } from "./valetudo";
 import { evaluateVeritas, veritasConfig } from "./veritas";
 import { evaluateWatchfloor, watchfloorConfig } from "./watchfloor";
+import { evaluateWaystation, waystationConfig } from "./waystation";
 
 /**
  * Laboratories a scene can be set in: the ones whose whole state is a
@@ -44,6 +45,7 @@ const SCENES = {
   porta: { base: portaConfig, run: evaluatePorta },
   valetudo: { base: valetudoConfig, run: evaluateValetudo },
   veritas: { base: veritasConfig, run: evaluateVeritas },
+  waystation: { base: waystationConfig, run: evaluateWaystation },
   watchfloor: { base: watchfloorConfig, run: evaluateWatchfloor },
 } as const satisfies Record<string, { base: () => object; run: (config: never) => unknown }>;
 

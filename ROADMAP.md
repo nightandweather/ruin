@@ -55,6 +55,8 @@ Turn the handoff between ASCENT logistics and a future civilian fleet into an ex
 
 First executable question: **which vessel misses a safe departure window when every shared service has a different queue and failure state?**
 
+**Delivered** — [`src/waystation.ts`](src/waystation.ts): a deterministic list-scheduled shift of eight vessels through inspection, clearance, berths, repair, and propellant, under five invariants (no clearance without identity + confidence + a compatible berth; no propellant across an unverified interface; the emergency berth and tug outside every schedule; custody and contamination surviving reclassification; a missed window becoming safe holding, never a forced departure). The answer to the question is computed, not narrated: under a collar fault the broken tanker departs on time and three faultless vessels miss, each naming its queue. `tests/waystation.test.ts` and the determinism gate cover all of it.
+
 ## Release 0.3 — sustain people and industry
 
 ### P1 · PROSPECT resource geography
