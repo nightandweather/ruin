@@ -34,9 +34,9 @@ describe("CONCILIUM economy", () => {
     const r = evaluateConcilium(conciliumConfig());
     const kuiper = world(r, "kuiper");
     const terra = world(r, "terra");
-    // Twelve thousand people selling certified designs out-earn nine billion
-    // selling finished goods, because margin is not volume.
-    expect(kuiper.world.population).toBeLessThan(terra.world.population / 100_000);
+    // Twelve thousand people selling certified designs out-earn a world three
+    // hundred times their size selling finished goods: margin is not volume.
+    expect(kuiper.world.population).toBeLessThan(terra.world.population / 300);
     expect(kuiper.revenueTWy).toBeGreaterThan(terra.revenueTWy);
   });
 
@@ -99,10 +99,13 @@ describe("CONCILIUM council", () => {
     const byMoney = evaluateConcilium({ ...conciliumConfig(), seatBasis: "revenue" });
     // Seats drawn from population are the population, by construction.
     expect(byPeople.representationGap).toBeCloseTo(0, 9);
-    // Drawn from revenue, a station of 240,000 holds most of the council.
-    expect(byMoney.representationGap).toBeGreaterThan(0.9);
+    // Drawn from revenue, a station of 240,000 holds most of the council...
+    expect(byMoney.representationGap).toBeGreaterThan(0.85);
     expect(world(byMoney, "helios").seatShare).toBeGreaterThan(0.9);
-    expect(world(byMoney, "helios").populationShare).toBeLessThan(0.001);
+    expect(world(byMoney, "helios").populationShare).toBeLessThan(0.06);
+    // ...while the world holding most of the species holds almost none of it.
+    expect(world(byMoney, "terra").populationShare).toBeGreaterThan(0.85);
+    expect(world(byMoney, "terra").seatShare).toBeLessThan(0.02);
   });
 
   it("refuses a landslide when the worlds it binds could not answer", () => {

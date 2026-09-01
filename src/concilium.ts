@@ -103,18 +103,20 @@ export interface CivSystem {
 }
 
 /**
- * Six worlds, at the distances CHRONOS uses. The asymmetry is deliberate and
- * is the whole subject: almost everyone lives on the world that generates
- * almost nothing, and the world that generates almost everything is a station
- * of a quarter of a million people.
+ * Seven worlds, at the distances CHRONOS uses, with populations and the α Cen
+ * landfall taken from the Season 02 canon.
+ *
+ * The asymmetry is the whole subject: most of the species lives on the world
+ * that generates almost nothing, and the world that generates almost
+ * everything is a station of a quarter of a million people.
  */
 export const WORLDS: readonly World[] = [
   {
     id: "terra",
     name: "TERRA HOLDFAST",
-    detail: "Nine billion people and the goods everyone uses; the lowest margin in the system",
+    detail: "Most of the species, and the goods everyone uses at the lowest margin in the system",
     distanceLs: 1.28,
-    population: 9_200_000_000,
+    population: 3_900_000,
     produces: { energy: 40, manufactures: 22, biomass: 14 },
   },
   {
@@ -159,10 +161,10 @@ export const WORLDS: readonly World[] = [
   },
   {
     id: "proxima",
-    name: "PROXIMA LANDFALL",
+    name: "α CEN LANDFALL",
     detail: "Four light-years out, with no neighbour close enough to buy from",
-    distanceLs: 1.34e8,
-    population: 18_000,
+    distanceLs: 1.3717e8,
+    population: 38_000,
     produces: { energy: 2.5, biomass: 5 },
   },
 ];
@@ -438,7 +440,7 @@ export function evaluateConcilium(c: ConciliumConfig) {
   /**
    * A resource is available to a world if it makes it, or if a world that
    * makes it is close enough to ship from inside the trade window. Distance,
-   * not price, is what puts Proxima out of the market.
+   * not price, is what puts the α Cen landfall out of the market.
    */
   const accessFor = (world: World): ResourceId[] => {
     const own = Object.keys(production(world)) as ResourceId[];

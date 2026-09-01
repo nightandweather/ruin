@@ -415,6 +415,16 @@ input {
   --lb-panel: #101208ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #212a10, #10140a 55%, #070905);
 }
+.porta {
+  --lb-accent: #7fd8e8;
+  --lb-accent-strong: #cbeff7;
+  --lb-border: #274652;
+  --lb-panel: #081114ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #0f2a33, #0b1014 55%, #050a0c);
+}
+.pt-roll p {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr) 112px;
+}
 .concilium {
   --lb-accent: #c8a8e0;
   --lb-accent-strong: #e8d6f4;

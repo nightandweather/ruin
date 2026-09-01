@@ -49,7 +49,7 @@ export interface ChronosSite {
  * One fixed network, so a run is comparable across configurations. The
  * distances are real: the Moon at 1.28 light-seconds, a HELIOS collector at
  * 0.4 AU seen from Earth, Jupiter at opposition, the inner Kuiper belt, a
- * cruiser 1.2 light-years out, and Proxima Centauri at 4.2465 light-years.
+ * cruiser 1.2 light-years out, and the α Centauri settlement at 4.3465 ly.
  */
 export const CHRONOS_SITES: readonly ChronosSite[] = [
   {
@@ -94,9 +94,9 @@ export const CHRONOS_SITES: readonly ChronosSite[] = [
   },
   {
     id: "proxima",
-    name: "PROXIMA SETTLEMENT",
-    detail: "4.2465 light-years — no shared present exists with this site",
-    distanceLs: 4.2465 * LY_LS,
+    name: "α CEN SETTLEMENT",
+    detail: "4.3465 light-years — no shared present exists with this site",
+    distanceLs: 4.3465 * LY_LS,
     velocityC: 0,
     phase: 0.91,
   },

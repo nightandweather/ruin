@@ -266,6 +266,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     blurb: "Price every system, give seven worlds economies, and draw the council's seats",
   },
   {
+    id: "porta",
+    page: "porta.html",
+    href: "./porta.html",
+    label: "PORTA",
+    group: "movement",
+    blurb: "Open a transit gate against heat, quorum, and a violation that forks the past",
+  },
+  {
     id: "reliquary",
     page: "reliquary.html",
     href: "./reliquary.html",

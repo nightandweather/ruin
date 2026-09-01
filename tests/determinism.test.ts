@@ -53,6 +53,7 @@ import { censusConfig, evaluateCensus } from "../src/census";
 import { chronosConfig, evaluateChronos } from "../src/chronos";
 import { evaluateLex, lexConfig } from "../src/lex";
 import { conciliumConfig, evaluateConcilium } from "../src/concilium";
+import { evaluatePorta, portaConfig } from "../src/porta";
 
 /**
  * One replayable run per module. Every run must start from scratch — a run
@@ -127,6 +128,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
   chronos: () => evaluateChronos(chronosConfig()),
   lex: () => evaluateLex(lexConfig()),
   concilium: () => evaluateConcilium(conciliumConfig()),
+  porta: () => evaluatePorta(portaConfig()),
   reliquary: () => evaluateReliquary(reliquaryConfig()),
   horizons: () => {
     let state = createHorizonState();
