@@ -19,7 +19,7 @@ import { replayHash, stableStringify } from "../src/replayHash";
 
 import { DysonSwarmSimulation } from "../src/simulation";
 import { heliosCassette } from "../src/heliosCassette";
-import { runPowerCampaign } from "../src/powerCampaign";
+import { runCivilizationCampaign } from "../src/powerCampaign";
 import { AutonomousFoundrySimulation } from "../src/foundry";
 import { DEFAULT_COLLECTOR_DESIGN, evaluateCollectorDesign } from "../src/collectorDesign";
 import { DEFAULT_DATACORE_CONFIG, OrbitalDatacoreSimulation } from "../src/datacore";
@@ -72,7 +72,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
     return sim.step(20);
   },
   concord: () =>
-    runPowerCampaign(
+    runCivilizationCampaign(
       heliosCassette(
         "Determinism gate",
         [

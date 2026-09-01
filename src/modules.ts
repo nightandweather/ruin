@@ -55,7 +55,7 @@ export const MODULES: readonly ModuleDefinition[] = [
     href: "./concord.html",
     label: "CONCORD",
     group: "energy",
-    blurb: "Replay an incident cassette and watch the power ledger settle survival-first",
+    blurb: "Replay one blackout into food and compute, cause by cause, on the state bus",
   },
   {
     id: "foundry",

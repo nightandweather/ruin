@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import { parseCassette, type CassetteAction, type IncidentCassette } from "./cassette";
 import { heliosCassette } from "./heliosCassette";
-import { runPowerCampaign, type PowerCampaignResult } from "./powerCampaign";
+import { runCivilizationCampaign, type CivilizationCampaignResult } from "./powerCampaign";
 import { FIRST_LIGHT_ACTIONS } from "./firstLight";
 import { fmt, LabShell, Metric, Options, Register, Title, Verdict, type Readiness } from "./LabKit";
 
@@ -50,9 +50,11 @@ function presetCassette(id: PresetId): IncidentCassette {
   );
 }
 
-function LedgerDiagram({ result }: { result: PowerCampaignResult }) {
+function LedgerDiagram({ result }: { result: CivilizationCampaignResult }) {
   const power = result.state.ledgers.power;
   const supply = Object.values(power.supply).reduce((sum, v) => sum + v, 0);
+  const short = (consumer: string) =>
+    (power.allocations[consumer] ?? 0) < (power.demand[consumer] ?? 0) - 1e-6;
   const rows = [
     { label: "GRID CAPABILITY (HELIOS)", mw: supply, color: "#9fd8c8" },
     { label: "SURVIVAL DEMAND", mw: power.demand.civilization ?? 0, color: "#8fd0ff" },
@@ -60,7 +62,15 @@ function LedgerDiagram({ result }: { result: PowerCampaignResult }) {
       label: "SURVIVAL ALLOCATION",
       mw: power.allocations.civilization ?? 0,
       color: "#8fd0ff",
-      shortfall: (power.allocations.civilization ?? 0) < (power.demand.civilization ?? 0) - 1e-6,
+      shortfall: short("civilization"),
+    },
+    { label: "AGRARIA DEMAND", mw: power.demand.agraria ?? 0, color: "#9fe08a", zoom: true },
+    {
+      label: "AGRARIA ALLOCATION",
+      mw: power.allocations.agraria ?? 0,
+      color: "#9fe08a",
+      zoom: true,
+      shortfall: short("agraria"),
     },
     { label: "DATACORE DEMAND", mw: power.demand.datacore ?? 0, color: "#e0c37a", zoom: true },
     {
@@ -68,24 +78,24 @@ function LedgerDiagram({ result }: { result: PowerCampaignResult }) {
       mw: power.allocations.datacore ?? 0,
       color: "#e0c37a",
       zoom: true,
-      shortfall: (power.allocations.datacore ?? 0) < (power.demand.datacore ?? 0) - 1e-6,
+      shortfall: short("datacore"),
     },
   ];
   const gridMax = Math.max(supply, power.demand.civilization ?? 0, 1);
-  // DATACORE draws megawatts against a grid measured in thousands of them;
-  // its rows get a zoomed scale so the shed is visible, with the ratio
-  // labeled rather than hidden.
-  const zoomMax = Math.max(power.demand.datacore ?? 0, 1e-6);
+  // The discretionary consumers draw megawatts against a grid measured in
+  // thousands of them; their rows get a zoomed scale so the shed is visible,
+  // with the ratio labeled rather than hidden.
+  const zoomMax = Math.max(power.demand.datacore ?? 0, power.demand.agraria ?? 0, 1e-6);
   const w = 620;
   return (
-    <svg viewBox={`0 0 ${w} 300`} role="img" aria-label="Power ledger settlement">
+    <svg viewBox={`0 0 ${w} 372`} role="img" aria-label="Power ledger settlement">
       <text x={30} y={20} fill="#7a938d" fontSize="10">
-        POWER LEDGER · SURVIVAL SERVED FIRST · GRID SCALE VS DATACORE ZOOM ×{fmt(gridMax / zoomMax, 0)}
+        POWER LEDGER · SURVIVAL SERVED FIRST · GRID SCALE VS CONSUMER ZOOM ×{fmt(gridMax / zoomMax, 0)}
       </text>
       {rows.map((row, index) => {
         const max = row.zoom ? zoomMax : gridMax;
         const width = Math.max(2, (row.mw / max) * (w - 260));
-        const y = 44 + index * 46;
+        const y = 40 + index * 44;
         return (
           <g key={row.label}>
             <text x={30} y={y + 11} fill={row.shortfall ? "#ff6b7c" : "#7a938d"} fontSize="9">
@@ -105,14 +115,14 @@ function LedgerDiagram({ result }: { result: PowerCampaignResult }) {
           </g>
         );
       })}
-      <text x={30} y={292} fill="#7a938d" fontSize="9">
+      <text x={30} y={364} fill="#7a938d" fontSize="9">
         SETTLEMENT CONSERVES SUPPLY · PRIORITY: {result.state.ledgers.power.priority.join(" → ")} → REST
       </text>
     </svg>
   );
 }
 
-function TileField({ result }: { result: PowerCampaignResult }) {
+function TileField({ result }: { result: CivilizationCampaignResult }) {
   const total = result.datacore.tileStates.length;
   const columns = 12;
   return (
@@ -135,7 +145,7 @@ export function ConcordApp() {
   const filePicker = useRef<HTMLInputElement>(null);
 
   const cassette = loaded?.cassette ?? presetCassette(preset);
-  const outcome = useMemo(() => runPowerCampaign(cassette), [cassette]);
+  const outcome = useMemo(() => runCivilizationCampaign(cassette), [cassette]);
 
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
@@ -167,12 +177,19 @@ export function ConcordApp() {
   }
 
   const { result } = outcome;
-  const grantRatio = result.requestedMW > 0 ? result.grantedMW / result.requestedMW : 1;
-  const readiness: Readiness = grantRatio >= 0.999 ? "GO" : grantRatio > 0 ? "CONDITIONAL" : "NO-GO";
+  const coreRatio = result.datacoreAskMW > 0 ? result.datacoreGrantMW / result.datacoreAskMW : 1;
+  const farmRatio = result.agrariaAskMW > 0 ? result.agrariaGrantMW / result.agrariaAskMW : 1;
+  const grantRatio = Math.min(coreRatio, farmRatio);
+  const readiness: Readiness = grantRatio >= 0.999 ? "GO" : farmRatio >= 0.999 ? "CONDITIONAL" : "NO-GO";
   const constraints = [
-    ...(grantRatio < 0.999
+    ...(coreRatio < 0.999
       ? [
-          `Survival demand consumed the surplus: DATACORE granted ${fmt(result.grantedMW, 2)} of ${fmt(result.requestedMW, 2)} MW`,
+          `Survival demand consumed the surplus: DATACORE granted ${fmt(result.datacoreGrantMW, 2)} of ${fmt(result.datacoreAskMW, 2)} MW`,
+        ]
+      : []),
+    ...(farmRatio < 0.999
+      ? [
+          `AGRARIA granted ${fmt(result.agrariaGrantMW, 3)} of ${fmt(result.agrariaAskMW, 3)} MW — ${fmt(result.agraria.peopleFed, 1)} fed against ${fmt(result.agrariaBaseline.peopleFed, 1)} under the full ask`,
         ]
       : []),
     ...(result.datacore.mode === "power-cap"
@@ -241,10 +258,22 @@ export function ConcordApp() {
       <section className="lb-panel lb-stage">
         <Title n="03" text="LEDGER SETTLEMENT" />
         <LedgerDiagram result={result} />
+        <Title n="04" text="CAUSAL TRAIL — EVERY CONSEQUENCE NAMES ITS CAUSE" />
+        <div className="cc-timeline">
+          {result.events.map((event) => (
+            <p key={event.id}>
+              <b>
+                E{event.id}
+                {event.causes.length > 0 ? `←${event.causes.join(",")}` : ""}
+              </b>{" "}
+              {event.module.toUpperCase()} · {event.detail}
+            </p>
+          ))}
+        </div>
       </section>
 
       <aside className="lb-panel lb-output">
-        <Title n="04" text="CAMPAIGN VERDICT" />
+        <Title n="05" text="CAMPAIGN VERDICT" />
         <Verdict
           readiness={readiness}
           label="DISCRETIONARY LOAD"
@@ -258,13 +287,25 @@ export function ConcordApp() {
             unit="GW"
             warning={result.helios.metrics.demandGW > result.helios.metrics.potentialGW}
           />
-          <Metric label="DATACORE ASK" value={fmt(result.requestedMW, 2)} unit="MW" />
           <Metric
             label="DATACORE GRANT"
-            value={fmt(result.grantedMW, 2)}
-            unit="MW"
-            warning={grantRatio < 0.999}
-            accent={grantRatio >= 0.999}
+            value={fmt(result.datacoreGrantMW, 2)}
+            unit={` / ${fmt(result.datacoreAskMW, 2)} MW`}
+            warning={coreRatio < 0.999}
+            accent={coreRatio >= 0.999}
+          />
+          <Metric
+            label="AGRARIA GRANT"
+            value={fmt(result.agrariaGrantMW, 3)}
+            unit={` / ${fmt(result.agrariaAskMW, 3)} MW`}
+            warning={farmRatio < 0.999}
+            accent={farmRatio >= 0.999}
+          />
+          <Metric
+            label="PEOPLE FED"
+            value={fmt(result.agraria.peopleFed, 1)}
+            unit={` / ${fmt(result.agrariaBaseline.peopleFed, 1)}`}
+            warning={result.agraria.peopleFed < result.agrariaBaseline.peopleFed - 1e-9}
           />
           <Metric
             label="DATACORE MODE"
@@ -277,16 +318,11 @@ export function ConcordApp() {
             warning={result.datacore.availableTiles < result.datacore.tileStates.length}
           />
           <Metric
-            label="VERIFIED COMPUTE"
-            value={fmt(result.datacore.verifiedComputePflops, 1)}
-            unit="PFLOPS"
-          />
-          <Metric
             label="OFFLINE NODES"
             value={fmt(result.helios.metrics.offlineCount + result.helios.metrics.isolatedCount, 0)}
           />
         </div>
-        <Title n="05" text="DATACORE TILE FIELD" />
+        <Title n="06" text="DATACORE TILE FIELD" />
         <TileField result={result} />
       </aside>
 
@@ -298,9 +334,12 @@ export function ConcordApp() {
             <b>CONSERVATION.</b> Settlement never allocates more than the grid supplies; a document that mints
             power is rejected. <b>DETERMINISM.</b> The same cassette settles into the same civilization, every
             time. <b>DECLARED PRIORITY.</b> Survival load outranks discretionary load by a visible list, not a
-            hidden rule — the shortfall lands where the ledger says it lands.
+            hidden rule — the shortfall lands where the ledger says it lands. <b>EXPLAINABLE.</b> Every
+            downstream consequence carries the ids of its causes, back to the incident itself.
           </p>
-          <p className="lb-basis">RUIN-STATE/1 POWER LEDGER · HELIOS ↔ DATACORE FIRST SLICE</p>
+          <p className="lb-basis">
+            RUIN-STATE/1 POWER LEDGER · HELIOS → AGRARIA + DATACORE · ADAPTERS, NOT IMPORTS
+          </p>
         </div>
       </section>
     </LabShell>
