@@ -1,0 +1,273 @@
+/*
+ * The front door.
+ *
+ * Deliberately quieter than the laboratories: a page of disciplined darkness
+ * and one accent, so the three findings carry the visual weight and the roster
+ * reads as a shelf rather than a menu. No orbital drift, no telemetry — the
+ * motion belongs behind the links, not in front of them.
+ */
+
+:root {
+  --gw-accent: #9fd8c8;
+  --gw-accent-strong: #d6f3ea;
+  --gw-alarm: #ff8a94;
+  --gw-border: #23292e;
+  --gw-ink: #8d979c;
+  --gw-ink-dim: #626c71;
+  color: #dfe4e2;
+  background: #070909;
+  font-family: Manrope, sans-serif;
+}
+body {
+  margin: 0;
+  background: radial-gradient(circle at 50% -10%, #101a1d, #090b10 45%, #06070a);
+}
+
+.gw {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 56px 28px 80px;
+  display: grid;
+  gap: 56px;
+}
+
+/* — masthead — */
+.gw-top {
+  display: grid;
+  gap: 18px;
+}
+.gw-brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+.gw-brand > span {
+  width: 50px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--gw-accent);
+  color: var(--gw-accent-strong);
+  font:
+    500 9px DM Mono,
+    monospace;
+}
+.gw-brand div {
+  display: grid;
+}
+.gw-brand strong {
+  font-size: 25px;
+  letter-spacing: 0.3em;
+}
+.gw-brand small,
+.gw-links a {
+  color: var(--gw-ink-dim);
+  font:
+    400 8px DM Mono,
+    monospace;
+  letter-spacing: 0.16em;
+}
+.gw-lede {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--gw-ink);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.gw-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.gw-links a {
+  text-decoration: none;
+  border-bottom: 1px solid #2b3338;
+  padding-bottom: 3px;
+}
+.gw-links a:hover,
+.gw-links a:focus-visible {
+  color: var(--gw-accent-strong);
+  border-bottom-color: var(--gw-accent);
+}
+
+/* — the three findings — */
+.gw-findings h2,
+.gw-shelf h3 {
+  margin: 0 0 14px;
+  color: var(--gw-ink-dim);
+  font:
+    500 9px DM Mono,
+    monospace;
+  letter-spacing: 0.24em;
+}
+.gw-shelf h3 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--gw-border);
+  padding-bottom: 8px;
+}
+.gw-shelf h3 small {
+  color: #4d565a;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  font-weight: 400;
+}
+.gw-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+  gap: 14px;
+}
+.gw-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--gw-border);
+  background: #0c0f13cc;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.gw-card:hover,
+.gw-card:focus-visible {
+  border-color: var(--gw-accent);
+  background: #0f1418;
+}
+.gw-card-tag {
+  color: var(--gw-accent);
+  font:
+    500 8px DM Mono,
+    monospace;
+  letter-spacing: 0.22em;
+}
+.gw-card strong {
+  font-size: 16px;
+  line-height: 1.45;
+  color: #eef3f1;
+}
+.gw-card p {
+  margin: 0;
+  color: var(--gw-ink);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.gw-card dl {
+  margin: 4px 0 0;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 10px;
+  border-top: 1px solid var(--gw-border);
+  padding-top: 12px;
+}
+.gw-card dl div {
+  display: grid;
+  gap: 3px;
+}
+.gw-card dt {
+  color: var(--gw-ink-dim);
+  font:
+    400 6.5px DM Mono,
+    monospace;
+  letter-spacing: 0.12em;
+}
+.gw-card dd {
+  margin: 0;
+  color: var(--gw-accent-strong);
+  font:
+    500 15px DM Mono,
+    monospace;
+}
+/* Colour is not the only channel: the alarm figures carry the mark too. */
+.gw-card dl div.alarm dd {
+  color: var(--gw-alarm);
+}
+.gw-card dl div.alarm dd::before {
+  content: var(--sig-terminal);
+  margin-right: 0.35em;
+  font-size: 0.62em;
+  vertical-align: 0.16em;
+}
+.gw-card em {
+  color: var(--gw-accent);
+  font:
+    500 8px DM Mono,
+    monospace;
+  font-style: normal;
+  letter-spacing: 0.18em;
+}
+
+/* — the roster — */
+.gw-roster {
+  display: grid;
+  gap: 34px;
+}
+.gw-shelf ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+  gap: 2px;
+}
+.gw-shelf a {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  text-decoration: none;
+  border-left: 2px solid transparent;
+}
+.gw-shelf a:hover,
+.gw-shelf a:focus-visible {
+  background: #0e1317;
+  border-left-color: var(--gw-accent);
+}
+.gw-shelf b {
+  color: var(--gw-accent-strong);
+  font:
+    500 10px DM Mono,
+    monospace;
+  letter-spacing: 0.16em;
+}
+.gw-shelf span {
+  color: var(--gw-ink);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* — foot — */
+.gw-foot {
+  display: grid;
+  gap: 10px;
+  border-top: 1px solid var(--gw-border);
+  padding-top: 22px;
+}
+.gw-foot p {
+  margin: 0;
+  max-width: 74ch;
+  color: var(--gw-ink-dim);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.gw-foot-meta {
+  font:
+    400 7.5px DM Mono,
+    monospace !important;
+  letter-spacing: 0.18em;
+}
+
+@media (max-width: 720px) {
+  .gw {
+    padding: 34px 16px 56px;
+    gap: 40px;
+  }
+  .gw-brand strong {
+    font-size: 20px;
+  }
+  .gw-card dl {
+    grid-auto-flow: row;
+  }
+}

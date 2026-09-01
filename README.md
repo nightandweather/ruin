@@ -54,7 +54,7 @@ This is science fiction built from real engineering ideas. It is not a claim tha
 
 > I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
 
-**[Run the public demo](https://nightandweather.github.io/ruin/)** · [What fiction assumes](docs/WHAT-FICTION-ASSUMES.md) · [The HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
+**[Open the laboratory](https://nightandweather.github.io/ruin/)** · [What fiction assumes](docs/WHAT-FICTION-ASSUMES.md) · [The HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In [HELIOS](https://nightandweather.github.io/ruin/helios.html), choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
 [![Watch the 72-second RUIN // HELIOS walkthrough](docs/assets/helios-first-light.png)](https://nightandweather.github.io/ruin/ruin-first-light-72s.mp4)
 
@@ -62,13 +62,13 @@ This is science fiction built from real engineering ideas. It is not a claim tha
 
 ## Civilization-operations interface
 
-[![RUIN civilization-operations HUD](docs/assets/ruin-hud-nominal.png)](https://nightandweather.github.io/ruin/)
+[![RUIN civilization-operations HUD](docs/assets/ruin-hud-nominal.png)](https://nightandweather.github.io/ruin/helios.html)
 
 The main situation room follows a deliberately restrained visual language: **NASA mission control × nuclear-submarine CIC × a forgotten civilization's oracle machine**. The star system dominates the screen; civilization vitals and event provenance sit at its edges; and a causal horizon shows how present power and communication failures can change population and institutional trust over 1, 10, and 50 years. Teal is reserved for verified state, amber for uncertainty, and red for irreversible outcomes. See the [HUD art direction and signal semantics](docs/HUD-DESIGN.md).
 
 The orbital map is inspectable rather than decorative. Click a sampled collector or one of the labeled civilization sites to open its live local-system record: control mode, health, link and thermal margins, delivered power, nearby operating-state composition, six authenticated neighbors, active system hazards, and the current autonomy recommendation. Neighbor controls move through the mesh without leaving the situation room.
 
-[![Live collector and neighborhood inspection](docs/assets/ruin-satellite-inspection.png)](https://nightandweather.github.io/ruin/)
+[![Live collector and neighborhood inspection](docs/assets/ruin-satellite-inspection.png)](https://nightandweather.github.io/ruin/helios.html)
 
 This is science-fiction software built from real engineering ideas. It is not a claim that a Dyson swarm can be built with present technology.
 
@@ -111,7 +111,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS and the module bar reaches every other laboratory. If you are looking for somewhere to start contributing, [there is a list](#contributing).
+Open the displayed local URL. `/` is the gateway — three findings and the whole roster on shelves — and every laboratory carries a module bar reaching all the others. If you are looking for somewhere to start contributing, [there is a list](#contributing).
 
 ```bash
 npm test

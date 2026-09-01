@@ -13,7 +13,8 @@ import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { MODULES } from "../src/modules";
+import { MODULE_GROUPS, MODULES } from "../src/modules";
+import { GatewayApp } from "../src/GatewayApp";
 import { App } from "../src/App";
 import { AegisApp } from "../src/AegisApp";
 import { AgrariaApp } from "../src/AgrariaApp";
@@ -91,6 +92,40 @@ afterEach(() => {
 describe("operator interfaces", () => {
   it("registers every app in the module registry, and vice versa", () => {
     expect(APPS.map((app) => app.id).sort()).toEqual(MODULES.map((module) => module.id).sort());
+  });
+
+  it("puts every laboratory on a shelf of the gateway, with a line describing it", () => {
+    const shelves = MODULE_GROUPS.map((group) => group.id);
+    for (const module of MODULES) {
+      expect(shelves, `${module.id} sits on no shelf`).toContain(module.group);
+      expect(module.blurb.length, `${module.id} has no blurb`).toBeGreaterThan(30);
+    }
+    // Empty shelves are a registry mistake, not a design choice.
+    for (const group of MODULE_GROUPS) {
+      expect(
+        MODULES.some((m) => m.group === group.id),
+        `${group.id} is empty`,
+      ).toBe(true);
+    }
+  });
+
+  it("renders the gateway with a link to every laboratory", () => {
+    host = document.createElement("div");
+    document.body.appendChild(host);
+    act(() => {
+      root = createRoot(host!);
+      root.render(
+        <StrictMode>
+          <GatewayApp />
+        </StrictMode>,
+      );
+    });
+    const hrefs = [...host.querySelectorAll("a")].map((a) => a.getAttribute("href"));
+    for (const module of MODULES) {
+      expect(hrefs, `gateway does not link ${module.label}`).toContain(module.href);
+    }
+    // The front door is not itself a laboratory and must not link to itself.
+    expect(hrefs).not.toContain("./");
   });
 
   for (const { id, Component } of APPS) {
