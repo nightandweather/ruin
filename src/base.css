@@ -8,7 +8,12 @@
  * Web fonts are loaded from each HTML entry point with a `<link>` rather than
  * a CSS `@import`, so the browser can request them while it is still parsing
  * the document instead of after the module stylesheet has downloaded.
+ *
+ * signal.css is pulled in here because every page renders the module bar, so
+ * the shape vocabulary that keeps meaning off colour alone reaches all of them.
  */
+
+@import "./signal.css";
 
 * {
   box-sizing: border-box;

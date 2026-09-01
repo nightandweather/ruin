@@ -1,7 +1,7 @@
 /*
  * Shared chassis for the operations laboratories (HYGEIA, KESSLER, THEMIS,
- * RELIQUARY), following the precedent of civilization.css, which GENESIS and
- * PROMETHEUS already share. Each module keeps its identity by setting the
+ * RELIQUARY, WATCHFLOOR, VERITAS, CENSUS), following the precedent of
+ * civilization.css, which GENESIS and PROMETHEUS already share. Each module keeps its identity by setting the
  * --lb-* palette on its own <main> class; everything structural lives here.
  */
 
@@ -399,4 +399,119 @@ input {
   --lb-border: #4e422b;
   --lb-panel: #12100aee;
   --lb-ground: radial-gradient(circle at 50% 36%, #291f0f, #120e08 55%, #0a0805);
+}
+
+.watchfloor {
+  --lb-accent: #ff8a94;
+  --lb-accent-strong: #ffc4c9;
+  --lb-border: #552c32;
+  --lb-panel: #150a0cee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #2c1016, #140809 55%, #0a0505);
+}
+.veritas {
+  --lb-accent: #c3e05a;
+  --lb-accent-strong: #e2f2a4;
+  --lb-border: #454e26;
+  --lb-panel: #101208ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #212a10, #10140a 55%, #070905);
+}
+.chronos {
+  --lb-accent: #c0a8ff;
+  --lb-accent-strong: #e6dcff;
+  --lb-border: #3b3550;
+  --lb-panel: #0d0b14ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #1a1430, #0c0a14 55%, #06050a);
+}
+.census {
+  --lb-accent: #d6d9df;
+  --lb-accent-strong: #f0f2f6;
+  --lb-border: #3a3f4a;
+  --lb-panel: #0e1014ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #1a1d24, #0c0e12 55%, #070809);
+}
+
+/* — CENSUS cohort roll — */
+.cs-roll {
+  display: grid;
+  gap: 3px;
+}
+.cs-roll p {
+  margin: 0;
+  padding: 4px 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) 1fr 62px 74px;
+  align-items: baseline;
+  gap: 8px;
+  border-left: 2px solid var(--lb-accent);
+  background: #14171c66;
+  font: 400 8px DM Mono;
+  color: var(--lb-ink);
+}
+.cs-roll p.excluded {
+  border-left-color: var(--lb-danger);
+  color: var(--lb-ink-dim);
+}
+.cs-roll p b {
+  color: var(--lb-accent-strong);
+  letter-spacing: 0.09em;
+}
+.cs-roll p.excluded b {
+  color: var(--lb-danger);
+}
+.cs-roll p i,
+.cs-roll p em {
+  font-style: normal;
+  text-align: right;
+}
+.cs-roll p em {
+  color: var(--lb-danger);
+}
+
+/*
+ * — redundant encoding —
+ * signal.css fixes the vocabulary; these rules bind it to the chassis. Every
+ * state below is already expressed in colour, and must also be expressed in
+ * shape. See docs/HUD-DESIGN.md.
+ */
+.lb-state b::before,
+.lb-verdict b::before {
+  content: var(--sig-nominal);
+  margin-right: 0.45em;
+  font-size: 0.78em;
+  vertical-align: 0.08em;
+}
+.lb-state b.conditional::before,
+.lb-verdict.conditional b::before {
+  content: var(--sig-caution);
+}
+.lb-state b.no-go::before,
+.lb-verdict.no-go b::before {
+  content: var(--sig-terminal);
+}
+.lb-metric.warning b::before {
+  content: var(--sig-terminal);
+  margin-right: 0.4em;
+  font-size: 0.72em;
+  vertical-align: 0.1em;
+}
+.lb-register p::before {
+  content: var(--sig-terminal);
+  margin-right: 0.5em;
+  font-size: 0.9em;
+}
+/* Tile states: lit, held, scrubbing, dark — four fills that must also be four
+   shapes, because the field carries no per-tile label. */
+.cc-tiles i.active {
+  border-radius: 50%;
+}
+.cc-tiles i.standby {
+  border-radius: 50%;
+}
+.cc-tiles i.scrub {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.82);
+}
+.cc-tiles i.offline {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }

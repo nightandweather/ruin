@@ -7,7 +7,18 @@ import {
   type ReliquaryConfig,
   type ReliquaryIncident,
 } from "./reliquary";
-import { fmt, LabShell, Metric, Options, Range, Register, Title, Verdict } from "./LabKit";
+import {
+  fmt,
+  LabShell,
+  Metric,
+  Options,
+  Range,
+  Register,
+  SeriesKey,
+  SERIES_DASH,
+  Title,
+  Verdict,
+} from "./LabKit";
 
 const INCIDENTS: ReadonlyArray<{ id: ReliquaryIncident; name: string; detail: string }> = [
   { id: "none", name: "NOMINAL", detail: "Stewardship staffed; readers available" },
@@ -53,17 +64,17 @@ function SurvivalChart({ result }: { result: ReturnType<typeof evaluateReliquary
         fill="none"
         stroke="#b79cff"
         strokeWidth="1.2"
-        strokeDasharray="5 3"
+        strokeDasharray={SERIES_DASH.long}
       />
       <line x1={30} y1={h - 40} x2={w - 30} y2={h - 40} stroke="#4e422b" />
-      <g fontSize="9">
-        <text x={w - 250} y={h - 14} fill="#e0c37a">
-          — ARCHIVE SURVIVAL
-        </text>
-        <text x={w - 120} y={h - 14} fill="#b79cff">
-          -- RESTORE KNOWLEDGE
-        </text>
-      </g>
+      <SeriesKey
+        right={w - 30}
+        y={h - 14}
+        items={[
+          { label: "ARCHIVE SURVIVAL", color: "#e0c37a" },
+          { label: "RESTORE KNOWLEDGE", color: "#b79cff", dash: SERIES_DASH.long },
+        ]}
+      />
     </svg>
   );
 }

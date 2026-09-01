@@ -79,6 +79,16 @@ Model which machines can reproduce which components, the bootstrapping gap for e
 
 Use the real-star survey as the map for probes and settlements. Add multi-year signal delay, divergent local policies, data reconciliation, and settlements that cannot wait for Earth to approve every action.
 
+## Delivered alongside — the human and epistemic layer
+
+Three laboratories now sit underneath the physical ones. They were built out of order because RUIN's stated subject is silent failure, and none of the modules that preceded them could produce one: every fault-response plan assumed an operator who decides, every model assumed a model that still describes the world, and every survival figure assumed a settled definition of who is counted.
+
+- **WATCHFLOOR** prices the operator step SENTINEL leaves free — alarm flooding, attention saturation, handover context loss, and criticals lost either by volume or by a crew that stopped believing the alarms. Its invariant withdraws irreversible authority from a saturated floor.
+- **VERITAS** audits the laboratory's own models for the years between becoming wrong and anyone being able to say so. Run against this repository's portfolio it fails the repository's own least-grounded modules, which is the result it was built to be able to produce.
+- **CENSUS** settles the ledger every survival metric is divided by, and refuses to publish a headline that diverges from the actual rate without its prior-definition ledger. It reproduces the Season 01 figure from its default configuration.
+
+Each remains isolated and deterministic. The next work for all three is the same as everything else in this file: adapters onto the civilization state bus, so a saturated floor, a decertified model, and an excluded cohort become cross-module consequences rather than local readings.
+
 ## Speculative frontier
 
 These remain research briefs until the lower infrastructure exists:
@@ -110,4 +120,4 @@ Choose the next issue by this order:
 4. It has at least one trustworthy physical or operational reference.
 5. It creates a meaningful operator decision within a one-screen prototype.
 
-By that rule, **LUMEN is next**, followed by the unified campaign state and ASCENT.
+By that rule, **LUMEN is next**, followed by the unified campaign state and ASCENT. WATCHFLOOR, VERITAS, and CENSUS satisfy rules 2 through 5 on their own and are now waiting on rule 1 — the state-bus adapters that would let them constrain the other laboratories instead of describing them.

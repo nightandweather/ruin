@@ -39,6 +39,10 @@ export const MODULES: readonly ModuleDefinition[] = [
   { id: "mnemosyne", page: "mnemosyne.html", href: "./mnemosyne.html", label: "MNEMOSYNE" },
   { id: "themis", page: "themis.html", href: "./themis.html", label: "THEMIS" },
   { id: "sentinel", page: "sentinel.html", href: "./sentinel.html", label: "SENTINEL" },
+  { id: "watchfloor", page: "watchfloor.html", href: "./watchfloor.html", label: "WATCHFLOOR" },
+  { id: "veritas", page: "veritas.html", href: "./veritas.html", label: "VERITAS" },
+  { id: "census", page: "census.html", href: "./census.html", label: "CENSUS" },
+  { id: "chronos", page: "chronos.html", href: "./chronos.html", label: "CHRONOS" },
   { id: "reliquary", page: "reliquary.html", href: "./reliquary.html", label: "RELIQUARY" },
   { id: "horizons", page: "horizons.html", href: "./horizons.html", label: "HORIZONS" },
 ];

@@ -6,7 +6,18 @@ import {
   type KesslerConfig,
   type KesslerIncident,
 } from "./kessler";
-import { fmt, LabShell, Metric, Options, Range, Register, Title, Verdict } from "./LabKit";
+import {
+  fmt,
+  LabShell,
+  Metric,
+  Options,
+  Range,
+  Register,
+  SeriesKey,
+  SERIES_DASH,
+  Title,
+  Verdict,
+} from "./LabKit";
 
 const INCIDENTS: ReadonlyArray<{ id: KesslerIncident; name: string; detail: string }> = [
   { id: "none", name: "NOMINAL", detail: "Catalog current; avoidance armed" },
@@ -61,20 +72,30 @@ function TrajectoryChart({ result }: { result: ReturnType<typeof evaluateKessler
         </g>
       )}
       <path d={path((p) => p.tracked)} fill="none" stroke="#ff9a6b" strokeWidth="1.6" />
-      <path d={path((p) => p.untracked)} fill="none" stroke="#ff6b7c" strokeWidth="1.6" />
-      <path d={path((p) => p.swarm)} fill="none" stroke="#7fd8e8" strokeWidth="1.2" strokeDasharray="5 3" />
+      <path
+        d={path((p) => p.untracked)}
+        fill="none"
+        stroke="#ff6b7c"
+        strokeWidth="1.6"
+        strokeDasharray={SERIES_DASH.dashed}
+      />
+      <path
+        d={path((p) => p.swarm)}
+        fill="none"
+        stroke="#7fd8e8"
+        strokeWidth="1.2"
+        strokeDasharray={SERIES_DASH.long}
+      />
       <line x1={30} y1={h - 30} x2={w - 30} y2={h - 30} stroke="#55352b" />
-      <g fontSize="9">
-        <text x={w - 200} y={h - 8} fill="#ff9a6b">
-          — TRACKED
-        </text>
-        <text x={w - 130} y={h - 8} fill="#ff6b7c">
-          — UNTRACKED
-        </text>
-        <text x={w - 52} y={h - 8} fill="#7fd8e8">
-          -- SWARM
-        </text>
-      </g>
+      <SeriesKey
+        right={w - 30}
+        y={h - 8}
+        items={[
+          { label: "TRACKED", color: "#ff9a6b" },
+          { label: "UNTRACKED", color: "#ff6b7c", dash: SERIES_DASH.dashed },
+          { label: "SWARM", color: "#7fd8e8", dash: SERIES_DASH.long },
+        ]}
+      />
     </svg>
   );
 }

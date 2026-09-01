@@ -7,9 +7,46 @@
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
 [![Live demo](https://img.shields.io/badge/live-demo-ffb456.svg)](https://nightandweather.github.io/ruin/)
 
-RUIN is a speculative civilization-operations laboratory. **HELIOS**, its first module, is a deterministic browser simulation of an autonomous Dyson swarm: 10,000 independent solar collectors operating at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures.
+RUIN is a laboratory of twenty-seven deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing. **HELIOS**, its first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures.
 
 > I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
+
+## Start here
+
+Three results, each one link away. Every laboratory can be opened in a named state, so these are the actual running models rather than screenshots of them.
+
+### A 99.97% survival report that is true of its denominator and of nothing else
+
+**[Open CENSUS](https://nightandweather.github.io/ruin/census.html)**
+
+A survival rate is a fraction, and the denominator is a definition of who counts as a person. CENSUS ships with six cohorts and a life-support budget that does not cover all of them. Its default allocation policy serves the counted population to completion first, so the people on the roll never experience the shortage at all.
+
+The headline reads **99.97%**. The actual rate is **94.98%**, and 20,321 deaths never enter a report.
+
+Count everyone instead and the headline falls to **96.37%** — while 5,648 more people are alive. The honest number is worse and it is the only one the model will publish. Switch off the dual ledger and it publishes nothing at all: **[the same run with disclosure disabled](https://nightandweather.github.io/ruin/census.html?disclose=off)** returns `PUBLICATION WITHHELD`, refused by the model rather than flagged for an operator.
+
+### A verification audit that fails this repository's own models
+
+**[Open VERITAS](https://nightandweather.github.io/ruin/veritas.html)**
+
+VERITAS measures the years between a model becoming wrong enough to invalidate decisions and anyone being able to say so. Run against RUIN's own portfolio, rated by the sourced fraction its [engineering notes](docs/ENGINEERING-NOTES.md) declare, it does not spare the repository that contains it:
+
+| Model                                                                                              | Sourced | Silent window |
+| -------------------------------------------------------------------------------------------------- | ------- | ------------- |
+| [HELIOS thermal derate](https://nightandweather.github.io/ruin/veritas.html?model=helios-thermal)  | 80%     | none          |
+| [ODYSSEY link budget](https://nightandweather.github.io/ruin/veritas.html?model=odyssey-beam)      | 65%     | none          |
+| [AGRARIA crop yield](https://nightandweather.github.io/ruin/veritas.html?model=agraria-yield)      | 50%     | none          |
+| [KESSLER cascade](https://nightandweather.github.io/ruin/veritas.html?model=kessler-cascade)       | 35%     | 12 years      |
+| [MNEMOSYNE evidence](https://nightandweather.github.io/ruin/veritas.html?model=mnemosyne-identity) | 15%     | 11 years      |
+| [IGNIS fusion branch](https://nightandweather.github.io/ruin/veritas.html?model=ignis-fusion)      | 5%      | 4 years       |
+
+Three of this repository's modules open a window in which their own certificate says nothing is wrong while the answer is already unusable.
+
+### A watch that loses interventions with nothing on the board looking wrong
+
+**[Open WATCHFLOOR on the cry-wolf watch](https://nightandweather.github.io/ruin/watchfloor.html?incident=cry-wolf)**
+
+Every fault-response plan in this repository ends with _the operator decides_. WATCHFLOOR prices that step. On the cry-wolf watch the queue peaks at 17 against a cap of 40, authority is never withdrawn, and every display stays calm — while 1.43 real critical alarms are written off as spurious by a crew that has learned not to believe them.
 
 **[Run the public demo](https://nightandweather.github.io/ruin/)** · [Read the HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
@@ -37,6 +74,8 @@ RUIN is also being tested as a human-scale science-fiction narrative. **Season 0
 
 **[Read Episode 01 — 제외된 사람들](fiction/season-01/episode-01.md)** · [Narrative continuity and status](fiction/README.md)
 
+The episode's central mechanism is now executable: **CENSUS** reproduces the 99.97% figure from its default configuration and refuses to publish it once the divergence is disclosed.
+
 ## The RUIN laboratory
 
 RUIN is a home for executable science-fiction infrastructure. Each concept begins as a sourced engineering brief, defines what must never happen, and grows into a deterministic simulation that lets an operator experience the tradeoffs.
@@ -48,6 +87,11 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Stellar survey](concepts/stellar-survey.md) — source-backed ranking of nearby systems for an industrial swarm bootstrap.
 - [Fleet operations](concepts/fleet-operations.md) — convoy protection, rescue, logistics, and damage control under delayed command.
 - [Technology tree](concepts/technology-tree.md) — a tested path from autonomous foothold to system-scale and speculative infrastructure.
+- [Personhood accounting](concepts/census-personhood-accounting.md) — the definition a survival rate is divided by, and what a restated baseline hides.
+- [Operator loading](concepts/watchfloor-operator-loading.md) — alarm flooding, handover context loss, and the crew every safety plan assumes.
+- [Model divergence](concepts/veritas-model-divergence.md) — drift, envelope exits, and certificates that outlive their evidence.
+- [Simultaneity](concepts/chronos-simultaneity.md) — causal order, command freshness, and the radius inside which a shared present exists.
+- [Gravitational catapult](concepts/funda-gravitational-catapult.md) — cargo moved on borrowed orbital momentum, and the corridor nobody can see in time.
 - [Concept template](concepts/template.md) — a repeatable path from a wild idea to testable software.
 
 HELIOS is the first executable module rather than the limit of the repository.
@@ -59,7 +103,18 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS; the module bar links every laboratory, including `/horizons.html` for the connected post-stellar civilization network, `/prometheus.html` for civilian fission power and NEP, `/genesis.html` for the stellar bootstrap campaign, `/mnemosyne.html` for neural identity evidence, and `/sentinel.html` for system-wide fault response.
+Open the displayed local URL. `/` runs HELIOS and the module bar reaches every other laboratory.
+
+```bash
+npm test
+npm run build
+```
+
+`npm test` includes two structural gates. `tests/determinism.test.ts` replays every module twice and compares both the result and its hash, and its registry must name every module — a new laboratory cannot land without a replayable run. `tests/signalEncoding.test.ts` derives the list of state selectors from the stylesheets themselves, so a state expressed in colour alone fails CI the moment it is written.
+
+## The executable modules
+
+A laboratory's opening state can be named in the query string — `census.html?policy=uniform`, `veritas.html?model=ignis-fusion`, `watchfloor.html?incident=cry-wolf` — so a link can point at a specific claim rather than at a control panel. An unknown value falls back to the module's own default.
 
 - **HELIOS** — inject a relay blackout, thermal wave, manufacturing cascade, demand spike, or directional debris corridor and watch the controller redistribute safe capacity.
 - **CONCORD** — replay any incident cassette through the civilization state bus and watch the power ledger settle survival-first, down to the compute tiles that go dark to pay for the shortfall.
@@ -83,13 +138,12 @@ Open the displayed local URL. `/` runs HELIOS; the module bar links every labora
 - **MNEMOSYNE** — test structural, synaptic, dynamic, glial, molecular, memory, behavioral, embodiment, consent, and fork evidence without claiming that a mind or consciousness has been transferred.
 - **THEMIS** — operate the autonomous civilization executive: light-lag against decision windows, evidence floors by action class, physically receivable veto pauses, and irreversible actions that never execute unproven.
 - **SENTINEL** — inspect 63 failure-response plans across every executable module, from early indicators and deterministic safing to fallback operation, human decisions, recovery evidence, and non-negotiable safety invariants.
+- **WATCHFLOOR** — price the step every fault-response plan leaves free: run one watch minute by minute while alarms burst, attention decays, handover destroys context, and a crew that stopped believing the alarms writes off a real one.
+- **VERITAS** — audit the laboratory's own models for the years between becoming wrong and anyone being able to say so, and watch its least-grounded modules fail their own truth audit.
+- **CENSUS** — settle the ledger every survival metric is divided by: change who counts as a person and watch a 99.97% survival report appear without a single life improving.
+- **CHRONOS** — record a civilization's events when no two sites share a present: watch order-by-receipt invent 124 sequences the universe does not have, and order-by-local-clock file effects ahead of their causes.
 - **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
-
-```bash
-npm test
-npm run build
-```
 
 ## What is simulated
 
@@ -118,6 +172,9 @@ npm run build
 - An autonomous civilian drone-swarm architect coupling per-node mass, delta-v, solar power, battery hold, and heat rejection to formation spacing, crosslink range, distributed quorum, collision reserve, and light-time autonomy.
 - A civilian fission and NEP architect coupling thermal power, conversion, electrical loads, radiators, radiation separation, propellant, thrust, and degraded safe states.
 - A cross-module stellar bootstrap campaign linking PROMETHEUS, CORVUS, FOUNDRY, PROGENITOR, HELIOS, AGRARIA, and GRAVITAS into evidence-gated milestones.
+- A minute-resolved control-room model coupling bursty alarm arrivals, fatigue, task saturation, handover context loss, and cry-wolf response decay to two distinct ways of losing a critical alarm — buried by volume, or written off as spurious.
+- A verification audit of RUIN's own model portfolio, separating the error the world holds from the error any observation programme can report, and measuring the silent window between them.
+- A personhood ledger in which the reported survival rate, the prior definition's rate, and the actual rate are computed side by side, and publication is refused when they diverge.
 - A neural identity-evidence laboratory that refuses to equate a connectome, behavioral imitation, or copied memory with demonstrated continuity and treats every fork as independent personhood.
 - A cross-system FDIR registry covering 21 executable modules with 63 detected, isolated, safed, fallback-capable, evidence-gated recovery plans and explicit dependency blast radius.
 - A deterministic post-stellar causal network linking fourteen speculative systems through explicit resources, dependencies, catastrophic failures, safety invariants, recovery policies, and century-scale civilization projections.

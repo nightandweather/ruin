@@ -1,5 +1,6 @@
 import { DEFAULT_CONFIG, DysonSwarmSimulation } from "./simulation";
 import type { ScenarioType, SimulationSnapshot } from "./types";
+import { replayHash } from "./replayHash";
 
 export type FirstLightAction =
   | { tick: number; kind: "inject"; scenario: ScenarioType; bearingDeg?: number; label: string }
@@ -91,9 +92,8 @@ function evidence(snapshot: SimulationSnapshot): InvariantEvidence[] {
     },
   ];
 }
-function hashReport(checkpoints: readonly CampaignCheckpoint[]) {
-  let h = 2166136261;
-  const text = JSON.stringify(
+const hashReport = (checkpoints: readonly CampaignCheckpoint[]) =>
+  replayHash(
     checkpoints.map((c) => [
       c.tick,
       c.label,
@@ -104,12 +104,6 @@ function hashReport(checkpoints: readonly CampaignCheckpoint[]) {
       c.invariants.map((i) => i.passed),
     ]),
   );
-  for (let i = 0; i < text.length; i++) {
-    h ^= text.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0).toString(16).padStart(8, "0");
-}
 function execute() {
   const sim = new DysonSwarmSimulation(),
     checkpoints: CampaignCheckpoint[] = [];

@@ -479,3 +479,11 @@ input {
     position: relative;
   }
 }
+
+/* — redundant encoding — see src/signal.css and docs/HUD-DESIGN.md. */
+.cx-metric.warning b::before {
+  content: var(--sig-terminal);
+  margin-right: 0.4em;
+  font-size: 0.72em;
+  vertical-align: 0.1em;
+}

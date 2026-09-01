@@ -18,6 +18,8 @@ import { App } from "../src/App";
 import { AegisApp } from "../src/AegisApp";
 import { AgrariaApp } from "../src/AgrariaApp";
 import { AtlasApp } from "../src/AtlasApp";
+import { CensusApp } from "../src/CensusApp";
+import { ChronosApp } from "../src/ChronosApp";
 import { CollectorApp } from "../src/CollectorApp";
 import { ConcordApp } from "../src/ConcordApp";
 import { CorvusApp } from "../src/CorvusApp";
@@ -38,12 +40,16 @@ import { PrometheusApp } from "../src/PrometheusApp";
 import { ReliquaryApp } from "../src/ReliquaryApp";
 import { SentinelApp } from "../src/SentinelApp";
 import { ThemisApp } from "../src/ThemisApp";
+import { VeritasApp } from "../src/VeritasApp";
+import { WatchfloorApp } from "../src/WatchfloorApp";
 
 const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "helios", Component: App },
   { id: "aegis", Component: AegisApp },
   { id: "agraria", Component: AgrariaApp },
   { id: "atlas", Component: AtlasApp },
+  { id: "census", Component: CensusApp },
+  { id: "chronos", Component: ChronosApp },
   { id: "collector", Component: CollectorApp },
   { id: "concord", Component: ConcordApp },
   { id: "corvus", Component: CorvusApp },
@@ -64,6 +70,8 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "reliquary", Component: ReliquaryApp },
   { id: "sentinel", Component: SentinelApp },
   { id: "themis", Component: ThemisApp },
+  { id: "veritas", Component: VeritasApp },
+  { id: "watchfloor", Component: WatchfloorApp },
 ];
 
 let root: Root | null = null;

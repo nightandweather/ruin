@@ -12,6 +12,69 @@ export const fmt = (value: number, digits = 1) =>
 
 export type Readiness = "GO" | "CONDITIONAL" | "NO-GO";
 
+/**
+ * Dash signatures for chart series.
+ *
+ * Colour never carries meaning alone in this interface, and a chart legend is
+ * the easiest place to break that rule: two series in different hues are one
+ * colour-vision difference away from being the same line. Every series takes a
+ * pattern as well as a hue, and `SeriesKey` draws the pattern in the legend so
+ * the two are matched by shape rather than by memory.
+ */
+export const SERIES_DASH = {
+  solid: undefined,
+  dashed: "7 4",
+  dotted: "2 3",
+  long: "5 3",
+  dotDash: "9 3 2 3",
+} as const;
+
+export type SeriesDash = (typeof SERIES_DASH)[keyof typeof SERIES_DASH];
+
+export interface SeriesSpec {
+  label: string;
+  color: string;
+  dash?: SeriesDash;
+}
+
+/**
+ * In-chart legend drawing each series as a line sample in its own pattern.
+ * Laid out right-aligned to `right`, in the order given.
+ */
+export function SeriesKey({ right, y, items }: { right: number; y: number; items: readonly SeriesSpec[] }) {
+  const SAMPLE = 16;
+  const GAP = 5;
+  const CHAR = 5.1;
+  const PAD = 14;
+  const widths = items.map((item) => SAMPLE + GAP + item.label.length * CHAR + PAD);
+  const total = widths.reduce((sum, width) => sum + width, 0);
+  let cursor = right - total;
+  return (
+    <g fontSize="9">
+      {items.map((item, index) => {
+        const x = cursor;
+        cursor += widths[index];
+        return (
+          <g key={item.label}>
+            <line
+              x1={x}
+              y1={y - 3}
+              x2={x + SAMPLE}
+              y2={y - 3}
+              stroke={item.color}
+              strokeWidth="1.6"
+              strokeDasharray={item.dash}
+            />
+            <text x={x + SAMPLE + GAP} y={y} fill={item.color}>
+              {item.label}
+            </text>
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
 export function LabShell({
   module,
   sigil,

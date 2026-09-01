@@ -1,0 +1,69 @@
+/*
+ * The redundant channel for RUIN's signal semantics.
+ *
+ * HUD-DESIGN.md assigns meaning to three hues — teal for verified state, amber
+ * for bounded uncertainty, red for irreversible loss. A hue alone is not a
+ * signal: roughly one in twelve men and one in two hundred women cannot
+ * separate this palette reliably, and no operator sees it at all through a
+ * monochrome camera, a printed incident report, or a failing display.
+ *
+ * So every state that is expressed in colour is also expressed in shape. The
+ * vocabulary is fixed here once; each stylesheet binds it to its own class
+ * names, next to the component it belongs to.
+ *
+ *   ●  ◆  ▲   glyphs, for state carried by a piece of text
+ *   neutral / diamond / triangle   for state carried by a mark
+ *
+ * A mark's neutral form is whatever shape that component already uses — the
+ * HELIOS status dots are squares, the lab tiles are circles — because the
+ * point of the neutral form is to be the thing a caution or hazard departs
+ * from, not to be a particular shape. Caution rotates that mark 45 degrees;
+ * hazard replaces it with a triangle. That ordering is the ISO one for
+ * routine, caution and hazard, and it survives greyscale, low resolution,
+ * and a photocopier.
+ */
+
+:root {
+  --sig-nominal: "●";
+  --sig-caution: "◆";
+  --sig-terminal: "▲";
+}
+
+/*
+ * Glyph markers for text that carries state. `aria-hidden` is unnecessary —
+ * generated content is not exposed as text by assistive technology, and the
+ * accessible name for these values always comes from an adjacent label.
+ */
+.sig-nominal::before,
+.sig-caution::before,
+.sig-terminal::before {
+  margin-right: 0.4em;
+  font-size: 0.82em;
+  vertical-align: 0.06em;
+}
+.sig-nominal::before {
+  content: var(--sig-nominal);
+}
+.sig-caution::before {
+  content: var(--sig-caution);
+}
+.sig-terminal::before {
+  content: var(--sig-terminal);
+}
+
+/*
+ * Shape modifiers for elements that are already a mark rather than text —
+ * status dots, event-stream bullets, tile fields. Size is left to the caller
+ * so an existing mark keeps its own dimensions.
+ */
+.sig-shape-nominal {
+  border-radius: 50%;
+}
+.sig-shape-caution {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.86);
+}
+.sig-shape-terminal {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}

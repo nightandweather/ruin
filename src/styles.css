@@ -1573,3 +1573,117 @@ footer {
     monospace;
   letter-spacing: 0.08em;
 }
+
+/*
+ * — redundant encoding —
+ * signal.css fixes the vocabulary; these rules bind it to the HELIOS HUD.
+ *
+ * Known limit: the orbital map draws ten thousand collectors at two pixels
+ * each, where a shape is not resolvable and colour is the only channel
+ * available. The mode legend below carries the same information as labelled
+ * counts, and selecting any collector opens its state as text. See
+ * docs/HUD-DESIGN.md.
+ */
+.system-status.warning i {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.86);
+}
+.system-status.critical i {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  box-shadow: none;
+}
+.dot.isolated,
+.dot.thermal {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.86);
+}
+.dot.offline {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+/* Event severity is a bullet with no severity text beside it. */
+.event-stream article.warning::before {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.9);
+}
+.event-stream article.critical::before {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+  box-shadow: none;
+}
+.metric.alert strong::before,
+.inspection-metrics b.warning::before {
+  content: var(--sig-caution);
+  margin-right: 0.4em;
+  font-size: 0.72em;
+  vertical-align: 0.1em;
+}
+.metric.critical strong::before {
+  content: var(--sig-terminal);
+  margin-right: 0.4em;
+  font-size: 0.72em;
+  vertical-align: 0.1em;
+}
+/* A neighbour's operating mode is a dot beside an id and a link percentage,
+   with no mode text of its own. */
+.neighbor-list button > i.isolated,
+.neighbor-list button > i.thermal {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.86);
+}
+.neighbor-list button > i.offline {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+/* Marks inside the local-system record and the causal horizon. */
+.neighbor-list button > i.curtailed,
+.satellite-inspector.isolated .inspection-status > i,
+.satellite-inspector.thermal .inspection-status > i,
+.satellite-inspector.curtailed .inspection-status > i {
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.86);
+}
+.satellite-inspector.offline .inspection-status > i {
+  border-radius: 0;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+/* The horizon marker holds its own numeral, so the frame changes shape rather
+   than rotating and taking the digit with it. */
+.horizon-track article.uncertain > i {
+  border-radius: 1px;
+}
+.horizon-track article.irreversible > i {
+  border-radius: 0;
+}
+.horizon-track article.uncertain > strong::before {
+  content: var(--sig-caution);
+  margin-right: 0.4em;
+  font-size: 0.6em;
+  vertical-align: 0.18em;
+}
+.horizon-track article.irreversible > strong::before {
+  content: var(--sig-terminal);
+  margin-right: 0.4em;
+  font-size: 0.6em;
+  vertical-align: 0.18em;
+}
+.campaign-invariants p.fail > i::before {
+  content: var(--sig-terminal);
+  margin-right: 0.4em;
+  font-size: 0.85em;
+}
+.hazard-list b:not(:only-child)::before {
+  content: var(--sig-caution);
+  margin-right: 0.4em;
+  font-size: 0.85em;
+}
+/* The signal-latency key is three one-pixel rules. Solid, dashed, dotted —
+   the same ordering the charts use. */
+.signal-key .delayed {
+  background-image: repeating-linear-gradient(90deg, #d7a65f 0 4px, transparent 4px 7px);
+}
+.signal-key .lost {
+  background-image: repeating-linear-gradient(90deg, #d85955 0 1.5px, transparent 1.5px 4px);
+}
