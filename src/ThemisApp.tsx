@@ -1,4 +1,9 @@
 import { useMemo, useState } from "react";
+import { settleModuleAuthority, type AuthorityInputs } from "./authorityBus";
+import { evaluateWatchfloor, watchfloorConfig } from "./watchfloor";
+import { evaluateVeritas, veritasConfig, withModel } from "./veritas";
+import { censusConfig, evaluateCensus, CENSUS_COHORTS, type CensusCohortId } from "./census";
+import { chronosConfig, evaluateChronos } from "./chronos";
 import {
   ACTION_META,
   evaluateThemis,
@@ -86,9 +91,58 @@ function DecisionTimeline({
   );
 }
 
+/**
+ * The civilization bus, as four switches.
+ *
+ * Each feed runs its own laboratory at a fixed configuration — nominal, or the
+ * incident that module exists to expose — and posts the resulting authority
+ * claim. The point the panel makes is that THEMIS does not get a vote: the
+ * envelope is settled from what the other modules report, and the executive
+ * reads it as a ceiling.
+ */
+type BusFeedId = "watchfloor" | "veritas" | "census" | "chronos";
+
+const BUS_FEEDS: ReadonlyArray<{ id: BusFeedId; name: string; degraded: string }> = [
+  { id: "watchfloor", name: "WATCHFLOOR", degraded: "Cry-wolf watch: a calm board losing interventions" },
+  { id: "veritas", name: "VERITAS", degraded: "IGNIS fusion branch: wrong while its residuals stay quiet" },
+  { id: "census", name: "CENSUS", degraded: "Survival figure published without its dual ledger" },
+  { id: "chronos", name: "CHRONOS", degraded: "Order-by-receipt: a causal record that invents sequence" },
+];
+
+const countAllCohorts = () =>
+  Object.fromEntries(CENSUS_COHORTS.map((cohort) => [cohort.id, true])) as Record<CensusCohortId, boolean>;
+
+function busEnvelope(feeds: Record<BusFeedId, boolean>) {
+  const inputs: AuthorityInputs = {
+    watchfloor: evaluateWatchfloor({
+      ...watchfloorConfig(),
+      ...(feeds.watchfloor ? { incident: "cry-wolf" as const } : {}),
+    }),
+    veritas: evaluateVeritas(withModel(veritasConfig(), feeds.veritas ? "ignis-fusion" : "helios-thermal")),
+    census: evaluateCensus({
+      ...censusConfig(),
+      ...(feeds.census ? { discloseExcluded: false } : { counted: countAllCohorts() }),
+    }),
+    chronos: evaluateChronos({
+      ...chronosConfig(),
+      policy: feeds.chronos ? "arrival" : "partial",
+      grantValidityS: 3.2e8,
+    }),
+  };
+  const state = settleModuleAuthority(inputs);
+  return { claims: state.ledgers.authority.claims, envelope: state.ledgers.authority.envelope };
+}
+
 export function ThemisApp() {
   const [config, setConfig] = useState<ThemisConfig>(() => themisConfig());
-  const result = useMemo(() => evaluateThemis(config), [config]);
+  const [feeds, setFeeds] = useState<Record<BusFeedId, boolean>>({
+    watchfloor: false,
+    veritas: false,
+    census: false,
+    chronos: false,
+  });
+  const bus = useMemo(() => busEnvelope(feeds), [feeds]);
+  const result = useMemo(() => evaluateThemis(config, bus.envelope ?? undefined), [config, bus]);
   const update = <K extends keyof ThemisConfig>(key: K, value: ThemisConfig[K]) =>
     setConfig((current) => ({ ...current, [key]: value }));
 
@@ -173,15 +227,36 @@ export function ThemisApp() {
           suffix="/100"
           onChange={(v) => update("evidenceScore", v)}
         />
+
+        <Title n="04" text="CIVILIZATION BUS" />
+        <div className="lb-options">
+          {BUS_FEEDS.map((feed) => {
+            const claim = bus.claims[feed.id];
+            const restricting = claim && claim.limit !== "none";
+            return (
+              <button
+                key={feed.id}
+                className={feeds[feed.id] ? "active" : ""}
+                aria-pressed={feeds[feed.id]}
+                onClick={() => setFeeds((current) => ({ ...current, [feed.id]: !current[feed.id] }))}
+              >
+                <b>
+                  {feed.name} · {restricting ? claim.limit.toUpperCase() : "CLEAR"}
+                </b>
+                <small>{feeds[feed.id] ? feed.degraded : "Nominal; posting no restriction"}</small>
+              </button>
+            );
+          })}
+        </div>
       </aside>
 
       <section className="lb-panel lb-stage">
-        <Title n="04" text="DECISION PATHWAY" />
+        <Title n="05" text="DECISION PATHWAY" />
         <DecisionTimeline config={config} result={result} />
       </section>
 
       <aside className="lb-panel lb-output">
-        <Title n="05" text="EXECUTION VERDICT" />
+        <Title n="06" text="EXECUTION VERDICT" />
         <Verdict
           readiness={result.readiness}
           label={`${ACTION_META[config.actionClass].name} ACTION`}
@@ -221,7 +296,7 @@ export function ThemisApp() {
           />
           <Metric label="HANDBACK" value={fmt(result.handbackS, 0)} unit="s" />
         </div>
-        <Title n="06" text="AUTONOMY TIER" />
+        <Title n="07" text="AUTONOMY TIER" />
         <Options
           options={(Object.keys(TIER_META) as AutonomyTier[]).map((tier) => ({
             id: tier,
@@ -231,7 +306,7 @@ export function ThemisApp() {
           active={config.tier}
           onSelect={(tier) => update("tier", tier)}
         />
-        <Title n="07" text="ACTION CLASS" />
+        <Title n="08" text="ACTION CLASS" />
         <Options
           options={(Object.keys(ACTION_META) as ActionClass[]).map((action) => ({
             id: action,
@@ -241,7 +316,7 @@ export function ThemisApp() {
           active={config.actionClass}
           onSelect={(action) => update("actionClass", action)}
         />
-        <Title n="08" text="INCIDENT INJECTION" />
+        <Title n="09" text="INCIDENT INJECTION" />
         <Options
           options={INCIDENTS}
           active={config.incident}

@@ -87,7 +87,11 @@ Three laboratories now sit underneath the physical ones. They were built out of 
 - **VERITAS** audits the laboratory's own models for the years between becoming wrong and anyone being able to say so. Run against this repository's portfolio it fails the repository's own least-grounded modules, which is the result it was built to be able to produce.
 - **CENSUS** settles the ledger every survival metric is divided by, and refuses to publish a headline that diverges from the actual rate without its prior-definition ledger. It reproduces the Season 01 figure from its default configuration.
 
-Each remains isolated and deterministic. The next work for all three is the same as everything else in this file: adapters onto the civilization state bus, so a saturated floor, a decertified model, and an excluded cohort become cross-module consequences rather than local readings.
+CHRONOS joined them: simultaneity, causal order, and command freshness, where order-by-receipt invents 124 sequences the universe does not have and a shared present at one-minute tolerance covers the Moon and nothing else.
+
+**These are no longer isolated.** The state bus gained an authority ledger, and all four now post restrictions that THEMIS reads as a ceiling — a saturated floor, an uncertified model, a withheld survival figure, and an inadmissible causal record each stop the executive from acting, rather than only reporting that they should. See the [state bus brief](concepts/civilization-state-bus.md) for the second slice.
+
+Still open on the bus: material, crew-dose, debris, and archive ledgers; adapters from HELIOS, FOUNDRY, and HYGEIA onto the authority ledger; and a campaign runner that advances both ledgers together across ticks.
 
 ## Speculative frontier
 
@@ -120,4 +124,4 @@ Choose the next issue by this order:
 4. It has at least one trustworthy physical or operational reference.
 5. It creates a meaningful operator decision within a one-screen prototype.
 
-By that rule, **LUMEN is next**, followed by the unified campaign state and ASCENT. WATCHFLOOR, VERITAS, and CENSUS satisfy rules 2 through 5 on their own and are now waiting on rule 1 — the state-bus adapters that would let them constrain the other laboratories instead of describing them.
+By that rule, **LUMEN is next**, followed by the unified campaign state and ASCENT. WATCHFLOOR, VERITAS, CENSUS, and CHRONOS have now satisfied rule 1 as well, through the authority ledger.

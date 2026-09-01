@@ -16,6 +16,10 @@
  * 3. EXPLICIT PRIORITY — when supply cannot cover demand, survival load is
  *    served before discretionary load, in a declared order rather than a
  *    hidden one. Curtailment is visible in the ledger, not silent.
+ * 4. AUTHORITY IS MONOTONE — the authority ledger only ever narrows. A module
+ *    can post a restriction; nothing on the bus can widen one. Settlement
+ *    returns the most restrictive claim posted, so an executive reading the
+ *    bus cannot be talked into more authority by adding modules to it.
  *
  * See concepts/civilization-state-bus.md for the full architecture.
  */
@@ -37,11 +41,43 @@ export interface PowerLedger {
   priority: string[];
 }
 
+/**
+ * What a module's own state permits the executive to do.
+ *
+ * Ordered from permissive to restrictive; settlement takes the maximum, so a
+ * single module in trouble narrows the whole civilization's envelope. That
+ * asymmetry is the point: the modules that know something is wrong are the
+ * ones with standing to restrict, and no quorum of comfortable modules can
+ * outvote them.
+ */
+export type AuthorityLimit = "none" | "no-irreversible" | "advisory-only" | "hold";
+
+/** Restrictiveness order. Settlement is `max` over this scale. */
+export const AUTHORITY_ORDER: readonly AuthorityLimit[] = [
+  "none",
+  "no-irreversible",
+  "advisory-only",
+  "hold",
+];
+
+export interface AuthorityClaim {
+  limit: AuthorityLimit;
+  /** Why this module is restricting, in the operator's language. */
+  reason: string;
+}
+
+export interface AuthorityLedger {
+  /** Module id → the restriction that module's own state imposes. */
+  claims: Record<string, AuthorityClaim>;
+  /** Settled envelope: the most restrictive claim posted. Null until settled. */
+  envelope: { limit: AuthorityLimit; source: string; reason: string } | null;
+}
+
 export interface CivilizationState {
   format: typeof STATE_FORMAT;
   seed: number;
   tick: number;
-  ledgers: { power: PowerLedger };
+  ledgers: { power: PowerLedger; authority: AuthorityLedger };
   /** Opaque module snapshots, keyed by module id. Modules read only their own. */
   snapshots: Record<string, unknown>;
 }
@@ -53,6 +89,7 @@ export function createState(seed: number, tick: number): CivilizationState {
     tick,
     ledgers: {
       power: { unit: "MW", supply: {}, demand: {}, allocations: {}, priority: [] },
+      authority: { claims: {}, envelope: null },
     },
     snapshots: {},
   };
@@ -134,5 +171,50 @@ export function settlePowerLedger(state: CivilizationState): CivilizationState {
     ledgers: { ...state.ledgers, power: { ...ledger, allocations } },
   };
   assertPowerConservation(settled);
+  return settled;
+}
+
+/** Rank of a limit on the restrictiveness scale. */
+export const authorityRank = (limit: AuthorityLimit): number => AUTHORITY_ORDER.indexOf(limit);
+
+/**
+ * INVARIANT 4: a settled envelope is never less restrictive than the strictest
+ * claim on the bus. Rejects any hand-built document that tries.
+ */
+export function assertAuthorityMonotone(state: CivilizationState): void {
+  const ledger = state.ledgers.authority;
+  if (!ledger.envelope) return;
+  for (const [module, claim] of Object.entries(ledger.claims)) {
+    if (authorityRank(ledger.envelope.limit) < authorityRank(claim.limit)) {
+      throw new Error(
+        `Authority widened past a posted restriction: "${module}" requires ${claim.limit}, envelope is ${ledger.envelope.limit}`,
+      );
+    }
+  }
+}
+
+/**
+ * Settle the authority ledger: the envelope is the most restrictive claim, and
+ * it names the module that made it. Ties break by module id so the attribution
+ * is deterministic rather than dependent on insertion order.
+ */
+export function settleAuthority(state: CivilizationState): CivilizationState {
+  const ledger = state.ledgers.authority;
+  const posted = Object.entries(ledger.claims).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
+  let envelope: AuthorityLedger["envelope"] = {
+    limit: "none",
+    source: "bus",
+    reason: "No module is restricting",
+  };
+  for (const [module, claim] of posted) {
+    if (authorityRank(claim.limit) > authorityRank(envelope.limit)) {
+      envelope = { limit: claim.limit, source: module, reason: claim.reason };
+    }
+  }
+  const settled: CivilizationState = {
+    ...state,
+    ledgers: { ...state.ledgers, authority: { ...ledger, envelope } },
+  };
+  assertAuthorityMonotone(settled);
   return settled;
 }

@@ -23,6 +23,12 @@
  * 3. STALE ORDERS QUARANTINE. A human command whose context predates local
  *    state change is never executed as-is; the system reconciles context
  *    instead of guessing intent.
+ * 4. THE BUS ENVELOPE IS A CEILING. When the civilization state bus carries an
+ *    authority envelope, THEMIS may only narrow its own decision against it,
+ *    never widen. The executive cannot out-argue a module that has posted a
+ *    reason to stop — that is what makes WATCHFLOOR's saturated floor,
+ *    VERITAS's uncertified model, CENSUS's withheld figure, and CHRONOS's
+ *    inadmissible causal record bind rather than merely report.
  */
 
 export type AutonomyTier = "advisory" | "bounded-executive" | "sovereign-proposal";
@@ -86,7 +92,18 @@ export function themisConfig(): ThemisConfig {
   };
 }
 
-export function evaluateThemis(c: ThemisConfig) {
+/**
+ * An authority ceiling posted by another module through the state bus.
+ * Structurally identical to the bus envelope, kept as a local type so THEMIS
+ * imports a shape rather than a module.
+ */
+export interface ExternalEnvelope {
+  limit: "none" | "no-irreversible" | "advisory-only" | "hold";
+  source: string;
+  reason: string;
+}
+
+export function evaluateThemis(c: ThemisConfig, envelope?: ExternalEnvelope) {
   const nodes = Math.max(1, Math.floor(c.councilNodes));
   const partitioned =
     c.incident === "partition"
@@ -170,6 +187,23 @@ export function evaluateThemis(c: ThemisConfig) {
   // human loop is itself a confirmed round trip, never an assumption.
   const authorityHolder = pathway === "HUMAN LOOP" ? "COUNCIL" : "THEMIS (BOUNDED)";
   const handbackS = vetoRequiredS;
+
+  // INVARIANT 4: the bus envelope is a ceiling, applied after THEMIS has
+  // reached its own conclusion. It can only take authority away — a `none`
+  // envelope, or no envelope at all, changes nothing.
+  const ceiling = envelope && envelope.limit !== "none" ? envelope : null;
+  if (ceiling) {
+    const blocks =
+      ceiling.limit === "hold" ||
+      (ceiling.limit === "advisory-only" && pathway !== "HUMAN LOOP") ||
+      (ceiling.limit === "no-irreversible" && c.actionClass === "irreversible" && pathway !== "HUMAN LOOP");
+    if (blocks) {
+      pathway = "HOLD SAFE STATE";
+      constraints.unshift(`${ceiling.source.toUpperCase()} restricts to ${ceiling.limit}: ${ceiling.reason}`);
+    } else {
+      constraints.push(`${ceiling.source.toUpperCase()} restricts to ${ceiling.limit}: ${ceiling.reason}`);
+    }
+  }
 
   const acts = pathway === "AUTONOMOUS ENVELOPE" || pathway === "VETO-WINDOW AUTONOMY";
   const readiness: ThemisReadiness =
