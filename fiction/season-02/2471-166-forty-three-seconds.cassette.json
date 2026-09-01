@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "porta",
+  "title": "C.E. 2471.166 — forty-three seconds",
+  "notes": "Episode 42. Both ends have revoked the standing quorum, so the gate cannot open automatically and nothing overrides that. Nina binds a hundred and twenty-five discarded ledgers into a temporary causal proof and holds the coolant valve by hand. Forty-seven children, nineteen wounded, the third ledger's original and ARK-2's navigation core go through in forty-three seconds. The door opens. The record forks at both ends forever, the method cannot be used twice, and the act is filed as cause unassigned — which is why the survivors write her name by hand.",
+  "config": { "manifest": "evacuation", "quorum": "revoked", "incident": "improvised-quorum" },
+  "timeline": []
+}

@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "lex",
+  "title": "C.E. 2471.031 — the first shot is a certification refusal",
+  "notes": "Episode 01. Noah's ore ship is held at the Earth gate: the cargo is ore and a child's marrow therapy, and the ship's identity is suspended rather than its cargo seized. The scene's legal fact is why that works at all — no instrument in the register reaches who counts as a person, so classifying someone out is not prohibited by anything. LEX returns UNGOVERNED, and silence is the finding rather than a permission.",
+  "config": { "activity": "personhood-classification" },
+  "timeline": []
+}

@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "chronos",
+  "title": "C.E. 2471.099 — seventy-three, and both ledgers say the other fired first",
+  "notes": "Episode 17. A radiator breach kills seventy-three civilians, and each side records the other as having fired first. Neither is lying. Ordering events by the timestamp each site wrote is enough on its own to file an effect ahead of its cause once the clocks run at different rates — set the cruiser's velocity to zero and the inversions vanish, because they were relativity and not a defect in the recorder.",
+  "config": { "policy": "timestamp" },
+  "timeline": []
+}

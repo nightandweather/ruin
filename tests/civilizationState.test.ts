@@ -127,3 +127,61 @@ describe("HELIOS ↔ DATACORE power campaign", () => {
     expect(outcome.ok).toBe(false);
   });
 });
+
+/**
+ * Regression: the ledger is keyed by strings that come from module ids,
+ * cassettes, and hand-edited documents, so it must not read anything off
+ * Object.prototype. The property suite found this by generating the consumer
+ * name "constructor"; these are the shrunk counterexample and its neighbours,
+ * pinned so the failure cannot come back as an occasional red run.
+ */
+describe("the power ledger does not trust its own keys", () => {
+  const withLedger = (supply: Record<string, number>, demand: Record<string, number>, priority: string[]) => {
+    const state = createState(1, 0);
+    return {
+      ...state,
+      ledgers: { ...state.ledgers, power: { ...state.ledgers.power, supply, demand, priority } },
+    };
+  };
+
+  it("never admits a consumer that only exists on Object.prototype", () => {
+    // The exact fast-check counterexample: empty supply, empty demand, and a
+    // priority list naming a prototype member. `"constructor" in {}` is true.
+    const settled = settlePowerLedger(withLedger({}, {}, ["constructor"]));
+    expect(Object.keys(settled.ledgers.power.allocations)).toEqual([]);
+    for (const value of Object.values(settled.ledgers.power.allocations)) {
+      expect(Number.isFinite(value)).toBe(true);
+    }
+  });
+
+  it("survives every prototype member a document might name", () => {
+    for (const name of ["constructor", "toString", "valueOf", "hasOwnProperty", "__proto__"]) {
+      const settled = settlePowerLedger(withLedger({ helios: 10 }, { datacore: 4 }, [name, "datacore"]));
+      const allocations = settled.ledgers.power.allocations;
+      expect(allocations.datacore).toBeCloseTo(4, 9);
+      expect(Object.keys(allocations)).toEqual(["datacore"]);
+    }
+  });
+
+  it("allocates to a real consumer actually named after a prototype member", () => {
+    // If a document genuinely posts demand under that key, it is a consumer
+    // like any other and must be served — the rule is own-property, not
+    // name-blocking.
+    const settled = settlePowerLedger(withLedger({ helios: 6 }, { constructor: 4 }, ["constructor"]));
+    expect(settled.ledgers.power.allocations.constructor).toBeCloseTo(4, 9);
+  });
+
+  it("refuses a ledger whose arithmetic is not finite, instead of passing it", () => {
+    // Every comparison against NaN is false, so a conservation check without
+    // this guard would report success on a poisoned ledger.
+    const state = createState(1, 0);
+    const poisoned = {
+      ...state,
+      ledgers: {
+        ...state.ledgers,
+        power: { ...state.ledgers.power, supply: { helios: 10 }, allocations: { datacore: NaN } },
+      },
+    };
+    expect(() => assertPowerConservation(poisoned)).toThrow(/not finite/);
+  });
+});

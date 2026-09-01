@@ -1,0 +1,8 @@
+{
+  "format": "ruin-cassette/1",
+  "module": "census",
+  "title": "C.E. 2471.049 — the first death, with no shot fired",
+  "notes": "Episode 06. A patient dies of an oxygen-renewal denial and the two ledgers record different causes. The war's first casualty is an accounting act: the counted population is served to completion first, so the people outside the roll experience the whole of the shortage and none of them enters a report as a war death.",
+  "config": { "policy": "counted-first", "discloseExcluded": true },
+  "timeline": []
+}

@@ -130,17 +130,34 @@ export function validateState(value: unknown): StateValidation {
 }
 
 /** INVARIANT 1 — rejects any document whose allocations exceed its supply. */
+/**
+ * Own-property lookup.
+ *
+ * `in` and plain indexing walk the prototype chain, so a ledger keyed
+ * "constructor" or "toString" reads a function off `Object.prototype` and
+ * poisons the arithmetic with NaN. Consumer names come from module ids,
+ * cassettes, and hand-edited documents, so they are not trustworthy input.
+ */
+const owned = (map: Record<string, number>, key: string): number => (Object.hasOwn(map, key) ? map[key] : 0);
+
 export function assertPowerConservation(state: CivilizationState): void {
   const ledger = state.ledgers.power;
   const supplied = Object.values(ledger.supply).reduce((sum, v) => sum + v, 0);
   const allocated = Object.values(ledger.allocations).reduce((sum, v) => sum + v, 0);
+  // A conservation check that passes on NaN fails open, which is worse than
+  // failing loudly: every comparison against NaN is false, so a poisoned
+  // ledger would sail through the very assertion meant to catch it.
+  if (!Number.isFinite(supplied) || !Number.isFinite(allocated))
+    throw new Error(`Power ledger is not finite: ${allocated} MW allocated from ${supplied} MW supplied`);
   if (allocated > supplied + 1e-9)
     throw new Error(
       `Power conservation violated: ${allocated.toFixed(3)} MW allocated from ${supplied.toFixed(3)} MW supplied`,
     );
-  for (const [consumer, granted] of Object.entries(ledger.allocations))
-    if (granted > (ledger.demand[consumer] ?? 0) + 1e-9)
+  for (const [consumer, granted] of Object.entries(ledger.allocations)) {
+    if (!Number.isFinite(granted)) throw new Error(`Allocation to "${consumer}" is not finite: ${granted}`);
+    if (granted > owned(ledger.demand, consumer) + 1e-9)
       throw new Error(`Allocation to "${consumer}" exceeds its own demand`);
+  }
 }
 
 /**
@@ -149,19 +166,24 @@ export function assertPowerConservation(state: CivilizationState): void {
  */
 export function settlePowerLedger(state: CivilizationState): CivilizationState {
   const ledger = state.ledgers.power;
-  const listed = ledger.priority.filter((consumer) => consumer in ledger.demand);
+  // `in` would match "constructor" against Object.prototype and admit a
+  // consumer that never posted demand; `Object.hasOwn` matches the document.
+  const listed = ledger.priority.filter((consumer) => Object.hasOwn(ledger.demand, consumer));
   const unlisted = Object.keys(ledger.demand)
     .filter((consumer) => !ledger.priority.includes(consumer))
     .sort();
   const order = [...listed, ...unlisted];
 
   let remaining = Object.values(ledger.supply).reduce((sum, v) => sum + v, 0);
-  const allocations: Record<string, number> = {};
+  // Null-prototype: assigning `allocations["__proto__"]` on a plain object
+  // sets the prototype instead of a key, so the grant would vanish from the
+  // ledger while the supply it consumed did not.
+  const allocations: Record<string, number> = Object.create(null);
   for (const consumer of order) {
     // Full precision, no rounding: fc-driven fuzzing caught toFixed(6)
     // rounding a 5e-7 MW grant UP past a 5e-7 MW supply — a settlement
     // that invents half a microwatt would eventually invent a reactor.
-    const granted = Math.min(ledger.demand[consumer], remaining);
+    const granted = Math.min(owned(ledger.demand, consumer), remaining);
     allocations[consumer] = granted;
     remaining -= granted;
   }
