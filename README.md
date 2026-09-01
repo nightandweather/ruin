@@ -7,23 +7,17 @@
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
 [![Live demo](https://img.shields.io/badge/live-demo-ffb456.svg)](https://nightandweather.github.io/ruin/)
 
-**HELIOS**, the first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine laboratories have grown around it — factories, habitats, propulsion, archives, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+---
 
-> I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
+## A civilization reports 99.97% survival. The real rate is 94.98%. Nobody lied.
 
-## Start here
+**[Open CENSUS and see for yourself →](https://nightandweather.github.io/ruin/census.html)**
 
-Three results, each one link away. Every laboratory can be opened in a named state, so these are the actual running models rather than screenshots of them.
+A survival rate is a fraction, and its denominator is a definition of who counts as a person. Change the definition and the headline moves without a single life improving. CENSUS ships six cohorts and a life-support budget that does not cover them; its default policy serves the counted population first, so the people on the roll never experience the shortage at all. Twenty thousand deaths never enter a report.
 
-### A 99.97% survival report that is true of its denominator and of nothing else
+Count everyone instead and the headline falls to **96.37%** — while 5,648 more people are alive. The honest number is worse, and it is the only one the model will publish. Switch off the dual ledger and it publishes nothing at all: [the same run with disclosure disabled](https://nightandweather.github.io/ruin/census.html?disclose=off) returns `PUBLICATION WITHHELD`, refused by the model rather than flagged for an operator to overrule at three in the morning.
 
-**[Open CENSUS](https://nightandweather.github.io/ruin/census.html)**
-
-A survival rate is a fraction, and the denominator is a definition of who counts as a person. CENSUS ships with six cohorts and a life-support budget that does not cover all of them. Its default allocation policy serves the counted population to completion first, so the people on the roll never experience the shortage at all.
-
-The headline reads **99.97%**. The actual rate is **94.98%**, and 20,321 deaths never enter a report.
-
-Count everyone instead and the headline falls to **96.37%** — while 5,648 more people are alive. The honest number is worse and it is the only one the model will publish. Switch off the dual ledger and it publishes nothing at all: **[the same run with disclosure disabled](https://nightandweather.github.io/ruin/census.html?disclose=off)** returns `PUBLICATION WITHHELD`, refused by the model rather than flagged for an operator.
+Two more, each one link away — these are the running models, not screenshots of them.
 
 ### A verification audit that fails this repository's own models
 
@@ -48,7 +42,19 @@ Three of this repository's modules open a window in which their own certificate 
 
 Every fault-response plan in this repository ends with _the operator decides_. WATCHFLOOR prices that step. On the cry-wolf watch the queue peaks at 17 against a cap of 40, authority is never withdrawn, and every display stays calm — while 1.43 real critical alarms are written off as spurious by a crew that has learned not to believe them.
 
-**[Run the public demo](https://nightandweather.github.io/ruin/)** · [What fiction assumes, and what the models say](docs/WHAT-FICTION-ASSUMES.md) · [The HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
+---
+
+## What this is
+
+Thirty browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+
+Every module declares what must never happen and enforces it in the model rather than warning about it. Every module separates the physics it sources from the parameters it invents, and [one of them audits the rest](https://nightandweather.github.io/ruin/veritas.html) — including itself. Reading down [the list of what fiction assumes and what the models return](docs/WHAT-FICTION-ASSUMES.md), the same failure appears in twelve costumes: **the instrument says everything is fine.**
+
+This is science fiction built from real engineering ideas. It is not a claim that any of it can be built.
+
+> I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
+
+**[Run the public demo](https://nightandweather.github.io/ruin/)** · [What fiction assumes](docs/WHAT-FICTION-ASSUMES.md) · [The HELIOS deep dive](docs/HELIOS-DEEP-DIVE.md) · In the dashboard, choose **RUN FIRST LIGHT** to execute and replay the commissioned failure campaign.
 
 [![Watch the 72-second RUIN // HELIOS walkthrough](docs/assets/helios-first-light.png)](https://nightandweather.github.io/ruin/ruin-first-light-72s.mp4)
 
@@ -72,9 +78,9 @@ The [session origin note](docs/SESSION-2026-08-30.md) records how the project gr
 
 RUIN is also being tested as a human-scale science-fiction narrative. **Season 01 — 99.97%의 구원** follows a junior simulation verifier who discovers that a perfect civilization-survival report was produced by changing who counts as a person. The fiction uses executable laboratory incidents as causal machinery while keeping unresolved questions—simulation consciousness, recurring identity, and RUIN's creator—open.
 
-**[Read Episode 01 — 제외된 사람들](fiction/season-01/episode-01.md)** · [Narrative continuity and status](fiction/README.md)
+Every episode ships an **incident cassette** — a deterministic replay file reproducing the operational event the chapter describes. Load `episode-01.cassette.json` from the HELIOS footer and fly the incident yourself: same seed, same commands, same result the characters verify on the page. The episode's central mechanism is executable too — **CENSUS** reproduces the 99.97% figure from its default configuration and refuses to publish it once the divergence is disclosed.
 
-The episode's central mechanism is now executable: **CENSUS** reproduces the 99.97% figure from its default configuration and refuses to publish it once the divergence is disclosed.
+**[Read Episode 01 — 제외된 사람들](fiction/season-01/episode-01.md)** (Korean) · [Narrative continuity and status](fiction/README.md) (English) · [the episode's cassette](fiction/season-01/episode-01.cassette.json)
 
 ## The RUIN laboratory
 
@@ -105,7 +111,7 @@ npm install
 npm run dev
 ```
 
-Open the displayed local URL. `/` runs HELIOS and the module bar reaches every other laboratory.
+Open the displayed local URL. `/` runs HELIOS and the module bar reaches every other laboratory. If you are looking for somewhere to start contributing, [there is a list](#contributing).
 
 ```bash
 npm test
@@ -269,7 +275,14 @@ A strong proposal does not need to know how to build the technology. It only nee
 
 ## Contributing
 
-RUIN is public, MIT-licensed open source. Code, research, interface, accessibility, documentation, and strange-but-operational concept contributions are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, modeling rules, module structure, and safety boundaries; use [GitHub Discussions](https://github.com/nightandweather/ruin/discussions) for early ideas and the [issue forms](https://github.com/nightandweather/ruin/issues/new/choose) for scoped work.
+RUIN is public, MIT-licensed open source. If you want somewhere concrete to start, these are real, scoped, and already specified:
+
+- **Build FUNDA.** [The concept brief](concepts/funda-gravitational-catapult.md) is finished — state model, safety invariants, five failure scenarios, and the smallest useful simulation — and nothing implements it. A gravitational catapult where the delta-v is free and the scarce resources are timing, geometry, and responsibility for where an aimed mass ends up.
+- **Ground one module's constants.** [IGNIS and NAVIS](src/ignis.ts) now tag every propulsion row `sourced`, `derived`, or `scenario` and cite the article behind it, and `tests/grounding.test.ts` checks the cited rows are internally consistent. Five modules still carry hand-entered ratings — HELIOS thermal, ODYSSEY link, AGRARIA yield, KESSLER coefficients, MNEMOSYNE thresholds. Each is an afternoon, and each one makes [VERITAS](https://nightandweather.github.io/ruin/veritas.html) honest about one more of its own models.
+- **Add an instrument to LEX.** The [register](src/lex.ts) holds six real instruments with their provisions quoted. The Registration Convention, the IADC debris guidelines, ITU spectrum coordination, and COSPAR planetary protection are missing. One treaty per pull request.
+- **Argue with a reading.** LEX's mapping of activities onto instruments is a reading, and a lawyer would dispute it. So would an astrodynamicist with the propulsion table. Disputes belong in issues, with a source.
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md) for setup, modeling rules, module structure, and safety boundaries; use [GitHub Discussions](https://github.com/nightandweather/ruin/discussions) for early ideas and the [issue forms](https://github.com/nightandweather/ruin/issues/new/choose) for scoped work.
 
 Community participation follows the [code of conduct](CODE_OF_CONDUCT.md). Potential vulnerabilities should be reported privately according to [SECURITY.md](SECURITY.md).
 
