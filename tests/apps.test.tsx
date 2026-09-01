@@ -43,6 +43,7 @@ import { OdysseyApp } from "../src/OdysseyApp";
 import { PatronApp } from "../src/PatronApp";
 import { PortaApp } from "../src/PortaApp";
 import { ProgenitorApp } from "../src/ProgenitorApp";
+import { ProspectApp } from "../src/ProspectApp";
 import { PrometheusApp } from "../src/PrometheusApp";
 import { ReliquaryApp } from "../src/ReliquaryApp";
 import { SentinelApp } from "../src/SentinelApp";
@@ -81,6 +82,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "patron", Component: PatronApp },
   { id: "porta", Component: PortaApp },
   { id: "progenitor", Component: ProgenitorApp },
+  { id: "prospect", Component: ProspectApp },
   { id: "prometheus", Component: PrometheusApp },
   { id: "reliquary", Component: ReliquaryApp },
   { id: "sentinel", Component: SentinelApp },

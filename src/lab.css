@@ -462,6 +462,16 @@ input {
   --lb-panel: #0d0b14ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #1a1430, #0c0a14 55%, #06050a);
 }
+.prospect {
+  --lb-accent: #a8c98a;
+  --lb-accent-strong: #d6ebc0;
+  --lb-border: #3c4a2c;
+  --lb-panel: #0e120aee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #1d2a12, #0e120a 55%, #070905);
+}
+.ps-survey p {
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.4fr) 66px 62px 68px;
+}
 .patron {
   --lb-accent: #d9c26a;
   --lb-accent-strong: #f1e3a8;

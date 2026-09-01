@@ -26,6 +26,7 @@ import { evaluateLex, lexConfig } from "./lex";
 import { evaluateLumen, lumenConfig } from "./lumen";
 import { evaluatePatron, patronConfig } from "./patron";
 import { evaluatePorta, portaConfig } from "./porta";
+import { evaluateProspect, prospectConfig } from "./prospect";
 import { evaluateValetudo, valetudoConfig } from "./valetudo";
 import { evaluateVeritas, veritasConfig } from "./veritas";
 import { evaluateWatchfloor, watchfloorConfig } from "./watchfloor";
@@ -45,6 +46,7 @@ const SCENES = {
   lumen: { base: lumenConfig, run: evaluateLumen },
   patron: { base: patronConfig, run: evaluatePatron },
   porta: { base: portaConfig, run: evaluatePorta },
+  prospect: { base: prospectConfig, run: evaluateProspect },
   valetudo: { base: valetudoConfig, run: evaluateValetudo },
   veritas: { base: veritasConfig, run: evaluateVeritas },
   waystation: { base: waystationConfig, run: evaluateWaystation },

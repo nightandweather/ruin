@@ -314,6 +314,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     blurb: "Move a foundry's output to orbit under custody rules that refuse an unsafe launch",
   },
   {
+    id: "prospect",
+    page: "prospect.html",
+    href: "./prospect.html",
+    label: "PROSPECT",
+    group: "energy",
+    blurb: "Plan a mine on three surveyed deposits where the biggest number is the least measured",
+  },
+  {
     id: "patron",
     page: "patron.html",
     href: "./patron.html",

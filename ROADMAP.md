@@ -63,6 +63,8 @@ First executable question: **which vessel misses a safe departure window when ev
 
 Replace generic material income with surveyed deposits, uncertainty, extraction energy, beneficiation yield, tool wear, tailings, and provenance. Rare materials should become a planning constraint rather than a magical inventory counter.
 
+**Delivered** — [`src/prospect.ts`](src/prospect.ts): three deposits with JORC-shaped confidence classes and booking factors, a day whose limiter names itself (plan, tool spares from ASCENT, LUMEN's power contract, or the tailings dam), a conservation-checked mass ledger, and the finding as arithmetic: the inferred 9,000 kt deposit is refused undrilled, collapses to 40% when drilled, and still underproduces the measured 800 kt one. `tests/prospect.test.ts` and the determinism gate cover it.
+
 ### P1 · ARK closed-loop habitat
 
 Connect crew health, atmosphere, water, waste, shielding, AGRARIA output, DATACORE support, and AEGIS excursions. The model should reveal which loops can recover and which failures silently compound.

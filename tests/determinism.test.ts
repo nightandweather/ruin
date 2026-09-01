@@ -57,6 +57,7 @@ import { evaluateLumen, lumenConfig } from "../src/lumen";
 import { conciliumConfig, evaluateConcilium } from "../src/concilium";
 import { evaluatePorta, portaConfig } from "../src/porta";
 import { evaluatePatron, patronConfig } from "../src/patron";
+import { evaluateProspect, prospectConfig } from "../src/prospect";
 import { evaluateValetudo, valetudoConfig } from "../src/valetudo";
 import { evaluateWaystation, waystationConfig } from "../src/waystation";
 
@@ -135,6 +136,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
   ascent: () => evaluateAscent(ascentConfig()),
   waystation: () => evaluateWaystation(waystationConfig()),
   patron: () => evaluatePatron(patronConfig()),
+  prospect: () => evaluateProspect(prospectConfig()),
   lumen: () => evaluateLumen(lumenConfig()),
   concilium: () => evaluateConcilium(conciliumConfig()),
   porta: () => evaluatePorta(portaConfig()),
