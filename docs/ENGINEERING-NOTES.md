@@ -37,4 +37,10 @@ HORIZONS adds a fourth question: how does a speculative system fail into its nei
 - **FORGEWORLD** — asteroid-scale industrial port connecting survey, refining, manufacturing, and logistics.
 - **ECHO** — verified scientific and cultural memory that remains interpretable after institutional collapse.
 
+## Provenance in the code
+
+`src/ignis.ts` and `src/navis.ts` now carry a `grounding` tag and a `source` string on every propulsion row: `sourced` when the specific impulse and thrust are the published figures of a real article, `derived` when they follow from sourced quantities by a stated equation, `scenario` when invented. `tests/grounding.test.ts` asserts that the cited rows are internally consistent — a real engine's Isp, thrust, power, and efficiency are not four free numbers, so a transcription error breaks the relation and fails CI.
+
+VERITAS reads the IGNIS rating from that table rather than from a number typed into its own model list. A rating entered by the same hand that wrote the model is not evidence, and the remaining entries should follow the same route.
+
 Every future module must retain RUIN's boundary: equations and sources are visible, invented assumptions are labeled, failures are executable, and safety-critical recovery requires evidence.

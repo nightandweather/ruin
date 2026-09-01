@@ -15,6 +15,18 @@ export interface EngineArchitecture {
   maxCoreTempK: number;
   maturity: EngineMaturity;
   evidence: string;
+  /**
+   * Where this engine's headline performance comes from.
+   *
+   * `sourced` means the specific impulse and thrust are the published figures
+   * of a real flight or test article, named in `source`. `derived` means they
+   * are computed from sourced quantities with the equation shown. `scenario`
+   * means invented — legible, configurable, and not a claim about anything
+   * that exists.
+   */
+  grounding: Grounding;
+  /** The article the reference numbers are taken from, or why there is none. */
+  source: string;
 }
 
 export interface IgnisConfig {
@@ -55,51 +67,74 @@ export interface IgnisResult {
   constraints: readonly string[];
 }
 
+/** Provenance of a reference constant. See `EngineArchitecture.grounding`. */
+export type Grounding = "sourced" | "derived" | "scenario";
+
 export const ENGINES: Record<EngineId, EngineArchitecture> = {
   "cryo-chemical": {
     id: "cryo-chemical",
-    name: "AURORA LOX / LH₂",
+    name: "RL10B-2 CRYOGENIC",
     family: "CRYOGENIC CHEMICAL",
     propellant: "LOX + LH₂",
-    referenceIspS: 450,
-    referenceThrustN: 900_000,
-    referencePowerMW: 3_100,
-    efficiency: 0.64,
+    // Sourced: RL10B-2 vacuum performance. Jet power follows from thrust and
+    // exhaust velocity (P = ½·ṁ·v²  with ṁ = F/v), so the 322 MW source power
+    // is that jet power divided by the assumed thermal-to-jet efficiency.
+    referenceIspS: 465.5,
+    referenceThrustN: 110_100,
+    referencePowerMW: 322,
+    efficiency: 0.78,
     structureHeatFraction: 0.018,
     referenceCoreTempK: 3500,
     maxCoreTempK: 3700,
     maturity: 5,
     evidence: "Flight-proven family; simplified equivalent exhaust model",
+    grounding: "sourced",
+    source:
+      "RL10B-2: 465.5 s vacuum Isp, 110.1 kN (24,750 lbf) vacuum thrust. Chamber temperatures and efficiency are scenario parameters.",
   },
   "hall-electric": {
     id: "hall-electric",
-    name: "VECTIS HALL ARRAY",
+    name: "AEPS HALL ARRAY",
     family: "POWER-LIMITED ELECTRIC",
     propellant: "XENON",
-    referenceIspS: 1900,
-    referenceThrustN: 0.55,
+    // Sourced: the 12 kW AEPS/HERMeS operating point. The power-limited thrust
+    // relation F = 2ηP/v reproduces 0.59 N from these three numbers, which is
+    // the published 0.6 N — the table is self-consistent, and the test says so.
+    referenceIspS: 2800,
+    referenceThrustN: 0.6,
     referencePowerMW: 0.012,
-    efficiency: 0.55,
+    efficiency: 0.67,
     structureHeatFraction: 0.45,
     referenceCoreTempK: 900,
     maxCoreTempK: 1150,
     maturity: 5,
     evidence: "12 kW magnetically shielded Hall-thruster class",
+    grounding: "sourced",
+    source:
+      "NASA AEPS / HERMeS at the 12 kW point: ~0.6 N thrust, ~2800 s Isp, 0.67 thrust efficiency. Thermal fractions are scenario parameters.",
   },
   "nuclear-thermal": {
     id: "nuclear-thermal",
-    name: "EMBER NUCLEAR THERMAL",
+    name: "NRX A6 SOLID CORE",
     family: "SOLID-CORE NTP",
     propellant: "HYDROGEN",
-    referenceIspS: 900,
-    referenceThrustN: 100_000,
-    referencePowerMW: 500,
-    efficiency: 0.86,
+    // Sourced: the NRX A6 ground test. Thrust is derived from the reported
+    // flow rate and specific impulse (F = ṁ·v = 32.7 kg/s × 8522 m/s), and the
+    // efficiency is the ratio of that jet power to the reported reactor
+    // thermal power — near unity, because for a solid-core NTP the reported
+    // reactor power is essentially the power going into the hydrogen.
+    referenceIspS: 869,
+    referenceThrustN: 278_700,
+    referencePowerMW: 1_199,
+    efficiency: 0.99,
     structureHeatFraction: 0.02,
-    referenceCoreTempK: 2800,
-    maxCoreTempK: 3100,
+    referenceCoreTempK: 2406,
+    maxCoreTempK: 2750,
     maturity: 2,
     evidence: "Rover/NERVA ground-test heritage; no operational flight system",
+    grounding: "sourced",
+    source:
+      "NERVA NRX A6 (1967): 1199 MW thermal, 869 s Isp, 32.7 kg/s flow, 2406 K chamber. The 2750 K material ceiling is a scenario parameter.",
   },
   "fusion-concept": {
     id: "fusion-concept",
@@ -115,7 +150,20 @@ export const ENGINES: Record<EngineId, EngineArchitecture> = {
     maxCoreTempK: 6000,
     maturity: 0,
     evidence: "Speculative placeholder; no verified flight-capable fusion drive",
+    grounding: "scenario",
+    source:
+      "No article exists. Every number here is invented, and this entry is the reason VERITAS rates the IGNIS fusion branch as it does.",
   },
+};
+
+/**
+ * Share of the engine table whose headline performance comes from a real
+ * article. VERITAS reads this instead of a hand-entered rating, so an audit of
+ * the laboratory's own grounding cannot drift away from the laboratory.
+ */
+export const enginesGroundedFraction = (): number => {
+  const all = Object.values(ENGINES);
+  return all.filter((engine) => engine.grounding === "sourced").length / all.length;
 };
 
 const G0 = 9.80665;

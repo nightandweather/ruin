@@ -11,6 +11,10 @@ export interface PropulsionArchitecture {
   efficiency: number;
   maturity: ModelMaturity;
   evidence: string;
+  /** Provenance of the headline performance. See IGNIS `Grounding`. */
+  grounding: Grounding;
+  /** The article the reference numbers are taken from, or why there is none. */
+  source: string;
 }
 export interface NavisConfig {
   mission: MissionId;
@@ -49,36 +53,50 @@ export interface NavisResult {
   constraints: readonly string[];
 }
 
+/** Provenance of a reference constant, shared with the IGNIS engine table. */
+export type Grounding = "sourced" | "derived" | "scenario";
+
 export const PROPULSION: Record<PropulsionId, PropulsionArchitecture> = {
   chemical: {
     id: "chemical",
     name: "LOX / LH₂ CHEMICAL",
-    specificImpulseS: 450,
-    thrustKN: 900,
+    // Eight RL10B-2 in a cluster: 8 × 110.1 kN. The specific impulse is the
+    // single-engine vacuum figure, which a cluster does not change.
+    specificImpulseS: 465.5,
+    thrustKN: 880.8,
     propulsionPowerMW: 0,
-    efficiency: 0.65,
+    efficiency: 0.78,
     maturity: 5,
     evidence: "Flight-proven class; ideal rocket equation only",
+    grounding: "sourced",
+    source: "RL10B-2 × 8: 465.5 s vacuum Isp, 110.1 kN each.",
   },
   "solar-electric": {
     id: "solar-electric",
     name: "SOLAR HALL ARRAY",
-    specificImpulseS: 3000,
-    thrustKN: 1.5,
+    // AEPS Hall thrusters scaled to a 30 MW array. Thrust is the power-limited
+    // relation F = 2ηP/v, not an independent guess: it follows from the other
+    // three numbers, and the test asserts that it still does.
+    specificImpulseS: 2800,
+    thrustKN: 1.46,
     propulsionPowerMW: 30,
-    efficiency: 0.7,
+    efficiency: 0.67,
     maturity: 5,
     evidence: "Flight-proven Hall-effect family; scaled power plant",
+    grounding: "derived",
+    source: "NASA AEPS / HERMeS 12 kW point (2800 s, 0.67), scaled to a 30 MW array by F = 2ηP/v.",
   },
   "nuclear-electric": {
     id: "nuclear-electric",
     name: "NUCLEAR ELECTRIC",
-    specificImpulseS: 6000,
-    thrustKN: 0.5,
+    specificImpulseS: 4190,
+    thrustKN: 0.69,
     propulsionPowerMW: 20,
-    efficiency: 0.62,
+    efficiency: 0.71,
     maturity: 2,
     evidence: "Subsystem heritage; integrated vehicle is conceptual",
+    grounding: "derived",
+    source: "NEXT-C gridded ion at 6.9 kW (4190 s, 0.71 thrust efficiency), scaled to 20 MW by F = 2ηP/v.",
   },
   "fusion-concept": {
     id: "fusion-concept",
@@ -89,7 +107,15 @@ export const PROPULSION: Record<PropulsionId, PropulsionArchitecture> = {
     efficiency: 0.55,
     maturity: 0,
     evidence: "No verified flight-capable fusion propulsion system",
+    grounding: "scenario",
+    source: "No article exists. Every number in this row is invented.",
   },
+};
+
+/** Share of the propulsion table backed by a real article, sourced or derived. */
+export const propulsionGroundedFraction = (): number => {
+  const all = Object.values(PROPULSION);
+  return all.filter((drive) => drive.grounding !== "scenario").length / all.length;
 };
 
 export const MISSION_PRESETS: Record<MissionId, Omit<NavisConfig, "mission" | "targetDistanceLy">> = {

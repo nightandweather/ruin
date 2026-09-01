@@ -7,7 +7,7 @@ import {
   REGIME_SHIFT_YEAR,
   SENSOR_BIAS_YEAR,
   veritasConfig,
-  VERITAS_MODELS,
+  veritasPortfolio,
   withModel,
 } from "../src/veritas";
 
@@ -18,7 +18,7 @@ describe("VERITAS model-reality divergence", () => {
   });
 
   it("never reports more error than the world actually holds", () => {
-    for (const model of VERITAS_MODELS) {
+    for (const model of veritasPortfolio()) {
       const r = evaluateVeritas(withModel(veritasConfig(), model.id));
       for (const year of r.trajectory) {
         expect(year.reportedError).toBeLessThanOrEqual(year.trueError + 1e-12);
@@ -103,7 +103,7 @@ describe("VERITAS model-reality divergence", () => {
   });
 
   it("rates the laboratory's own least-grounded models as its least trustworthy", () => {
-    const scored = VERITAS_MODELS.map((model) => ({
+    const scored = veritasPortfolio().map((model) => ({
       model,
       result: evaluateVeritas(withModel(veritasConfig(), model.id)),
     }));
@@ -128,5 +128,24 @@ describe("VERITAS model-reality divergence", () => {
     expect(r.endTrueError).toBeLessThan(ACTION_ERROR_LIMIT);
     expect(r.readiness).toBe("GO");
     expect(r.safeMode).toBe("CERTIFIED IN ENVELOPE");
+  });
+});
+
+describe("VERITAS portfolio grounding", () => {
+  it("reads the IGNIS conventional rating from the engine table rather than a literal", async () => {
+    const { enginesGroundedFraction } = await import("../src/ignis");
+    const entry = veritasPortfolio().find((model) => model.id === "ignis-conventional")!;
+    expect(entry.groundedFraction).toBeCloseTo(enginesGroundedFraction(), 12);
+    // Grounding the engine table has to move the audit, or the loop is fake.
+    expect(entry.groundedFraction).toBeGreaterThan(
+      veritasPortfolio().find((model) => model.id === "ignis-fusion")!.groundedFraction,
+    );
+  });
+
+  it("rates a table-read branch better than the invented one it sits beside", () => {
+    const conventional = evaluateVeritas(withModel(veritasConfig(), "ignis-conventional"));
+    const fusion = evaluateVeritas(withModel(veritasConfig(), "ignis-fusion"));
+    expect(conventional.endTrueError).toBeLessThan(fusion.endTrueError);
+    expect(conventional.silentYears).toBeLessThan(fusion.silentYears);
   });
 });

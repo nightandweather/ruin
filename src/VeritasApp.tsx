@@ -6,7 +6,7 @@ import {
   evaluateVeritas,
   MAX_VALIDATION_AGE,
   veritasConfig,
-  VERITAS_MODELS,
+  veritasPortfolio,
   withModel,
   type VeritasConfig,
   type VeritasIncident,
@@ -127,7 +127,7 @@ export function VeritasApp() {
       base,
       readDeepLink(
         "model",
-        VERITAS_MODELS.map((model) => model.id),
+        veritasPortfolio().map((model) => model.id),
         base.modelId,
       ),
     );
@@ -161,7 +161,7 @@ export function VeritasApp() {
       <aside className="lb-panel lb-config">
         <Title n="01" text="MODEL UNDER AUDIT" />
         <Options
-          options={VERITAS_MODELS.map((model) => ({
+          options={veritasPortfolio().map((model) => ({
             id: model.id,
             name: model.name,
             detail: `${(model.groundedFraction * 100).toFixed(0)}% sourced · ${model.detail}`,

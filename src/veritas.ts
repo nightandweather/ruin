@@ -23,6 +23,8 @@
  * advise. It may not commit anything that cannot be undone.
  */
 
+import { enginesGroundedFraction } from "./ignis";
+
 export type VeritasRegime = "interpolation" | "edge" | "extrapolation";
 export type VeritasIncident = "none" | "regime-shift" | "sensor-bias" | "validation-lapse";
 
@@ -38,8 +40,13 @@ export interface VeritasModel {
 
 /**
  * The laboratory's own model portfolio, rated by how much of each is sourced.
- * The ratings come from this repository's engineering notes, which separate
- * grounded kernels from scenario parameters module by module.
+ *
+ * Most ratings are still hand-entered from this repository's engineering
+ * notes, which is exactly the weakness this module exists to distrust — a
+ * rating typed by the same person who wrote the model is not evidence. The
+ * IGNIS conventional branch is the first entry to escape that: its fraction is
+ * computed from the engine table's own `grounding` declarations, so the audit
+ * cannot drift away from the laboratory it audits. The rest should follow.
  */
 export const VERITAS_MODELS: readonly VeritasModel[] = [
   {
@@ -80,10 +87,28 @@ export const VERITAS_MODELS: readonly VeritasModel[] = [
   {
     id: "ignis-fusion",
     name: "IGNIS FUSION BRANCH",
-    detail: "Explicitly unsupported propulsion — a model of a machine nobody has built",
+    detail: "The one engine-table row with no article behind it; every number invented",
     groundedFraction: 0.05,
     driftRate: 0.045,
   },
+];
+
+/**
+ * The portfolio, with any computed ratings resolved.
+ *
+ * Kept separate from the literal above so the table stays readable, and so a
+ * computed entry cannot be mistaken for a typed one.
+ */
+export const veritasPortfolio = (): readonly VeritasModel[] => [
+  ...VERITAS_MODELS.slice(0, 4),
+  {
+    id: "ignis-conventional",
+    name: "IGNIS CONVENTIONAL",
+    detail: "Chemical, Hall, and NTP reference points — rating read from the engine table",
+    groundedFraction: enginesGroundedFraction(),
+    driftRate: 0.018,
+  },
+  ...VERITAS_MODELS.slice(4),
 ];
 
 export interface VeritasConfig {
@@ -149,7 +174,7 @@ export function veritasConfig(): VeritasConfig {
 
 /** Apply a portfolio model's ratings to the current configuration. */
 export function withModel(config: VeritasConfig, modelId: string): VeritasConfig {
-  const model = VERITAS_MODELS.find((m) => m.id === modelId);
+  const model = veritasPortfolio().find((m) => m.id === modelId);
   if (!model) return config;
   return {
     ...config,
@@ -280,7 +305,7 @@ export function evaluateVeritas(c: VeritasConfig) {
 
   return {
     trajectory,
-    model: VERITAS_MODELS.find((m) => m.id === c.modelId) ?? null,
+    model: veritasPortfolio().find((m) => m.id === c.modelId) ?? null,
     calibrations,
     firstTrueBreach,
     firstReportedBreach,
