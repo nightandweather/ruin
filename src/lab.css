@@ -462,6 +462,16 @@ input {
   --lb-panel: #0d0b14ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #1a1430, #0c0a14 55%, #06050a);
 }
+.lumen {
+  --lb-accent: #f2c14e;
+  --lb-accent-strong: #ffe3a8;
+  --lb-border: #55452a;
+  --lb-panel: #14100aee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #2c2210, #14100a 55%, #0a0705);
+}
+.lm-grid p {
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1.5fr) 52px 72px 56px;
+}
 .census {
   --lb-accent: #d6d9df;
   --lb-accent-strong: #f0f2f6;

@@ -52,6 +52,7 @@ import { evaluateVeritas, veritasConfig } from "../src/veritas";
 import { censusConfig, evaluateCensus } from "../src/census";
 import { chronosConfig, evaluateChronos } from "../src/chronos";
 import { evaluateLex, lexConfig } from "../src/lex";
+import { evaluateLumen, lumenConfig } from "../src/lumen";
 import { conciliumConfig, evaluateConcilium } from "../src/concilium";
 import { evaluatePorta, portaConfig } from "../src/porta";
 import { evaluateValetudo, valetudoConfig } from "../src/valetudo";
@@ -128,6 +129,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
   census: () => evaluateCensus(censusConfig()),
   chronos: () => evaluateChronos(chronosConfig()),
   lex: () => evaluateLex(lexConfig()),
+  lumen: () => evaluateLumen(lumenConfig()),
   concilium: () => evaluateConcilium(conciliumConfig()),
   porta: () => evaluatePorta(portaConfig()),
   valetudo: () => evaluateValetudo(valetudoConfig()),

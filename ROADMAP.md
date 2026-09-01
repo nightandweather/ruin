@@ -18,6 +18,8 @@ Definition of done:
 - At least four incidents: pointing uncertainty, relay loss, receiver overheat, and demand surge.
 - Importable power contracts for existing modules.
 
+**Delivered** — [`src/lumen.ts`](src/lumen.ts), with every definition-of-done item covered by `tests/lumen.test.ts` and the determinism gate.
+
 ### P0 · [unified campaign state](https://github.com/nightandweather/ruin/issues/3)
 
 Create a versioned scenario file and shared tick contract. Existing engines remain independently testable, but a campaign runner can exchange power, material, food, compute, crew exposure, and repair orders.
@@ -124,4 +126,4 @@ Choose the next issue by this order:
 4. It has at least one trustworthy physical or operational reference.
 5. It creates a meaningful operator decision within a one-screen prototype.
 
-By that rule, **LUMEN is next**, followed by the unified campaign state and ASCENT. WATCHFLOOR, VERITAS, CENSUS, and CHRONOS have now satisfied rule 1 as well, through the authority ledger.
+By that rule LUMEN shipped: a deterministic source → relay → receiver dispatch graph with fail-closed beam authorization, thermal-capped receivers, a ledger that closes to numerical precision, and contracts importable by FOUNDRY, DATACORE, AGRARIA, GRAVITAS, and IGNIS. **The unified campaign state is next**, followed by ASCENT. WATCHFLOOR, VERITAS, CENSUS, and CHRONOS have now satisfied rule 1 as well, through the authority ledger.

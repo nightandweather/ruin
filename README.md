@@ -48,7 +48,7 @@ Every fault-response plan in this repository ends with _the operator decides_. W
 
 ## What this is
 
-Thirty-two browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+Thirty-three browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Thirty have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
 
 Every module declares what must never happen and enforces it in the model rather than warning about it. Every module separates the physics it sources from the parameters it invents, and [one of them audits the rest](https://nightandweather.github.io/ruin/veritas.html) — including itself. Reading down [the list of what fiction assumes and what the models return](docs/WHAT-FICTION-ASSUMES.md), the same failure appears in twelve costumes: **the instrument says everything is fine.**
 
@@ -159,6 +159,7 @@ A laboratory's opening state can be named in the query string — `census.html?p
 - **PORTA** — open the transit gate Season 02 runs on: 9.58 PJ per 71 minutes, an 80-minute ceiling, a 94-day cooldown, and one violation that opens the door and forks the shared past forever.
 - **VALETUDO** — allocate six beds across sixteen admissions and watch the rule fifteen US states actually use forgo 2.17 expected survivors, then hold an irreversible dose for a second check that cannot arrive.
 - **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
+- **LUMEN** — dispatch 48 GW of beamed power to five contracts across real geometry: 1.22 λ/D at 5.8 GHz, rectennas below Brown's 1975 conversion record, and beams that fail closed when wander exceeds the keep-out. Watch pointing fog take down the survival-rank-one habitat while the cheapest customer stays lit — the merit order does not reach the geometry — and a spare relay string that is idle capital every nominal day earn its keep in one casualty.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
 
 ## What is simulated

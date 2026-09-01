@@ -297,6 +297,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     group: "campaign",
     blurb: "Operate fourteen connected post-stellar systems on one causal map",
   },
+  {
+    id: "lumen",
+    page: "lumen.html",
+    href: "./lumen.html",
+    label: "LUMEN",
+    group: "energy",
+    blurb: "Dispatch beamed power through relays that fail closed, and see who browns out",
+  },
 ];
 
 export type ModuleId = (typeof MODULES)[number]["id"];

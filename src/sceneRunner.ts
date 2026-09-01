@@ -22,6 +22,7 @@ import { censusConfig, evaluateCensus } from "./census";
 import { chronosConfig, evaluateChronos } from "./chronos";
 import { conciliumConfig, evaluateConcilium } from "./concilium";
 import { evaluateLex, lexConfig } from "./lex";
+import { evaluateLumen, lumenConfig } from "./lumen";
 import { evaluatePorta, portaConfig } from "./porta";
 import { evaluateValetudo, valetudoConfig } from "./valetudo";
 import { evaluateVeritas, veritasConfig } from "./veritas";
@@ -37,6 +38,7 @@ const SCENES = {
   chronos: { base: chronosConfig, run: evaluateChronos },
   concilium: { base: conciliumConfig, run: evaluateConcilium },
   lex: { base: lexConfig, run: evaluateLex },
+  lumen: { base: lumenConfig, run: evaluateLumen },
   porta: { base: portaConfig, run: evaluatePorta },
   valetudo: { base: valetudoConfig, run: evaluateValetudo },
   veritas: { base: veritasConfig, run: evaluateVeritas },
