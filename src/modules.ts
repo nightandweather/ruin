@@ -43,6 +43,7 @@ export const MODULES: readonly ModuleDefinition[] = [
   { id: "veritas", page: "veritas.html", href: "./veritas.html", label: "VERITAS" },
   { id: "census", page: "census.html", href: "./census.html", label: "CENSUS" },
   { id: "chronos", page: "chronos.html", href: "./chronos.html", label: "CHRONOS" },
+  { id: "lex", page: "lex.html", href: "./lex.html", label: "LEX" },
   { id: "reliquary", page: "reliquary.html", href: "./reliquary.html", label: "RELIQUARY" },
   { id: "horizons", page: "horizons.html", href: "./horizons.html", label: "HORIZONS" },
 ];

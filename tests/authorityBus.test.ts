@@ -20,6 +20,7 @@ import {
 import {
   censusAuthority,
   chronosAuthority,
+  lexAuthority,
   settleModuleAuthority,
   veritasAuthority,
   watchfloorAuthority,
@@ -30,6 +31,7 @@ import { evaluateWatchfloor, watchfloorConfig } from "../src/watchfloor";
 import { evaluateVeritas, veritasConfig, withModel } from "../src/veritas";
 import { censusConfig, evaluateCensus, CENSUS_COHORTS, type CensusCohortId } from "../src/census";
 import { chronosConfig, evaluateChronos } from "../src/chronos";
+import { evaluateLex, lexConfig } from "../src/lex";
 
 const withClaims = (claims: Record<string, AuthorityClaim>) => {
   const state = createState(1, 0);
@@ -48,6 +50,7 @@ const healthy = (): AuthorityInputs => ({
     counted: Object.fromEntries(CENSUS_COHORTS.map((c) => [c.id, true])) as Record<CensusCohortId, boolean>,
   }),
   chronos: evaluateChronos({ ...chronosConfig(), policy: "partial", grantValidityS: 3.2e8 }),
+  lex: evaluateLex({ ...lexConfig(), activity: "resource-extraction" }),
 });
 
 describe("authority ledger", () => {
@@ -104,6 +107,7 @@ describe("module adapters", () => {
     expect(veritasAuthority(inputs.veritas!).limit).toBe("none");
     expect(censusAuthority(inputs.census!).limit).toBe("none");
     expect(chronosAuthority(inputs.chronos!).limit).toBe("none");
+    expect(lexAuthority(inputs.lex!).limit).toBe("none");
     expect(settleModuleAuthority(inputs).ledgers.authority.envelope!.limit).toBe("none");
   });
 
@@ -156,6 +160,37 @@ describe("module adapters", () => {
   });
 });
 
+describe("LEX on the bus", () => {
+  it("holds an unlawful act whether or not anyone could stop it", () => {
+    const reachable = lexAuthority(evaluateLex(lexConfig()));
+    const unreachable = lexAuthority(
+      evaluateLex({ ...lexConfig(), distanceLs: 1.34e8, incident: "enforcement-gap" }),
+    );
+    // The distance to the nearest court is not an argument.
+    expect(reachable.limit).toBe("hold");
+    expect(unreachable.limit).toBe("hold");
+    expect(unreachable.reason).toMatch(/unenforceable/i);
+  });
+
+  it("refuses to clear an irreversible act that no instrument reaches", () => {
+    const ungoverned = lexAuthority(evaluateLex({ ...lexConfig(), activity: "personhood-classification" }));
+    // Personhood classification is reversible, so silence alone does not
+    // restrict; the irreversible ungoverned case is what the rule is for.
+    expect(ungoverned.limit).toBe("none");
+    const seeding = lexAuthority(evaluateLex({ ...lexConfig(), activity: "biological-seeding" }));
+    expect(seeding.limit).toBe("hold");
+  });
+
+  it("stops THEMIS from committing the act its own flagship performs", () => {
+    const envelope = settleModuleAuthority({
+      lex: evaluateLex({ ...lexConfig(), activity: "stellar-collection" }),
+    }).ledgers.authority.envelope!;
+    const r = evaluateThemis({ ...themisConfig(), actionClass: "irreversible", evidenceScore: 95 }, envelope);
+    expect(r.pathway).toBe("HOLD SAFE STATE");
+    expect(r.constraints[0]).toMatch(/^LEX restricts to hold/);
+  });
+});
+
 describe("adding a module can only narrow the envelope", () => {
   it("never widens as inputs are added, in any order", () => {
     const broken: AuthorityInputs = {
@@ -163,16 +198,17 @@ describe("adding a module can only narrow the envelope", () => {
       veritas: evaluateVeritas(withModel(veritasConfig(), "helios-thermal")),
       census: evaluateCensus({ ...censusConfig(), discloseExcluded: false }),
       chronos: evaluateChronos({ ...chronosConfig(), policy: "partial" }),
+      lex: evaluateLex({ ...lexConfig(), activity: "resource-extraction" }),
     };
-    const keys = ["watchfloor", "veritas", "census", "chronos"] as const;
+    const keys = ["watchfloor", "veritas", "census", "chronos", "lex"] as const;
     // Every subset, compared against every subset that contains it.
-    for (let mask = 0; mask < 16; mask += 1) {
+    for (let mask = 0; mask < 32; mask += 1) {
       const subset: AuthorityInputs = {};
       keys.forEach((key, i) => {
         if (mask & (1 << i)) (subset as Record<string, unknown>)[key] = broken[key];
       });
       const here = settleModuleAuthority(subset).ledgers.authority.envelope!;
-      for (let extra = 0; extra < 4; extra += 1) {
+      for (let extra = 0; extra < keys.length; extra += 1) {
         if (mask & (1 << extra)) continue;
         const bigger: AuthorityInputs = { ...subset };
         (bigger as Record<string, unknown>)[keys[extra]] = broken[keys[extra]];

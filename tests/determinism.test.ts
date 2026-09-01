@@ -51,6 +51,7 @@ import { evaluateWatchfloor, watchfloorConfig } from "../src/watchfloor";
 import { evaluateVeritas, veritasConfig } from "../src/veritas";
 import { censusConfig, evaluateCensus } from "../src/census";
 import { chronosConfig, evaluateChronos } from "../src/chronos";
+import { evaluateLex, lexConfig } from "../src/lex";
 
 /**
  * One replayable run per module. Every run must start from scratch — a run
@@ -123,6 +124,7 @@ const RUNS: Record<ModuleId, () => unknown> = {
   veritas: () => evaluateVeritas(veritasConfig()),
   census: () => evaluateCensus(censusConfig()),
   chronos: () => evaluateChronos(chronosConfig()),
+  lex: () => evaluateLex(lexConfig()),
   reliquary: () => evaluateReliquary(reliquaryConfig()),
   horizons: () => {
     let state = createHorizonState();

@@ -415,6 +415,16 @@ input {
   --lb-panel: #101208ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #212a10, #10140a 55%, #070905);
 }
+.lex {
+  --lb-accent: #9fd8b4;
+  --lb-accent-strong: #d2f2df;
+  --lb-border: #2f4a3a;
+  --lb-panel: #0a120eee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #12291d, #0a120e 55%, #050a07);
+}
+.lx-register p {
+  grid-template-columns: minmax(0, 1.6fr) 90px 52px 92px;
+}
 .chronos {
   --lb-accent: #c0a8ff;
   --lb-accent-strong: #e6dcff;

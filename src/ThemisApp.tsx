@@ -4,6 +4,7 @@ import { evaluateWatchfloor, watchfloorConfig } from "./watchfloor";
 import { evaluateVeritas, veritasConfig, withModel } from "./veritas";
 import { censusConfig, evaluateCensus, CENSUS_COHORTS, type CensusCohortId } from "./census";
 import { chronosConfig, evaluateChronos } from "./chronos";
+import { evaluateLex, lexConfig } from "./lex";
 import {
   ACTION_META,
   evaluateThemis,
@@ -100,13 +101,14 @@ function DecisionTimeline({
  * envelope is settled from what the other modules report, and the executive
  * reads it as a ceiling.
  */
-type BusFeedId = "watchfloor" | "veritas" | "census" | "chronos";
+type BusFeedId = "watchfloor" | "veritas" | "census" | "chronos" | "lex";
 
 const BUS_FEEDS: ReadonlyArray<{ id: BusFeedId; name: string; degraded: string }> = [
   { id: "watchfloor", name: "WATCHFLOOR", degraded: "Cry-wolf watch: a calm board losing interventions" },
   { id: "veritas", name: "VERITAS", degraded: "IGNIS fusion branch: wrong while its residuals stay quiet" },
   { id: "census", name: "CENSUS", degraded: "Survival figure published without its dual ledger" },
   { id: "chronos", name: "CHRONOS", degraded: "Order-by-receipt: a causal record that invents sequence" },
+  { id: "lex", name: "LEX", degraded: "Stellar collection: prohibited by the treaty it inherited" },
 ];
 
 const countAllCohorts = () =>
@@ -128,6 +130,10 @@ function busEnvelope(feeds: Record<BusFeedId, boolean>) {
       policy: feeds.chronos ? "arrival" : "partial",
       grantValidityS: 3.2e8,
     }),
+    lex: evaluateLex({
+      ...lexConfig(),
+      activity: feeds.lex ? "stellar-collection" : "resource-extraction",
+    }),
   };
   const state = settleModuleAuthority(inputs);
   return { claims: state.ledgers.authority.claims, envelope: state.ledgers.authority.envelope };
@@ -140,6 +146,7 @@ export function ThemisApp() {
     veritas: false,
     census: false,
     chronos: false,
+    lex: false,
   });
   const bus = useMemo(() => busEnvelope(feeds), [feeds]);
   const result = useMemo(() => evaluateThemis(config, bus.envelope ?? undefined), [config, bus]);

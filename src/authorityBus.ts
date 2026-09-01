@@ -27,11 +27,13 @@ import type { evaluateWatchfloor } from "./watchfloor";
 import type { evaluateVeritas } from "./veritas";
 import type { evaluateCensus } from "./census";
 import type { evaluateChronos } from "./chronos";
+import type { evaluateLex } from "./lex";
 
 type WatchfloorResult = ReturnType<typeof evaluateWatchfloor>;
 type VeritasResult = ReturnType<typeof evaluateVeritas>;
 type CensusResult = ReturnType<typeof evaluateCensus>;
 type ChronosResult = ReturnType<typeof evaluateChronos>;
+type LexResult = ReturnType<typeof evaluateLex>;
 
 const NONE: AuthorityClaim = {
   limit: "none",
@@ -135,11 +137,50 @@ export function chronosAuthority(result: ChronosResult): AuthorityClaim {
   return NONE;
 }
 
+/**
+ * An unlawful act is refused whether or not anyone could stop it.
+ *
+ * This is the adapter where the asymmetry does the most work. LEX computes
+ * impunity — prohibited, and nobody able to act on the breach — and posts the
+ * same `hold` either way. An executive that could be talked out of a
+ * prohibition by measuring the distance to the nearest court would be exactly
+ * the failure the module exists to name.
+ *
+ * An ungoverned act is not cleared either. Nothing in the register reaches
+ * personhood classification, and silence is a finding rather than a licence,
+ * so an irreversible act under no instrument at all is still held back from
+ * autonomy.
+ */
+export function lexAuthority(result: LexResult): AuthorityClaim {
+  if (!result.lawful) {
+    return {
+      limit: "hold",
+      reason: result.impunity
+        ? `Unlawful and unenforceable: ${result.prohibitions} binding prohibition(s), nearest party ${result.roundTripYears.toFixed(2)} yr away`
+        : `Unlawful: ${result.prohibitions} binding prohibition(s) against ${result.activity.name.toLowerCase()}`,
+    };
+  }
+  if (result.undetermined && result.activity.irreversible) {
+    return {
+      limit: "no-irreversible",
+      reason: "No instrument reaches this act; silence is not a permission for something irreversible",
+    };
+  }
+  if (result.restrictions > 0 && result.activity.irreversible) {
+    return {
+      limit: "no-irreversible",
+      reason: `${result.restrictions} instrument(s) restrict an irreversible act`,
+    };
+  }
+  return NONE;
+}
+
 export interface AuthorityInputs {
   watchfloor?: WatchfloorResult;
   veritas?: VeritasResult;
   census?: CensusResult;
   chronos?: ChronosResult;
+  lex?: LexResult;
 }
 
 /**
@@ -156,6 +197,7 @@ export function settleModuleAuthority(inputs: AuthorityInputs, seed = 1, tick = 
   if (inputs.veritas) claims.veritas = veritasAuthority(inputs.veritas);
   if (inputs.census) claims.census = censusAuthority(inputs.census);
   if (inputs.chronos) claims.chronos = chronosAuthority(inputs.chronos);
+  if (inputs.lex) claims.lex = lexAuthority(inputs.lex);
   return settleAuthority({
     ...state,
     ledgers: { ...state.ledgers, authority: { claims, envelope: null } },
