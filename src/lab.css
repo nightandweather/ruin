@@ -415,6 +415,16 @@ input {
   --lb-panel: #101208ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #212a10, #10140a 55%, #070905);
 }
+.concilium {
+  --lb-accent: #c8a8e0;
+  --lb-accent-strong: #e8d6f4;
+  --lb-border: #453456;
+  --lb-panel: #100c16ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #241a30, #0e0b12 55%, #070509);
+}
+.cn-worlds p {
+  grid-template-columns: minmax(0, 1.4fr) 108px 58px 42px 54px 78px;
+}
 .lex {
   --lb-accent: #9fd8b4;
   --lb-accent-strong: #d2f2df;

@@ -28,6 +28,7 @@ HORIZONS adds a fourth question: how does a speculative system fail into its nei
 | CENSUS     | definition-dependent reporting and baseline restatement                 | cohort sizes, life-support demand, vulnerability, and trust model  | population and allocation state read from the civilization state bus                                                  |
 | CHRONOS    | relativity of simultaneity, time dilation, real site distances          | event schedule, drift rate, and operational thresholds             | frame transformations and acceleration profiles; this is one frame, not a relativistic solver                         |
 | LEX        | treaty text, article numbers, and party counts for six real instruments | activity mapping, binding decay, recognition half-life, thresholds | a space lawyer's review of the activity mapping; registration, debris, spectrum, and planetary-protection instruments |
+| CONCILIUM  | none — the structure is the claim, not the figures                      | every population, price, capital cost, upkeep, and window          | ground the cost model against real megaproject capital and operating ratios, if any survive the extrapolation         |
 | HORIZONS   | dependency graphs, failure containment, causal ordering                 | fourteen connected post-stellar systems and century projections    | replace each abstract node with validated domain models and uncertainty propagation                                   |
 
 ## Proposed laboratories

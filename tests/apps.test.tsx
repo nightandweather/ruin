@@ -21,6 +21,7 @@ import { AtlasApp } from "../src/AtlasApp";
 import { CensusApp } from "../src/CensusApp";
 import { ChronosApp } from "../src/ChronosApp";
 import { CollectorApp } from "../src/CollectorApp";
+import { ConciliumApp } from "../src/ConciliumApp";
 import { ConcordApp } from "../src/ConcordApp";
 import { CorvusApp } from "../src/CorvusApp";
 import { DatacoreApp } from "../src/DatacoreApp";
@@ -52,6 +53,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "census", Component: CensusApp },
   { id: "chronos", Component: ChronosApp },
   { id: "collector", Component: CollectorApp },
+  { id: "concilium", Component: ConciliumApp },
   { id: "concord", Component: ConcordApp },
   { id: "corvus", Component: CorvusApp },
   { id: "datacore", Component: DatacoreApp },

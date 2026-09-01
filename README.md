@@ -1,13 +1,13 @@
 # RUIN
 
-> **Executable science fiction.** Twenty-nine deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
+> **Executable science fiction.** Thirty deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
 
 [![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-60c5ba.svg)](CONTRIBUTING.md)
 [![Live demo](https://img.shields.io/badge/live-demo-ffb456.svg)](https://nightandweather.github.io/ruin/)
 
-**HELIOS**, the first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-eight laboratories have grown around it — factories, habitats, propulsion, archives, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+**HELIOS**, the first module, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU, balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine laboratories have grown around it — factories, habitats, propulsion, archives, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
 
 > I build mission-critical operational systems in domains where silent failure is unacceptable—first in radiotherapy, then as an open simulation laboratory for autonomous space infrastructure.
 
@@ -90,6 +90,7 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Personhood accounting](concepts/census-personhood-accounting.md) — the definition a survival rate is divided by, and what a restated baseline hides.
 - [Operator loading](concepts/watchfloor-operator-loading.md) — alarm flooding, handover context loss, and the crew every safety plan assumes.
 - [Model divergence](concepts/veritas-model-divergence.md) — drift, envelope exits, and certificates that outlive their evidence.
+- [Councils and budgets](concepts/concilium-councils-and-budgets.md) — what each system costs, which worlds can hold it, and how seats are drawn.
 - [Space law](concepts/lex-space-law.md) — which instruments bind an act, which can still be enforced, and why the gap is not a permission.
 - [Simultaneity](concepts/chronos-simultaneity.md) — causal order, command freshness, and the radius inside which a shared present exists.
 - [Gravitational catapult](concepts/funda-gravitational-catapult.md) — cargo moved on borrowed orbital momentum, and the corridor nobody can see in time.
@@ -144,6 +145,7 @@ A laboratory's opening state can be named in the query string — `census.html?p
 - **CENSUS** — settle the ledger every survival metric is divided by: change who counts as a person and watch a 99.97% survival report appear without a single life improving.
 - **CHRONOS** — record a civilization's events when no two sites share a present: watch order-by-receipt invent 124 sequences the universe does not have, and order-by-local-clock file effects ahead of their causes.
 - **LEX** — read RUIN's own activities against the Outer Space Treaty, the Liability Convention, the Moon Agreement, and the national statutes that contradict them, and watch the flagship come out prima facie unlawful under Article II.
+- **CONCILIUM** — price every RUIN system in terawatt-years, give seven worlds different economies, and watch the same proposal carry at 95% by revenue and fail at 0% by population.
 - **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
 
