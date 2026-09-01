@@ -314,6 +314,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     blurb: "Move a foundry's output to orbit under custody rules that refuse an unsafe launch",
   },
   {
+    id: "patron",
+    page: "patron.html",
+    href: "./patron.html",
+    label: "PATRON",
+    group: "govern",
+    blurb: "Fund 24 honest studies and watch the money, not the data, choose the answer",
+  },
+  {
     id: "waystation",
     page: "waystation.html",
     href: "./waystation.html",

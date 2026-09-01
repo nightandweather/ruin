@@ -40,6 +40,7 @@ import { MenderApp } from "../src/MenderApp";
 import { MnemosyneApp } from "../src/MnemosyneApp";
 import { NavisApp } from "../src/NavisApp";
 import { OdysseyApp } from "../src/OdysseyApp";
+import { PatronApp } from "../src/PatronApp";
 import { PortaApp } from "../src/PortaApp";
 import { ProgenitorApp } from "../src/ProgenitorApp";
 import { PrometheusApp } from "../src/PrometheusApp";
@@ -77,6 +78,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "mnemosyne", Component: MnemosyneApp },
   { id: "navis", Component: NavisApp },
   { id: "odyssey", Component: OdysseyApp },
+  { id: "patron", Component: PatronApp },
   { id: "porta", Component: PortaApp },
   { id: "progenitor", Component: ProgenitorApp },
   { id: "prometheus", Component: PrometheusApp },

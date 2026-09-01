@@ -95,6 +95,8 @@ Three laboratories now sit underneath the physical ones. They were built out of 
 
 CHRONOS joined them: simultaneity, causal order, and command freshness, where order-by-receipt invents 124 sequences the universe does not have and a shared present at one-minute tolerance covers the Moon and nothing else.
 
+PATRON joined them: the consortium that produces the numbers the other modules consume. Every researcher honest, every published estimate exactly what was measured — and the funding structure alone, through the file drawer Turner documented in 2008, moves the published consensus far enough to clear a deployment the registry would have refused. Its repair is the documented one: registered reports, which abolish the drawer rather than the money.
+
 **These are no longer isolated.** The state bus gained an authority ledger, and all four now post restrictions that THEMIS reads as a ceiling — a saturated floor, an uncertified model, a withheld survival figure, and an inadmissible causal record each stop the executive from acting, rather than only reporting that they should. See the [state bus brief](concepts/civilization-state-bus.md) for the second slice.
 
 Still open on the bus: material, crew-dose, debris, and archive ledgers; adapters from HELIOS, FOUNDRY, and HYGEIA onto the authority ledger; and a campaign runner that advances both ledgers together across ticks.
