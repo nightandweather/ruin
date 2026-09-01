@@ -17,6 +17,7 @@ import { fmt, LabShell, Metric, Options, Range, Register, Title, Verdict } from 
 const BASES: ReadonlyArray<{ id: SeatBasis; name: string; detail: string }> = [
   { id: "revenue", name: "BY REVENUE", detail: "Seats follow what a world earns" },
   { id: "population", name: "BY POPULATION", detail: "Seats follow who lives there" },
+  { id: "counted", name: "BY COUNTED ROLL", detail: "Seats follow who the personhood definition admits" },
   { id: "holdings", name: "BY HOLDINGS", detail: "Seats follow what a world already owns" },
 ];
 

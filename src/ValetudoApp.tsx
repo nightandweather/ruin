@@ -53,6 +53,7 @@ export function ValetudoApp() {
     setConfig((current) => ({ ...current, [key]: value }));
 
   const treated = new Set(result.treated.map((p) => p.id));
+  const rolled = new Set(result.rolledIds);
   const held = new Set(result.refusedForConfirmation.map((p) => p.id));
 
   return (
@@ -124,7 +125,7 @@ export function ValetudoApp() {
               </span>
               <i>SOFA {patient.sofa}</i>
               <i>+{(benefitOf(patient) * 100).toFixed(0)}</i>
-              <em>{patient.onRoll ? "ON ROLL" : "UNROLLED"}</em>
+              <em>{rolled.has(patient.id) ? "ON ROLL" : "UNROLLED"}</em>
             </p>
           ))}
         </div>

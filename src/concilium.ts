@@ -1,3 +1,4 @@
+import { censusConfig, type CensusCohortId } from "./census";
 /**
  * CONCILIUM — who can afford the infrastructure, and who decides about it.
  *
@@ -37,7 +38,7 @@ export type SystemId =
   | "datacore"
   | "helios-swarm"
   | "odyssey-corridor";
-export type SeatBasis = "population" | "revenue" | "holdings";
+export type SeatBasis = "population" | "counted" | "revenue" | "holdings";
 export type ConciliumIncident =
   "none" | "light-lag-vote" | "output-collapse" | "dependency-cascade" | "embargo";
 
@@ -80,6 +81,12 @@ export interface World {
   /** Distance from the council seat, in light-seconds. */
   distanceLs: number;
   population: number;
+  /**
+   * Which CENSUS cohorts live here. A world is not one kind of person, and the
+   * "counted" seat basis only counts the cohorts the personhood definition
+   * admits — so amending the definition moves the council without a vote.
+   */
+  cohorts: CensusCohortId[];
   /** Annual production by resource. Energy is in TW; the rest in TW-year units. */
   produces: Partial<Record<ResourceId, number>>;
 }
@@ -117,6 +124,7 @@ export const WORLDS: readonly World[] = [
     detail: "Most of the species, and the goods everyone uses at the lowest margin in the system",
     distanceLs: 1.28,
     population: 3_900_000,
+    cohorts: ["charter", "contract", "stateless"],
     produces: { energy: 40, manufactures: 22, biomass: 14 },
   },
   {
@@ -125,6 +133,7 @@ export const WORLDS: readonly World[] = [
     detail: "A quarter of a million people operating the swarm they own",
     distanceLs: 299.4,
     population: 240_000,
+    cohorts: ["charter", "contract"],
     produces: { energy: 3_400 },
   },
   {
@@ -133,6 +142,7 @@ export const WORLDS: readonly World[] = [
     detail: "Fifty thousand miners holding the only rare-metal stream anyone can reach",
     distanceLs: 1_250,
     population: 54_000,
+    cohorts: ["contract", "stateless"],
     produces: { energy: 9, "rare-metals": 46 },
   },
   {
@@ -141,6 +151,7 @@ export const WORLDS: readonly World[] = [
     detail: "Transfer port and separation plant; enriched fuel and everyone's traffic",
     distanceLs: 2_095.8,
     population: 86_000,
+    cohorts: ["charter", "contract"],
     produces: { energy: 90, fissile: 31 },
   },
   {
@@ -149,6 +160,7 @@ export const WORLDS: readonly World[] = [
     detail: "Twelve thousand people selling certified engineering, eleven hours out",
     distanceLs: 19_960.2,
     population: 12_000,
+    cohorts: ["charter", "forks"],
     produces: { energy: 6, designs: 28 },
   },
   {
@@ -157,6 +169,7 @@ export const WORLDS: readonly World[] = [
     detail: "In transit on stored power, still licensing what it works out on the way",
     distanceLs: 3.787e7,
     population: 41_000,
+    cohorts: ["sleepers", "forks"],
     produces: { energy: 18, designs: 7 },
   },
   {
@@ -165,6 +178,7 @@ export const WORLDS: readonly World[] = [
     detail: "Four light-years out, with no neighbour close enough to buy from",
     distanceLs: 1.3717e8,
     population: 38_000,
+    cohorts: ["unchartered", "charter"],
     produces: { energy: 2.5, biomass: 5 },
   },
 ];
@@ -299,6 +313,8 @@ export const PROPOSALS: readonly Proposal[] = [
 ];
 
 export interface ConciliumConfig {
+  /** Which cohorts the definition admits. Defaults to CENSUS's own roll. */
+  roll: Record<CensusCohortId, boolean>;
   proposal: string;
   seatBasis: SeatBasis;
   /** Years of surplus a world may commit to capital projects. */
@@ -313,6 +329,15 @@ export interface ConciliumConfig {
 }
 
 const LY_LS = 3.15576e7;
+
+/**
+ * The personhood definition the council is drawn against.
+ *
+ * CONCILIUM reads CENSUS's default roll rather than keeping its own, so the
+ * two cannot disagree about who exists. Passing a different roll is how a
+ * campaign runner replays a council under an amended definition.
+ */
+export const defaultRoll = (): Record<CensusCohortId, boolean> => censusConfig().counted;
 /** Output retained by the richest world under `output-collapse` (scenario). */
 const COLLAPSE_RETAINED = 0.15;
 /** Share of seats needed to carry. */
@@ -320,6 +345,7 @@ export const CARRY_THRESHOLD = 0.5;
 
 export function conciliumConfig(): ConciliumConfig {
   return {
+    roll: defaultRoll(),
     proposal: "expand-swarm",
     seatBasis: "revenue",
     accumulationYears: 40,
@@ -337,6 +363,8 @@ export interface WorldStanding {
   outputTW: number;
   /** Everything the world sells, priced in terawatt-years. */
   revenueTWy: number;
+  /** Share of this world's people the personhood definition admits. */
+  countedFraction: number;
   /** Resources it can obtain: its own production plus reachable trade. */
   access: ResourceId[];
   /** Resources it needs for the systems it could otherwise afford. */
@@ -477,10 +505,18 @@ export function evaluateConcilium(c: ConciliumConfig) {
       owns = owns.filter((id) => !lost.some((sys) => sys.id === id));
     }
     const roundTripYears = roundTrip(world);
+    // The counted population is the people the definition admits: a world of
+    // sleepers and forks can be fully alive and mostly invisible to a council
+    // drawn from the roll.
+    const countedFraction =
+      world.cohorts.length > 0
+        ? world.cohorts.filter((cohort) => c.roll[cohort]).length / world.cohorts.length
+        : 0;
     return {
       world,
       outputTW,
       revenueTWy,
+      countedFraction,
       access,
       missing,
       budgetTWy,
@@ -500,15 +536,18 @@ export function evaluateConcilium(c: ConciliumConfig) {
   const totalPopulation = standings.reduce((sum, s) => sum + s.world.population, 0);
   const totalOutput = standings.reduce((sum, s) => sum + s.outputTW, 0);
   const totalRevenue = standings.reduce((sum, s) => sum + s.revenueTWy, 0);
+  const countedTotal = standings.reduce((sum, s) => sum + s.world.population * s.countedFraction, 0);
   const totalHoldings = standings.reduce((sum, s) => sum + s.owns.length, 0);
   for (const standing of standings) {
     standing.populationShare = standing.world.population / Math.max(1, totalPopulation);
     standing.seatShare =
       c.seatBasis === "population"
         ? standing.populationShare
-        : c.seatBasis === "revenue"
-          ? standing.outputTW / Math.max(1e-9, totalOutput)
-          : standing.owns.length / Math.max(1, totalHoldings);
+        : c.seatBasis === "counted"
+          ? (standing.world.population * standing.countedFraction) / Math.max(1, countedTotal)
+          : c.seatBasis === "revenue"
+            ? standing.outputTW / Math.max(1e-9, totalOutput)
+            : standing.owns.length / Math.max(1, totalHoldings);
   }
 
   // A world votes for a proposal about a system it owns — it captures the
@@ -597,6 +636,16 @@ export function evaluateConcilium(c: ConciliumConfig) {
       (s) =>
         `${s.world.name} can pay for ${s.upkeepBlocked.length} system(s) it cannot run: ${s.budgetTWy.toFixed(0)} TW·yr of capital against ${s.outputTW} TW of generation`,
     ),
+    ...(c.seatBasis === "counted" && standings.some((s) => s.countedFraction < 1)
+      ? [
+          `Seats drawn from the counted roll: ${
+            standings
+              .filter((s) => s.countedFraction < 0.5)
+              .map((s) => s.world.name)
+              .join(", ") || "no world"
+          } mostly outside the definition`,
+        ]
+      : []),
     ...(embargo
       ? ["Rare-metal embargo: no world outside Ceres can build or replace a foundry, at any budget"]
       : []),

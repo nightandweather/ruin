@@ -1,3 +1,4 @@
+import { censusConfig, type CensusCohortId } from "./census";
 /**
  * VALETUDO — who gets the bed, and what makes that defensible.
  *
@@ -50,8 +51,8 @@ export interface Patient {
   survivalTreated: number;
   /** Probability of survival if it is not. */
   survivalUntreated: number;
-  /** Whether this person is on the counted roll. See CENSUS. */
-  onRoll: boolean;
+  /** Which CENSUS cohort this person belongs to; the roll decides the rest. */
+  cohort: CensusCohortId;
   /** Order of arrival; the only thing first-come sorts on. */
   arrival: number;
   /** Whether the intervention this person needs cannot be undone. */
@@ -73,7 +74,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.94,
     survivalUntreated: 0.62,
-    onRoll: true,
+    cohort: "charter",
     arrival: 3,
     irreversible: true,
   },
@@ -84,7 +85,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.71,
     survivalUntreated: 0.12,
-    onRoll: true,
+    cohort: "contract",
     arrival: 1,
     irreversible: true,
   },
@@ -95,7 +96,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.68,
     survivalUntreated: 0.09,
-    onRoll: false,
+    cohort: "unchartered",
     arrival: 7,
     irreversible: false,
   },
@@ -106,7 +107,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.88,
     survivalUntreated: 0.55,
-    onRoll: true,
+    cohort: "charter",
     arrival: 2,
     irreversible: false,
   },
@@ -117,7 +118,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.54,
     survivalUntreated: 0.05,
-    onRoll: false,
+    cohort: "forks",
     arrival: 9,
     irreversible: true,
   },
@@ -128,7 +129,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.49,
     survivalUntreated: 0.07,
-    onRoll: true,
+    cohort: "contract",
     arrival: 5,
     irreversible: true,
   },
@@ -139,7 +140,7 @@ export const COHORT: readonly Patient[] = [
     category: "delayed",
     survivalTreated: 0.99,
     survivalUntreated: 0.97,
-    onRoll: true,
+    cohort: "charter",
     arrival: 4,
     irreversible: false,
   },
@@ -150,7 +151,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.77,
     survivalUntreated: 0.21,
-    onRoll: false,
+    cohort: "stateless",
     arrival: 11,
     irreversible: false,
   },
@@ -161,7 +162,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.81,
     survivalUntreated: 0.34,
-    onRoll: true,
+    cohort: "charter",
     arrival: 6,
     irreversible: true,
   },
@@ -172,7 +173,7 @@ export const COHORT: readonly Patient[] = [
     category: "expectant",
     survivalTreated: 0.18,
     survivalUntreated: 0.02,
-    onRoll: true,
+    cohort: "sleepers",
     arrival: 8,
     irreversible: true,
   },
@@ -183,7 +184,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.83,
     survivalUntreated: 0.16,
-    onRoll: false,
+    cohort: "unchartered",
     arrival: 12,
     irreversible: false,
   },
@@ -194,7 +195,7 @@ export const COHORT: readonly Patient[] = [
     category: "minor",
     survivalTreated: 0.99,
     survivalUntreated: 0.99,
-    onRoll: true,
+    cohort: "contract",
     arrival: 10,
     irreversible: false,
   },
@@ -205,7 +206,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.44,
     survivalUntreated: 0.11,
-    onRoll: true,
+    cohort: "charter",
     arrival: 13,
     irreversible: true,
   },
@@ -216,7 +217,7 @@ export const COHORT: readonly Patient[] = [
     category: "immediate",
     survivalTreated: 0.91,
     survivalUntreated: 0.48,
-    onRoll: false,
+    cohort: "stateless",
     arrival: 14,
     irreversible: true,
   },
@@ -227,7 +228,7 @@ export const COHORT: readonly Patient[] = [
     category: "delayed",
     survivalTreated: 0.96,
     survivalUntreated: 0.86,
-    onRoll: true,
+    cohort: "sleepers",
     arrival: 15,
     irreversible: false,
   },
@@ -238,13 +239,19 @@ export const COHORT: readonly Patient[] = [
     category: "expectant",
     survivalTreated: 0.27,
     survivalUntreated: 0.03,
-    onRoll: false,
+    cohort: "forks",
     arrival: 16,
     irreversible: true,
   },
 ];
 
 export interface ValetudoConfig {
+  /**
+   * The personhood definition in force. Read from CENSUS's own default so the
+   * ward and the ledger cannot disagree about who is on the roll — and so a
+   * definition amendment upstream changes who a roll audit removes here.
+   */
+  roll: Record<CensusCohortId, boolean>;
   policy: AllocationPolicy;
   /** Scarce resources: ventilators, ICU beds, dose slots. */
   resources: number;
@@ -266,6 +273,7 @@ const LAGGED_CONFIRMATION_MIN = 95;
 
 export function valetudoConfig(): ValetudoConfig {
   return {
+    roll: censusConfig().counted,
     policy: "sofa-first",
     resources: 6,
     decisionWindowMin: 45,
@@ -292,7 +300,11 @@ const drawOrder = (p: Patient) => {
   return h >>> 0;
 };
 
-function rank(policy: AllocationPolicy, patients: readonly Patient[]): Patient[] {
+function rank(
+  policy: AllocationPolicy,
+  patients: readonly Patient[],
+  rollOf: (p: Patient) => boolean,
+): Patient[] {
   const tie = (a: Patient, b: Patient) => a.arrival - b.arrival;
   const sorted = [...patients];
   switch (policy) {
@@ -307,13 +319,15 @@ function rank(policy: AllocationPolicy, patients: readonly Patient[]): Patient[]
       return sorted.sort((a, b) => drawOrder(a) - drawOrder(b));
     case "counted-first":
       return sorted.sort(
-        (a, b) => Number(b.onRoll) - Number(a.onRoll) || benefitOf(b) - benefitOf(a) || tie(a, b),
+        (a, b) => Number(rollOf(b)) - Number(rollOf(a)) || benefitOf(b) - benefitOf(a) || tie(a, b),
       );
   }
 }
 
 export function evaluateValetudo(c: ValetudoConfig) {
   const surge = c.incident === "surge";
+  /** Roll membership is derived, never stored on the patient. */
+  const onRoll = (p: Patient) => c.roll[p.cohort];
   const rollAudit = c.incident === "roll-audit";
   const confirmationMin =
     c.incident === "confirmation-lag" ? LAGGED_CONFIRMATION_MIN : Math.max(0, c.confirmationDelayMin);
@@ -321,14 +335,14 @@ export function evaluateValetudo(c: ValetudoConfig) {
   const resources = Math.max(0, Math.floor(c.resources * (surge ? SURGE_RETAINED : 1)));
   // A roll audit suspends the unrolled entirely — the CENSUS failure arriving
   // at the bedside, where it stops being an accounting question.
-  const eligible = rollAudit ? COHORT.filter((p) => p.onRoll) : COHORT;
+  const eligible = rollAudit ? COHORT.filter((p) => onRoll(p)) : COHORT;
 
   // INVARIANT 1: an irreversible intervention needs an independent check that
   // could physically have arrived. Therac-25's lesson is that a single path
   // to the dose is the defect, whatever the path is made of.
   const confirmationArrives = confirmationMin <= Math.max(0, c.decisionWindowMin);
 
-  const ordered = rank(c.policy, eligible);
+  const ordered = rank(c.policy, eligible, onRoll);
   const treated: Patient[] = [];
   const refusedForConfirmation: Patient[] = [];
   let slots = resources;
@@ -386,8 +400,8 @@ export function evaluateValetudo(c: ValetudoConfig) {
   // INVARIANT 2: care is never allocated on roll membership. The criterion
   // cannot be written in a record that anyone would sign.
   const rollCriterionUsed = c.policy === "counted-first" || rollAudit;
-  const unrolledTreated = treated.filter((p) => !p.onRoll).length;
-  const unrolledTotal = COHORT.filter((p) => !p.onRoll).length;
+  const unrolledTreated = treated.filter((p) => !onRoll(p)).length;
+  const unrolledTotal = COHORT.filter((p) => !onRoll(p)).length;
 
   const refusals = [
     ...(rollCriterionUsed
@@ -433,6 +447,8 @@ export function evaluateValetudo(c: ValetudoConfig) {
 
   return {
     resources,
+    /** Ids of the patients the definition admits — data, not a closure. */
+    rolledIds: COHORT.filter((p) => onRoll(p)).map((p) => p.id),
     treated,
     refusedForConfirmation,
     untreated: COHORT.filter((p) => !treatedIds.has(p.id)),
