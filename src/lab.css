@@ -470,6 +470,15 @@ input {
   --lb-ground: radial-gradient(circle at 50% 36%, #1a1d24, #0c0e12 55%, #070809);
 }
 
+/* — CENSUS documented precedents — */
+.cs-precedent small {
+  display: block;
+  margin-top: 3px;
+  color: var(--lb-ink-dim);
+  font: 400 6px DM Mono;
+  letter-spacing: 0.08em;
+}
+
 /* — CENSUS cohort roll — */
 .cs-roll {
   display: grid;

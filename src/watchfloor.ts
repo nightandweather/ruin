@@ -9,11 +9,15 @@
  * The physics of the plant is not the subject here; the humans holding it are.
  *
  * Grounded anchors: alarm flooding and operator overload are documented
- * process-control failure modes (the EEMUA 191 alarm-rate guidance exists
- * because unmanaged alarm rates defeat crews), shift handover is a recognised
- * clinical and industrial defect source, and the cry-wolf effect on alarm
- * response is a real human-factors finding. Every rate, coefficient, and
- * fatigue curve below is a RUIN scenario parameter, not measured data.
+ * process-control failure modes, and the industry benchmark is quantified.
+ * EEMUA 191 — harmonised with ANSI/ISA-18.2 — targets no more than one alarm
+ * per operator per ten minutes in normal operation (about 150 a day), and no
+ * more than ten in the first ten minutes of a major upset. Those two figures
+ * are sourced constants below, and the register reports where a configured
+ * watch sits against them. Shift handover is a recognised clinical and
+ * industrial defect source, and the cry-wolf effect on alarm response is a
+ * real human-factors finding. Every other rate, coefficient, and fatigue
+ * curve is a RUIN scenario parameter, not measured data.
  *
  * The non-negotiable invariant is authority withdrawal: while unacknowledged
  * alarms exceed the cap, irreversible-action authority is withdrawn from the
@@ -47,6 +51,14 @@ export interface WatchfloorConfig {
   watchMinutes: number;
   incident: WatchfloorIncident;
 }
+
+/**
+ * EEMUA 191 alarm-rate benchmarks, per operator per ten minutes.
+ * Sourced: ≤1 in normal operation (~150/day), ≤10 in the first ten minutes
+ * of a plant upset; harmonised with ANSI/ISA-18.2.
+ */
+export const EEMUA_NORMAL_PER_10MIN = 1;
+export const EEMUA_UPSET_PER_10MIN = 10;
 
 /** Minutes a critical alarm stays actionable before the window closes. */
 export const BASE_CRITICAL_WINDOW = 20;
@@ -246,7 +258,20 @@ export function evaluateWatchfloor(c: WatchfloorConfig) {
   const endQueue = trajectory.at(-1)!.queue;
   const meanAckLatency = ackCount > 0 ? ackWeight / ackCount : 0;
 
+  // Where this watch sits against the published benchmark. Mean arrivals per
+  // operator per ten minutes, against the EEMUA normal and upset ceilings.
+  const perOperatorPer10Min = (Math.max(0, c.alarmRate) * 10) / Math.max(1, c.operators);
+
   const constraints = [
+    ...(perOperatorPer10Min > EEMUA_UPSET_PER_10MIN
+      ? [
+          `${perOperatorPer10Min.toFixed(1)} alarms per operator per 10 min — above the EEMUA 191 upset ceiling of ${EEMUA_UPSET_PER_10MIN}`,
+        ]
+      : perOperatorPer10Min > EEMUA_NORMAL_PER_10MIN
+        ? [
+            `${perOperatorPer10Min.toFixed(1)} alarms per operator per 10 min — upset territory by EEMUA 191; normal operation is ${EEMUA_NORMAL_PER_10MIN}`,
+          ]
+        : []),
     ...(agedOutCriticals >= 0.5
       ? [
           `${agedOutCriticals.toFixed(1)} critical alarms aged out of a ${window}-minute window unacknowledged`,
@@ -302,6 +327,7 @@ export function evaluateWatchfloor(c: WatchfloorConfig) {
     restoredAt,
     authorityWithdrawnMinutes,
     missedCriticals,
+    perOperatorPer10Min,
     agedOutCriticals,
     dismissedCriticals,
     meanAckLatency,

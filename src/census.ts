@@ -7,13 +7,11 @@
  * denominator is a definition of who counts as a person. Change the
  * definition and the headline figure moves without a single life improving.
  *
- * Grounded anchors: none of the physics kind. What is grounded here is
- * administrative rather than physical — that reported population statistics
- * depend on a category definition, that definitions are revised, and that a
- * revision applied to the baseline as well as the current count changes the
- * ratio without changing the world. Cohort sizes, per-capita life-support
- * demand, vulnerability, and the attrition coefficient are RUIN scenario
- * parameters.
+ * Grounded anchors: none of the physics kind, but the mechanism itself is
+ * documented at world scale — see `CENSUS_PRECEDENTS`, which quotes real
+ * cases where the denominator, not the world, moved the headline. Cohort
+ * sizes, per-capita life-support demand, vulnerability, and the attrition
+ * coefficient are RUIN scenario parameters.
  *
  * The non-negotiable invariant is dual-ledger publication: a survival figure
  * computed under an amended definition may not be published alone. The prior
@@ -22,6 +20,39 @@
  * selection of survivors. Refusal happens inside the model, not as a lamp an
  * operator may overrule.
  */
+
+/**
+ * Documented precedents for the mechanism this module simulates.
+ *
+ * These are not analogies. Each is a real, checkable case where a headline
+ * figure and the underlying reality diverged because of who or what was
+ * counted — with nobody lying anywhere in the pipeline. The module's numbers
+ * are invented; the mechanism is not, and this register is the evidence.
+ */
+export const CENSUS_PRECEDENTS: ReadonlyArray<{
+  name: string;
+  reported: string;
+  actual: string;
+  mechanism: string;
+  source: string;
+}> = [
+  {
+    name: "COVID-19 MORTALITY, 2020–2021",
+    reported: "5.4 million reported COVID deaths",
+    actual: "14.9 million excess deaths (WHO range 13.3–16.6M)",
+    mechanism:
+      "Reported deaths count people who died with a confirmed attribution; excess mortality counts everyone who died beyond the expected baseline. The gap is who enters the denominator, not fraud.",
+    source: "WHO, 5 May 2022 — global excess mortality associated with the pandemic.",
+  },
+  {
+    name: "UNEMPLOYMENT MEASURES, ONGOING",
+    reported: "U-3, the headline rate",
+    actual: "U-6, including discouraged and involuntarily part-time workers, is persistently far higher",
+    mechanism:
+      "The US Bureau of Labor Statistics publishes six measures, U-1 through U-6, of the same labour market — an official acknowledgement that the rate is a definition, not an observation.",
+    source: "BLS alternative measures of labor underutilization, published monthly.",
+  },
+];
 
 export type CensusCohortId = "charter" | "contract" | "sleepers" | "forks" | "unchartered" | "stateless";
 export type CensusPolicy = "counted-first" | "uniform" | "vulnerable-first";

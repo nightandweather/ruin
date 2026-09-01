@@ -15,6 +15,8 @@
 
 A survival rate is a fraction, and its denominator is a definition of who counts as a person. Change the definition and the headline moves without a single life improving. CENSUS ships six cohorts and a life-support budget that does not cover them; its default policy serves the counted population first, so the people on the roll never experience the shortage at all. Twenty thousand deaths never enter a report.
 
+This mechanism is documented at world scale. The WHO's excess-mortality estimate for 2020–2021 is **14.9 million deaths against 5.4 million reported** — nearly three to one, with nobody lying anywhere in the pipeline; the gap is who enters the denominator. The module's own figures are invented, and [its page quotes the real cases](https://nightandweather.github.io/ruin/census.html).
+
 Count everyone instead and the headline falls to **96.37%** — while 5,648 more people are alive. The honest number is worse, and it is the only one the model will publish. Switch off the dual ledger and it publishes nothing at all: [the same run with disclosure disabled](https://nightandweather.github.io/ruin/census.html?disclose=off) returns `PUBLICATION WITHHELD`, refused by the model rather than flagged for an operator to overrule at three in the morning.
 
 Two more, each one link away — these are the running models, not screenshots of them.

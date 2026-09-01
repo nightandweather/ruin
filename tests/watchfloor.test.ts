@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   AUTHORITY_QUEUE_CAP,
+  EEMUA_NORMAL_PER_10MIN,
+  EEMUA_UPSET_PER_10MIN,
   AUTHORITY_RECOVERY,
   BASE_CRITICAL_WINDOW,
   evaluateWatchfloor,
@@ -19,7 +21,13 @@ describe("WATCHFLOOR operator-loading model", () => {
     expect(r.missedCriticals).toBeLessThan(MISSED_CRITICAL_LIMIT);
     expect(r.peakQueue).toBeLessThan(AUTHORITY_QUEUE_CAP);
     expect(r.authorityWithdrawnMinutes).toBe(0);
-    expect(r.readiness).toBe("GO");
+    // Grounding against EEMUA 191 demoted this watch from GO. The default
+    // runs at ten alarms per operator per ten minutes — exactly the published
+    // upset ceiling, and ten times the normal-operation target — so a watch
+    // the model survives is still one the industry benchmark calls an upset.
+    expect(r.perOperatorPer10Min).toBeCloseTo(EEMUA_UPSET_PER_10MIN, 9);
+    expect(r.readiness).toBe("CONDITIONAL");
+    expect(r.constraints.join(" ")).toContain("EEMUA 191");
   });
 
   it("withdraws irreversible authority while the floor is saturated — fail-closed", () => {
@@ -114,5 +122,28 @@ describe("WATCHFLOOR operator-loading model", () => {
       }
       expect(r.missedCriticals).toBeCloseTo(r.agedOutCriticals + r.dismissedCriticals, 9);
     }
+  });
+});
+
+describe("the EEMUA 191 benchmark", () => {
+  it("scales per operator, so staffing changes the verdict on the same stream", () => {
+    // Same alarm stream, more people: the per-operator rate falls below the
+    // upset ceiling and the benchmark constraint softens. Sourced: EEMUA 191
+    // targets ≤1 alarm/operator/10 min normally, ≤10 in an upset's first ten.
+    expect(EEMUA_NORMAL_PER_10MIN).toBe(1);
+    expect(EEMUA_UPSET_PER_10MIN).toBe(10);
+    const thin = evaluateWatchfloor({ ...watchfloorConfig(), operators: 1 });
+    const staffed = evaluateWatchfloor({ ...watchfloorConfig(), operators: 8 });
+    expect(thin.perOperatorPer10Min).toBeGreaterThan(EEMUA_UPSET_PER_10MIN);
+    expect(thin.constraints.join(" ")).toContain("above the EEMUA 191 upset ceiling");
+    expect(staffed.perOperatorPer10Min).toBeLessThan(EEMUA_UPSET_PER_10MIN);
+    expect(staffed.perOperatorPer10Min).toBeGreaterThan(EEMUA_NORMAL_PER_10MIN);
+    expect(staffed.constraints.join(" ")).toContain("upset territory");
+  });
+
+  it("goes quiet only when the stream is genuinely inside normal operation", () => {
+    const calm = evaluateWatchfloor({ ...watchfloorConfig(), alarmRate: 0.5, operators: 6 });
+    expect(calm.perOperatorPer10Min).toBeLessThanOrEqual(EEMUA_NORMAL_PER_10MIN);
+    expect(calm.constraints.join(" ")).not.toContain("EEMUA");
   });
 });

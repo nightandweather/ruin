@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   AMENDMENT_YEAR,
+  CENSUS_PRECEDENTS,
   censusConfig,
   CENSUS_COHORTS,
   DISCLOSURE_FLOOR,
@@ -140,5 +141,20 @@ describe("CENSUS personhood accounting", () => {
     for (let i = 1; i < r.trajectory.length; i += 1) {
       expect(r.trajectory[i].totalAlive).toBeLessThanOrEqual(r.trajectory[i - 1].totalAlive + 1e-9);
     }
+  });
+});
+
+describe("documented precedents", () => {
+  it("quotes real cases with their figures and sources", () => {
+    expect(CENSUS_PRECEDENTS.length).toBeGreaterThanOrEqual(2);
+    for (const precedent of CENSUS_PRECEDENTS) {
+      expect(precedent.source.length).toBeGreaterThan(20);
+      expect(precedent.mechanism).toMatch(/count|definition|denominator/i);
+    }
+    // The WHO figures are the checkable core: 14.9M excess against 5.4M
+    // reported, 2020–2021 — the module's mechanism at world scale.
+    const covid = CENSUS_PRECEDENTS.find((p) => p.name.includes("COVID"))!;
+    expect(covid.reported).toContain("5.4 million");
+    expect(covid.actual).toContain("14.9 million");
   });
 });

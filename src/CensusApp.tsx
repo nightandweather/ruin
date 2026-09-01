@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { readDeepLink, readDeepLinkFlag } from "./deepLink";
 import {
   CENSUS_COHORTS,
+  CENSUS_PRECEDENTS,
   censusConfig,
   evaluateCensus,
   MAX_PUBLISHABLE_DIVERGENCE,
@@ -288,9 +289,14 @@ export function CensusApp() {
             model itself. The definition floor cannot be written out, and a rate over an empty roll is not a
             rate.
           </p>
-          <p className="lb-basis">
-            DEFINITION-DEPENDENT REPORTING · GROUNDED — COHORT SIZES, DEMAND, ATTRITION · ASSUMED
-          </p>
+          <p className="lb-basis">MECHANISM · DOCUMENTED — COHORT SIZES, DEMAND, ATTRITION · ASSUMED</p>
+          <Title n="P" text="DOCUMENTED PRECEDENTS" />
+          {CENSUS_PRECEDENTS.map((precedent) => (
+            <p key={precedent.name} className="lb-invariant cs-precedent">
+              <b>{precedent.name}.</b> {precedent.reported} against {precedent.actual}. {precedent.mechanism}{" "}
+              <small>{precedent.source}</small>
+            </p>
+          ))}
         </div>
       </section>
     </LabShell>
