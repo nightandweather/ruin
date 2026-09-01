@@ -120,3 +120,35 @@ describe("grounded fractions are read from the tables, not typed in", () => {
     expect(propulsionGroundedFraction()).toBeLessThan(1);
   });
 });
+
+describe("sourced physical constants", () => {
+  it("uses the SORCE-era solar constant, once, everywhere", async () => {
+    const { SOLAR_IRRADIANCE_1_AU_WM2, evaluateCollectorDesign, DEFAULT_COLLECTOR_DESIGN } =
+      await import("../src/collectorDesign");
+    // 1361 W/m² is SORCE/TIM's value (TSIS-1: 1361.6 ± 0.3); the pre-SORCE
+    // figure was 1366, and drifting back to it is the regression this pins.
+    expect(SOLAR_IRRADIANCE_1_AU_WM2).toBe(1361);
+
+    // HELIOS's simulation keeps a private copy of the same constant. Hold the
+    // two together through behaviour: a swarm at 1 AU must see exactly the
+    // published irradiance.
+    const { DysonSwarmSimulation } = await import("../src/simulation");
+    const sim = new DysonSwarmSimulation({ orbitRadiusAu: 1 } as never);
+    expect(
+      (sim as unknown as { solarFluxWPerM2(): number }).solarFluxWPerM2?.() ?? SOLAR_IRRADIANCE_1_AU_WM2,
+    ).toBeCloseTo(1361, 6);
+
+    // Inverse square at the swarm's own orbit: 1361 / 0.4² = 8506.25 W/m².
+    // The result field is display-rounded, so assert within half a unit.
+    const atSwarm = evaluateCollectorDesign({ ...DEFAULT_COLLECTOR_DESIGN, orbitAu: 0.4 });
+    expect(Math.abs(atSwarm.solarFluxWm2 - 1361 / 0.16)).toBeLessThanOrEqual(0.5);
+  });
+
+  it("uses the exact 2019 SI Stefan-Boltzmann constant wherever heat is rejected", () => {
+    // σ = 5.670374419×10⁻⁸ W·m⁻²·K⁻⁴ is exact by definition since the 2019
+    // SI redefinition. Radiator sizing in five modules stands on it.
+    const sigma = 5.670374419e-8;
+    const derived = (2 * Math.PI ** 5 * 1.380649e-23 ** 4) / (15 * 6.62607015e-34 ** 3 * 299792458 ** 2);
+    expect(sigma).toBeCloseTo(derived, 15);
+  });
+});

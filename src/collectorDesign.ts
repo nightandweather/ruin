@@ -31,6 +31,16 @@ export const DEFAULT_COLLECTOR_DESIGN: CollectorDesign = {
   propellantKg: 850,
 };
 
+/**
+ * Total solar irradiance at 1 AU.
+ *
+ * Sourced: SORCE/TIM established 1361 W/m², superseding the pre-SORCE 1366;
+ * TSIS-1 measures 1361.6 ± 0.3 W/m² at the 2019 solar minimum, varying about
+ * 0.1% over the 11-year cycle. Flux elsewhere follows the inverse square of
+ * distance — at the swarm's 0.4 AU that is 1361 / 0.16 ≈ 8506 W/m², which is
+ * the entire energetic case for a close swarm and the entire thermal case
+ * against one.
+ */
 export const SOLAR_IRRADIANCE_1_AU_WM2 = 1361;
 const STEFAN_BOLTZMANN = 5.670374419e-8;
 const RADIATOR_EMISSIVITY = 0.9;

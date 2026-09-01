@@ -10,6 +10,9 @@ import type {
   LogisticsState,
 } from "./types";
 
+// Sourced: SORCE/TIM total solar irradiance, 1361 W/m² at 1 AU (TSIS-1:
+// 1361.6 ± 0.3). Kept numerically identical to collectorDesign's constant;
+// tests/grounding.test.ts holds the two together.
 const SOLAR_IRRADIANCE_AT_1_AU = 1361;
 const STEFAN_BOLTZMANN = 5.670374419e-8;
 const BACKGROUND_TEMPERATURE_K = 3;
