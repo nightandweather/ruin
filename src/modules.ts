@@ -305,6 +305,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     group: "energy",
     blurb: "Dispatch beamed power through relays that fail closed, and see who browns out",
   },
+  {
+    id: "ascent",
+    page: "ascent.html",
+    href: "./ascent.html",
+    label: "ASCENT",
+    group: "movement",
+    blurb: "Move a foundry's output to orbit under custody rules that refuse an unsafe launch",
+  },
 ];
 
 export type ModuleId = (typeof MODULES)[number]["id"];

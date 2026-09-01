@@ -18,6 +18,7 @@
  */
 
 import type { IncidentCassette } from "./cassette";
+import { ascentConfig, evaluateAscent } from "./ascent";
 import { censusConfig, evaluateCensus } from "./census";
 import { chronosConfig, evaluateChronos } from "./chronos";
 import { conciliumConfig, evaluateConcilium } from "./concilium";
@@ -34,6 +35,7 @@ import { evaluateWatchfloor, watchfloorConfig } from "./watchfloor";
  * names a runnable module keeps this honest.
  */
 const SCENES = {
+  ascent: { base: ascentConfig, run: evaluateAscent },
   census: { base: censusConfig, run: evaluateCensus },
   chronos: { base: chronosConfig, run: evaluateChronos },
   concilium: { base: conciliumConfig, run: evaluateConcilium },

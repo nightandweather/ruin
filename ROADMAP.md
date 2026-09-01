@@ -47,6 +47,8 @@ Definition of done:
 - No launch without a validated corridor and receiver confidence.
 - FOUNDRY output and C-01 replacement demand use the same cargo ledger.
 
+**Delivered** — [`src/ascent.ts`](src/ascent.ts): the ORDERED → MANIFESTED → TRANSIT → CUSTODY → INSTALLED chain as a conservation-checked cargo ledger, both roads under fail-closed authorization, and the living-cargo exclusion enforced by the model's structure (and its 294 g), all under `tests/ascent.test.ts` and the determinism gate.
+
 ### P1 · [WAYSTATION orbital port](https://github.com/nightandweather/ruin/issues/6)
 
 Turn the handoff between ASCENT logistics and a future civilian fleet into an executable port: traffic corridors, compatible berths, propellant and power service, radiator capacity, cargo quarantine, repair cells, emergency tugs, and departure windows.

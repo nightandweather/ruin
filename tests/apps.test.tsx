@@ -18,6 +18,7 @@ import { GatewayApp } from "../src/GatewayApp";
 import { App } from "../src/App";
 import { AegisApp } from "../src/AegisApp";
 import { AgrariaApp } from "../src/AgrariaApp";
+import { AscentApp } from "../src/AscentApp";
 import { AtlasApp } from "../src/AtlasApp";
 import { CensusApp } from "../src/CensusApp";
 import { ChronosApp } from "../src/ChronosApp";
@@ -53,6 +54,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "helios", Component: App },
   { id: "aegis", Component: AegisApp },
   { id: "agraria", Component: AgrariaApp },
+  { id: "ascent", Component: AscentApp },
   { id: "atlas", Component: AtlasApp },
   { id: "census", Component: CensusApp },
   { id: "chronos", Component: ChronosApp },
