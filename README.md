@@ -1,6 +1,6 @@
 # RUIN
 
-> **Executable science fiction.** Thirty-one deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
+> **Executable science fiction.** Thirty-two deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
 
 [![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -46,7 +46,7 @@ Every fault-response plan in this repository ends with _the operator decides_. W
 
 ## What this is
 
-Thirty-one browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+Thirty-two browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Twenty-nine have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
 
 Every module declares what must never happen and enforces it in the model rather than warning about it. Every module separates the physics it sources from the parameters it invents, and [one of them audits the rest](https://nightandweather.github.io/ruin/veritas.html) — including itself. Reading down [the list of what fiction assumes and what the models return](docs/WHAT-FICTION-ASSUMES.md), the same failure appears in twelve costumes: **the instrument says everything is fine.**
 
@@ -96,6 +96,7 @@ RUIN is a home for executable science-fiction infrastructure. Each concept begin
 - [Personhood accounting](concepts/census-personhood-accounting.md) — the definition a survival rate is divided by, and what a restated baseline hides.
 - [Operator loading](concepts/watchfloor-operator-loading.md) — alarm flooding, handover context loss, and the crew every safety plan assumes.
 - [Model divergence](concepts/veritas-model-divergence.md) — drift, envelope exits, and certificates that outlive their evidence.
+- [Clinical allocation](concepts/valetudo-clinical-allocation.md) — what the sorting rule in official use costs, and the criterion the model refuses.
 - [Transit gate operations](concepts/porta-transit-gate-operations.md) — heat, quorum, and the one violation the model prices instead of refusing.
 - [Councils and budgets](concepts/concilium-councils-and-budgets.md) — what each system costs, which worlds can hold it, and how seats are drawn.
 - [Space law](concepts/lex-space-law.md) — which instruments bind an act, which can still be enforced, and why the gap is not a permission.
@@ -154,6 +155,7 @@ A laboratory's opening state can be named in the query string — `census.html?p
 - **LEX** — read RUIN's own activities against the Outer Space Treaty, the Liability Convention, the Moon Agreement, and the national statutes that contradict them, and watch the flagship come out prima facie unlawful under Article II.
 - **CONCILIUM** — price every RUIN system in terawatt-years, give seven worlds different economies, and watch the same proposal carry at 95% by revenue and fail at 0% by population.
 - **PORTA** — open the transit gate Season 02 runs on: 9.58 PJ per 71 minutes, an 80-minute ceiling, a 94-day cooldown, and one violation that opens the door and forks the shared past forever.
+- **VALETUDO** — allocate six beds across sixteen admissions and watch the rule fifteen US states actually use forgo 2.17 expected survivors, then hold an irreversible dose for a second check that cannot arrive.
 - **RELIQUARY** — steward a century archive against media decay, format death, and institutional forgetting, where a backup never restored in rehearsal counts as zero copies.
 - **HORIZONS** — operate fourteen connected post-stellar systems—WORMWAY, CHRONOS, STELLAR FORGE, ARK, EXODUS, ORACLE, DARKLIGHT, MNEMOSYNE, TERRAFORM, WORLD ENGINE, NECROPOLIS, FIRST CONTACT, MATRIOSHKA BRAIN, and SEED—on one causal map. Inject a failure, inspect its dependency blast radius, execute evidence-gated recovery, choose a civilization priority, and resolve the consequences across 10, 50, and 100 years.
 

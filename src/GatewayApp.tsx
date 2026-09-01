@@ -69,7 +69,7 @@ export function GatewayApp() {
           </div>
         </div>
         <p className="gw-lede">
-          Thirty-one deterministic simulations of infrastructure that does not exist yet — and of the ways
+          Thirty-two deterministic simulations of infrastructure that does not exist yet — and of the ways
           such infrastructure fails without anyone noticing. Every module declares what must never happen and
           enforces it in the model rather than warning about it.
         </p>

@@ -274,6 +274,14 @@ export const MODULES: readonly ModuleDefinition[] = [
     blurb: "Open a transit gate against heat, quorum, and a violation that forks the past",
   },
   {
+    id: "valetudo",
+    page: "valetudo.html",
+    href: "./valetudo.html",
+    label: "VALETUDO",
+    group: "life",
+    blurb: "Allocate scarce beds, and price what the rule in official use costs in lives",
+  },
+  {
     id: "reliquary",
     page: "reliquary.html",
     href: "./reliquary.html",

@@ -415,6 +415,16 @@ input {
   --lb-panel: #101208ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #212a10, #10140a 55%, #070905);
 }
+.valetudo {
+  --lb-accent: #e8a0b0;
+  --lb-accent-strong: #f7d3dc;
+  --lb-border: #4d2f39;
+  --lb-panel: #150d10ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #2b1620, #120c0f 55%, #080506);
+}
+.vl-ward p {
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) 66px 46px 76px;
+}
 .porta {
   --lb-accent: #7fd8e8;
   --lb-accent-strong: #cbeff7;

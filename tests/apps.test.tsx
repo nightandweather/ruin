@@ -44,6 +44,7 @@ import { PrometheusApp } from "../src/PrometheusApp";
 import { ReliquaryApp } from "../src/ReliquaryApp";
 import { SentinelApp } from "../src/SentinelApp";
 import { ThemisApp } from "../src/ThemisApp";
+import { ValetudoApp } from "../src/ValetudoApp";
 import { VeritasApp } from "../src/VeritasApp";
 import { WatchfloorApp } from "../src/WatchfloorApp";
 
@@ -77,6 +78,7 @@ const APPS: Array<{ id: string; Component: () => React.JSX.Element }> = [
   { id: "reliquary", Component: ReliquaryApp },
   { id: "sentinel", Component: SentinelApp },
   { id: "themis", Component: ThemisApp },
+  { id: "valetudo", Component: ValetudoApp },
   { id: "veritas", Component: VeritasApp },
   { id: "watchfloor", Component: WatchfloorApp },
 ];
