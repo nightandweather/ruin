@@ -462,6 +462,16 @@ input {
   --lb-panel: #0d0b14ee;
   --lb-ground: radial-gradient(circle at 50% 36%, #1a1430, #0c0a14 55%, #06050a);
 }
+.ark {
+  --lb-accent: #8ad0c0;
+  --lb-accent-strong: #c6efe3;
+  --lb-border: #2c4a42;
+  --lb-panel: #0a1210ee;
+  --lb-ground: radial-gradient(circle at 50% 36%, #122a24, #0a1210 55%, #050907);
+}
+.ak-loops p {
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr) 62px 66px;
+}
 .prospect {
   --lb-accent: #a8c98a;
   --lb-accent-strong: #d6ebc0;

@@ -18,6 +18,7 @@
  */
 
 import type { IncidentCassette } from "./cassette";
+import { arkConfig, evaluateArk } from "./ark";
 import { ascentConfig, evaluateAscent } from "./ascent";
 import { censusConfig, evaluateCensus } from "./census";
 import { chronosConfig, evaluateChronos } from "./chronos";
@@ -38,6 +39,7 @@ import { evaluateWaystation, waystationConfig } from "./waystation";
  * names a runnable module keeps this honest.
  */
 const SCENES = {
+  ark: { base: arkConfig, run: evaluateArk },
   ascent: { base: ascentConfig, run: evaluateAscent },
   census: { base: censusConfig, run: evaluateCensus },
   chronos: { base: chronosConfig, run: evaluateChronos },

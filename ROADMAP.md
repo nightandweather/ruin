@@ -69,6 +69,8 @@ Replace generic material income with surveyed deposits, uncertainty, extraction 
 
 Connect crew health, atmosphere, water, waste, shielding, AGRARIA output, DATACORE support, and AEGIS excursions. The model should reveal which loops can recover and which failures silently compound.
 
+**Delivered** — [`src/ark.ts`](src/ark.ts): four coupled loops (oxygen, carbon, water, food) run day-by-day for a year, fed by AGRARIA's own snapshot and resupplied on ASCENT's schedule, with the Biosphere 2 masking as the central incident — the CO₂ telemetry the curing structure silences, the 132-day gap between the trend alarm and the threshold alarm, and the counted O₂ injections. Daily-closing mass ledgers and every incident under `tests/ark.test.ts` and the determinism gate.
+
 ### P2 · WATCHTOWER environment and navigation
 
 Add solar-weather forecasts, ephemeris uncertainty, conjunction covariance, navigation beacons, communications delay, and observation confidence. Other modules consume forecasts rather than omniscient truth.
