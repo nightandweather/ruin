@@ -1,6 +1,6 @@
 # RUIN
 
-> **Executable science fiction.** Thirty-two deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
+> **Executable science fiction.** Thirty-eight deterministic simulations of infrastructure that does not exist yet — and of the ways such infrastructure fails without anyone noticing.
 
 [![CI](https://github.com/nightandweather/ruin/actions/workflows/ci.yml/badge.svg)](https://github.com/nightandweather/ruin/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -48,7 +48,7 @@ Every fault-response plan in this repository ends with _the operator decides_. W
 
 ## What this is
 
-Thirty-eight browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Thirty-five have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
+Thirty-eight browser laboratories, each a deterministic model of one piece of infrastructure that does not exist yet. **HELIOS**, the first, operates an autonomous Dyson swarm: 10,000 independent solar collectors at 0.4 AU balancing power demand against communication partitions, thermal limits, and cascading failures. Thirty-seven have grown around it — factories, habitats, propulsion, archives, law, and governance, plus the handful that model the people and the paperwork, where the quiet failures actually live.
 
 Every module declares what must never happen and enforces it in the model rather than warning about it. Every module separates the physics it sources from the parameters it invents, and [one of them audits the rest](https://nightandweather.github.io/ruin/veritas.html) — including itself. Reading down [the list of what fiction assumes and what the models return](docs/WHAT-FICTION-ASSUMES.md), the same failure appears in twelve costumes: **the instrument says everything is fine.**
 
